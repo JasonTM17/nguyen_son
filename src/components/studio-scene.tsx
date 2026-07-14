@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useForcedColors } from "../hooks/use-forced-colors";
-import { SignalLatticeFallback } from "./signal-lattice-fallback";
+import { StudioSceneFallback } from "./studio-scene-fallback";
 
-type SignalLatticeSceneProps = {
+type StudioSceneProps = {
   readonly reduceMotion: boolean;
 };
 
@@ -15,30 +15,22 @@ function scheduleIdleTask(task: () => void): () => void {
   const idleWindow = window as IdleWindow;
   const idleHandle = idleWindow.requestIdleCallback?.(task, { timeout: 1000 });
 
-  if (idleHandle !== undefined) {
-    return () => idleWindow.cancelIdleCallback?.(idleHandle);
-  }
+  if (idleHandle !== undefined) return () => idleWindow.cancelIdleCallback?.(idleHandle);
 
   const timeoutHandle = window.setTimeout(task, 320);
   return () => window.clearTimeout(timeoutHandle);
 }
 
-export function SignalLatticeScene({ reduceMotion }: SignalLatticeSceneProps) {
+export function StudioScene({ reduceMotion }: StudioSceneProps) {
   const forcedColors = useForcedColors();
-
-  return (
-    <SignalLatticeInstance
-      disabled={reduceMotion || forcedColors}
-      key={`${reduceMotion}-${forcedColors}`}
-    />
-  );
+  return <StudioSceneInstance disabled={reduceMotion || forcedColors} key={`${reduceMotion}-${forcedColors}`} />;
 }
 
-type SignalLatticeInstanceProps = {
+type StudioSceneInstanceProps = {
   readonly disabled: boolean;
 };
 
-function SignalLatticeInstance({ disabled }: SignalLatticeInstanceProps) {
+function StudioSceneInstance({ disabled }: StudioSceneInstanceProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
   const [canvasReady, setCanvasReady] = useState(false);
@@ -53,7 +45,6 @@ function SignalLatticeInstance({ disabled }: SignalLatticeInstanceProps) {
 
     const handleContextLost = () => {
       if (!active) return;
-
       contextLostDuringSetup = true;
       sceneCleanup?.();
       sceneCleanup = undefined;
@@ -62,22 +53,18 @@ function SignalLatticeInstance({ disabled }: SignalLatticeInstanceProps) {
 
     const startScene = async () => {
       if (!active || startedRef.current) return;
-
       startedRef.current = true;
       try {
-        const { createSignalLatticeScene } = await import("./signal-lattice-scene-runtime");
+        const { createStudioScene } = await import("./studio-scene-runtime");
         if (!active) return;
-
-        sceneCleanup = createSignalLatticeScene(host, handleContextLost);
+        sceneCleanup = createStudioScene(host, handleContextLost);
         if (contextLostDuringSetup) {
           sceneCleanup();
           sceneCleanup = undefined;
           return;
         }
-
         setCanvasReady(true);
       } catch {
-        // The inline SVG remains visible because this visual is optional.
         startedRef.current = false;
       }
     };
@@ -105,22 +92,17 @@ function SignalLatticeInstance({ disabled }: SignalLatticeInstanceProps) {
   }, [disabled]);
 
   return (
-    <div className="signal-lattice" data-canvas-ready={canvasReady}>
-      <SignalLatticeFallback />
-      <div aria-hidden="true" className="signal-lattice-host" ref={hostRef} />
-      <div aria-hidden="true" className="signal-lattice__meta">
-        <div className="signal-lattice__meta-row">
-          <span>Project topology</span>
-          <span className="signal-lattice__metric">
-            <span className="signal-lattice__metric-dot" />4 selected systems
-          </span>
-        </div>
-        <div className="signal-lattice__legend">
-          <span>Web</span>
-          <span>Mobile</span>
-          <span>Real-time</span>
-          <span>AI</span>
-        </div>
+    <div className="studio-scene" data-canvas-ready={canvasReady}>
+      <img
+        alt=""
+        className="studio-scene__portrait"
+        src="/nguyen-son-studio-avatar-clean.png"
+      />
+      <StudioSceneFallback />
+      <div aria-hidden="true" className="studio-scene-host" ref={hostRef} />
+      <div aria-hidden="true" className="studio-scene__meta">
+        <span>Nguyen Son / systems studio</span>
+        <span>Software engineering + DevOps</span>
       </div>
     </div>
   );

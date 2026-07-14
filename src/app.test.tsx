@@ -33,11 +33,12 @@ describe("App", () => {
     const { container } = render(<App />);
 
     expect(screen.getByRole("main")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/ideas travel farther/i);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/nguyen son/i);
+    expect(screen.getByText(/build reliably\. ship deliberately/i)).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "View repository" })).toHaveLength(
       selectedProjects.length,
     );
-    expect(container.querySelector(".signal-lattice-fallback")).toBeInTheDocument();
+    expect(container.querySelector(".studio-scene-fallback")).toBeInTheDocument();
   });
 
   it("lets a visitor reduce optional motion", () => {

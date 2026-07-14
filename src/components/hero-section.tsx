@@ -1,6 +1,6 @@
 import { focusAreas, profileLinks } from "../content/portfolio-data";
 import type { MotionPreference } from "../hooks/use-motion-preference";
-import { SignalLatticeScene } from "./signal-lattice-scene";
+import { StudioScene } from "./studio-scene";
 
 type HeroSectionProps = {
   readonly motionPreference: MotionPreference;
@@ -12,11 +12,14 @@ export function HeroSection({ motionPreference }: HeroSectionProps) {
   return (
     <section className="hero section" aria-labelledby="hero-heading">
       <div className="hero__copy">
-        <p className="eyebrow">Nguyen Son / product systems</p>
-        <h1 id="hero-heading">Ideas travel farther when the systems behind them are deliberate.</h1>
+        <p className="eyebrow">Software Engineer / DevOps</p>
+        <h1 id="hero-heading">
+          <span className="hero__name">Nguyen Son</span>
+          <span className="hero__statement">Build reliably. Ship deliberately.</span>
+        </h1>
         <p className="hero__lede">
-          I build end-to-end experiences across web, mobile, real-time services, and applied AI —
-          with the product workflow in view at every layer.
+          I build practical product systems across web, mobile, real-time services, and applied AI.
+          I am continuously learning and welcome thoughtful feedback from the community.
         </p>
         <div className="hero__actions">
           <a className="button button--primary" href="#work">
@@ -33,7 +36,7 @@ export function HeroSection({ motionPreference }: HeroSectionProps) {
         </ul>
       </div>
       <div className="hero__visual" aria-hidden="true">
-        <SignalLatticeScene reduceMotion={motionPreference.reduceMotion} />
+        <StudioScene reduceMotion={motionPreference.reduceMotion} />
       </div>
     </section>
   );

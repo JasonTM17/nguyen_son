@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { disposeResources } from "./signal-lattice-resource-cleanup";
+import { disposeResources } from "./three-resource-cleanup";
 
 describe("disposeResources", () => {
   it("disposes every resource that completed initialization", () => {

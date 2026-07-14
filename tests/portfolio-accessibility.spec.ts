@@ -34,33 +34,36 @@ test("keeps keyboard access and avoids mobile horizontal overflow", async ({ pag
   expect(hasHorizontalOverflow).toBe(false);
 });
 
-test("uses the static lattice when the operating system reduces motion", async ({ page }) => {
+test("uses the static studio illustration when the operating system reduces motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.waitForTimeout(500);
 
-  await expect(page.locator(".signal-lattice-fallback")).toBeVisible();
-  await expect(page.locator(".signal-lattice-host canvas")).toHaveCount(0);
+  await expect(page.locator(".studio-scene-fallback")).toBeVisible();
+  await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".studio-scene-host canvas")).toHaveCount(0);
 });
 
-test("uses the static lattice in forced-colors mode", async ({ page }) => {
+test("uses the static studio illustration in forced-colors mode", async ({ page }) => {
   await page.emulateMedia({ forcedColors: "active" });
   await page.goto("/");
   await page.waitForTimeout(500);
 
-  await expect(page.locator(".signal-lattice-fallback")).toBeVisible();
-  await expect(page.locator(".signal-lattice-host canvas")).toHaveCount(0);
+  await expect(page.locator(".studio-scene-fallback")).toBeVisible();
+  await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".studio-scene-host canvas")).toHaveCount(0);
 });
 
-test("restores the static lattice after a WebGL context loss", async ({ page }) => {
+test("restores the static studio illustration after a WebGL context loss", async ({ page }) => {
   await page.goto("/");
-  const canvas = page.locator(".signal-lattice-host canvas");
+  const canvas = page.locator(".studio-scene-host canvas");
   await expect(canvas).toHaveCount(1);
 
   await canvas.dispatchEvent("webglcontextlost");
 
   await expect(canvas).toHaveCount(0);
-  await expect(page.locator(".signal-lattice-fallback")).toBeVisible();
+  await expect(page.locator(".studio-scene-fallback")).toBeVisible();
+  await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "1");
 });
 
 test("keeps the scene optional for coarse-pointer devices", async ({ page }, testInfo) => {
@@ -79,13 +82,13 @@ test("keeps the scene optional for coarse-pointer devices", async ({ page }, tes
     };
   });
   await page.goto("/");
-  await expect(page.locator(".signal-lattice-host canvas")).toHaveCount(1);
+  await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
   await page.waitForTimeout(100);
 
   const framesBeforePointerMove = await page.evaluate(
     () => (window as unknown as { __signalScheduledFrames: number }).__signalScheduledFrames,
   );
-  await page.locator(".signal-lattice-host").dispatchEvent("pointermove", {
+  await page.locator(".studio-scene-host").dispatchEvent("pointermove", {
     clientX: 120,
     clientY: 160,
   });

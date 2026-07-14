@@ -47,18 +47,18 @@ npm run build
 - Treat operating-system reduced motion as a stricter preference than the local toggle.
 - Keep decorative canvas and SVG visuals out of the accessibility tree unless their role changes materially.
 
-## Signal Lattice rules
+## Studio Scene rules
 
-- Keep the SVG fallback available independently of WebGL.
+- Keep the local owner artwork and SVG fallback available independently of WebGL.
 - Keep Three.js loading isolated behind the existing dynamic import and preference checks.
 - Dispose event listeners, observers, geometries, materials, renderer context, and canvas during normal cleanup or setup failure.
-- Avoid a continuous animation loop. The current runtime requests frames only for relevant render events.
+- Avoid uncontrolled animation loops. The Studio Scene's fine-pointer icon drift is the explicit exception: cap it at roughly 14fps and stop it when the visual is offscreen, hidden, reduced-motion, or coarse-pointer.
 
 ## Styling rules
 
 - Reuse CSS custom properties from `base.css` for palette and focus tokens.
-- Keep layout rules in `layout.css`, control and typography rules in `components.css`, visual-specific rules in `signal-lattice.css`, and work/principle/about/footer rules in `content-sections.css`.
-- Preserve the 720px desktop layout breakpoint and the 320px minimum viewport baseline unless a tested responsive change requires otherwise.
+- Keep layout rules in `layout.css`, control and typography rules in `components.css`, visual-specific rules in `studio-scene.css`, and work/principle/about/footer rules in `content-sections.css`.
+- Preserve the 740px desktop layout breakpoint and the 320px minimum viewport baseline unless a tested responsive change requires otherwise.
 - Honor `prefers-reduced-motion` and `forced-colors` fallbacks when adding transitions, animation, or non-text visuals.
 
 ## Content changes
