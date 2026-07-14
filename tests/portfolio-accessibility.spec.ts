@@ -1,6 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.route(/^https:\/\/api\.github\.com\/users\/JasonTM17\/repos\?/, async (route) => {
+    await route.fulfill({ contentType: "application/json", body: "[]" });
+  });
+});
+
 test("has semantic content without serious accessibility violations", async ({ page }) => {
   const consoleErrors: string[] = [];
   page.on("console", (message) => {
@@ -32,6 +38,109 @@ test("keeps keyboard access and avoids mobile horizontal overflow", async ({ pag
     () => document.documentElement.scrollWidth > window.innerWidth,
   );
   expect(hasHorizontalOverflow).toBe(false);
+});
+
+test("keeps anchor headings clear of the sticky header and exposes the 3D interaction", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
+
+  await page.getByRole("button", { name: "Interact with 3D" }).click();
+  await expect(page.getByRole("button", { name: "Reset 3D view" })).toHaveAttribute("aria-pressed", "true");
+
+  await page.getByRole("link", { name: "Archive" }).click();
+  const positions = await page.evaluate(() => {
+    const header = document.querySelector(".site-header")?.getBoundingClientRect();
+    const heading = document.querySelector("#archive-heading")?.getBoundingClientRect();
+    return { headerBottom: header?.bottom ?? 0, headingTop: heading?.top ?? 0 };
+  });
+
+  expect(positions.headingTop).toBeGreaterThan(positions.headerBottom + 8);
+});
+
+test("keeps a manual 3D rotation until it is explicitly reset", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Runs only in the desktop interaction project.");
+
+  await page.goto("/");
+  await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
+  await page.getByRole("button", { name: "Interact with 3D" }).click();
+
+  const host = page.locator(".studio-scene-host");
+  await host.scrollIntoViewIfNeeded();
+  const bounds = await host.boundingBox();
+  if (!bounds) throw new Error("The 3D interaction surface has no layout bounds.");
+
+  const dragPath = await page.evaluate((hostBounds) => {
+    const headerBottom = document.querySelector(".site-header")?.getBoundingClientRect().bottom ?? 0;
+    const top = Math.max(hostBounds.y + 40, headerBottom + 32);
+    const bottom = Math.min(hostBounds.y + hostBounds.height - 40, window.innerHeight - 40);
+    if (bottom <= top) throw new Error("No visible area is available for the 3D drag assertion.");
+
+    return {
+      endX: hostBounds.x + hostBounds.width * 0.68,
+      endY: top + (bottom - top) * 0.68,
+      startX: hostBounds.x + hostBounds.width * 0.3,
+      startY: top + (bottom - top) * 0.32,
+    };
+  }, bounds);
+
+  await page.mouse.move(dragPath.startX, dragPath.startY);
+  await page.mouse.down();
+  await page.mouse.move(dragPath.endX, dragPath.endY);
+  await expect(page.locator(".studio-scene")).toHaveAttribute("data-dragging", "true");
+  await page.mouse.up();
+  await expect(page.locator(".studio-scene")).not.toHaveAttribute("data-dragging");
+
+  const rotationBeforeReset = await page.locator(".studio-scene").evaluate((element) => ({
+    x: element.style.getPropertyValue("--studio-tilt-x"),
+    y: element.style.getPropertyValue("--studio-tilt-y"),
+  }));
+  expect(rotationBeforeReset.x).not.toBe("0deg");
+  expect(rotationBeforeReset.y).not.toBe("0deg");
+
+  await page.getByRole("button", { name: "Reset 3D view" }).click();
+  await expect(page.getByRole("button", { name: "Interact with 3D" })).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator(".studio-scene")).toHaveAttribute("data-interactive", "false");
+
+  const rotationAfterReset = await page.locator(".studio-scene").evaluate((element) => ({
+    x: element.style.getPropertyValue("--studio-tilt-x"),
+    y: element.style.getPropertyValue("--studio-tilt-y"),
+  }));
+  expect(rotationAfterReset).toEqual({ x: "0deg", y: "0deg" });
+});
+
+test("opens a grounded portfolio assistant in the lower-right corner", async ({ page }) => {
+  await page.route("**/api/chat", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        answer: "DevHire Cloud is a Java and DevOps learning project.",
+        serverRemaining: 74,
+        sources: ["DevHire Cloud project"],
+      }),
+    });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: /ask son's guide/i }).click();
+
+  await expect(page.getByRole("dialog", { name: /ask about son's learning path/i })).toBeVisible();
+  await page.getByLabel(/ask about nguyen son's portfolio/i).fill("Which project uses Java?");
+  await page.getByRole("button", { name: "Send" }).click();
+  await expect(page.getByText(/devhire cloud is a java and devops learning project/i)).toBeVisible();
+});
+
+test("keeps the skip-link target clear of the sticky header on a narrow viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto("/");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+
+  const positions = await page.evaluate(() => {
+    const header = document.querySelector(".site-header")?.getBoundingClientRect();
+    const main = document.querySelector("#main-content")?.getBoundingClientRect();
+    return { headerBottom: header?.bottom ?? 0, mainTop: main?.top ?? 0 };
+  });
+
+  expect(positions.mainTop).toBeGreaterThanOrEqual(positions.headerBottom);
 });
 
 test("uses the static studio illustration when the operating system reduces motion", async ({ page }) => {

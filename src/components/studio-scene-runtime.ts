@@ -25,6 +25,7 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
   try {
     const studio = createStudioObjects(matchesMediaQuery("(max-width: 767px)"));
     const animateIcons = matchesMediaQuery("(pointer: fine)");
+    const supportsPointerInteraction = !matchesMediaQuery("(pointer: none)");
     resources = studio.resources;
     renderer.outputColorSpace = SRGBColorSpace;
     renderer.domElement.setAttribute("aria-hidden", "true");
@@ -48,11 +49,15 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
     let visible = !document.hidden;
     let pointerX = 0;
     let pointerY = 0;
+    let isDragging = false;
+    let hasManualRotation = false;
+    let activePointerId: number | undefined;
 
     const render = (time: number) => {
       if (!visible || !inViewport) return;
       studio.animate(animateIcons ? time : 0);
-      studio.group.rotation.set(pointerY * 0.025, pointerX * 0.035, 0);
+      const rotationStrength = isDragging || hasManualRotation ? 0.11 : 0.025;
+      studio.group.rotation.set(pointerY * rotationStrength, pointerX * rotationStrength * 1.4, 0);
       renderer.render(scene, camera);
     };
 
@@ -88,19 +93,71 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
       requestRender();
     };
 
-    const onPointerMove = (event: PointerEvent) => {
-      if (!animateIcons) return;
+    const applyPointerPosition = (event: PointerEvent) => {
       const { height, left, top, width } = host.getBoundingClientRect();
       if (width === 0 || height === 0) return;
       pointerX = clamp(((event.clientX - left) / width) * 2 - 1);
       pointerY = clamp(((event.clientY - top) / height) * 2 - 1);
+      if (isDragging) {
+        const sceneElement = host.closest<HTMLElement>(".studio-scene");
+        sceneElement?.style.setProperty("--studio-tilt-x", `${pointerY * -5}deg`);
+        sceneElement?.style.setProperty("--studio-tilt-y", `${pointerX * 6}deg`);
+      }
       requestRender();
     };
 
-    const onPointerLeave = () => {
+    const resetPointer = () => {
       pointerX = 0;
       pointerY = 0;
+      hasManualRotation = false;
+      const sceneElement = host.closest<HTMLElement>(".studio-scene");
+      sceneElement?.style.setProperty("--studio-tilt-x", "0deg");
+      sceneElement?.style.setProperty("--studio-tilt-y", "0deg");
       requestRender();
+    };
+
+    const finishDrag = () => {
+      if (!isDragging) return;
+      if (activePointerId !== undefined && host.hasPointerCapture(activePointerId)) {
+        host.releasePointerCapture(activePointerId);
+      }
+      activePointerId = undefined;
+      isDragging = false;
+      hasManualRotation = true;
+      host.classList.remove("is-dragging");
+      host.closest<HTMLElement>(".studio-scene")?.removeAttribute("data-dragging");
+      requestRender();
+    };
+
+    const resetInteraction = () => {
+      if (activePointerId !== undefined && host.hasPointerCapture(activePointerId)) {
+        host.releasePointerCapture(activePointerId);
+      }
+      activePointerId = undefined;
+      isDragging = false;
+      host.classList.remove("is-dragging");
+      host.closest<HTMLElement>(".studio-scene")?.removeAttribute("data-dragging");
+      resetPointer();
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!isDragging && (!animateIcons || hasManualRotation)) return;
+      applyPointerPosition(event);
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!supportsPointerInteraction || host.dataset.interactive !== "true") return;
+      isDragging = true;
+      hasManualRotation = false;
+      activePointerId = event.pointerId;
+      host.setPointerCapture(event.pointerId);
+      host.classList.add("is-dragging");
+      host.closest<HTMLElement>(".studio-scene")?.setAttribute("data-dragging", "true");
+      applyPointerPosition(event);
+    };
+
+    const onPointerLeave = () => {
+      if (!isDragging && !hasManualRotation) resetPointer();
     };
 
     const onVisibilityChange = () => {
@@ -129,7 +186,11 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
       intersectionObserver?.disconnect();
       resizeObserver?.disconnect();
       host.removeEventListener("pointermove", onPointerMove);
+      host.removeEventListener("pointerdown", onPointerDown);
       host.removeEventListener("pointerleave", onPointerLeave);
+      host.removeEventListener("pointerup", finishDrag);
+      host.removeEventListener("pointercancel", resetInteraction);
+      host.removeEventListener("studioreset", resetInteraction);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("resize", resize);
       renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
@@ -143,7 +204,11 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
     intersectionObserver?.observe(host);
     resizeObserver?.observe(host);
     host.addEventListener("pointermove", onPointerMove);
+    host.addEventListener("pointerdown", onPointerDown);
     host.addEventListener("pointerleave", onPointerLeave);
+    host.addEventListener("pointerup", finishDrag);
+    host.addEventListener("pointercancel", resetInteraction);
+    host.addEventListener("studioreset", resetInteraction);
     document.addEventListener("visibilitychange", onVisibilityChange);
     window.addEventListener("resize", resize);
     resize();

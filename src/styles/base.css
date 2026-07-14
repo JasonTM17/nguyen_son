@@ -16,6 +16,8 @@
   --amber: #ed9a45;
   --focus: #c06000;
   --shadow: rgba(22, 35, 67, 0.16);
+  --site-header-height: 5.9rem;
+  --anchor-clearance: 1.35rem;
 }
 
 * {
@@ -24,6 +26,7 @@
 
 html {
   background: var(--canvas);
+  scroll-padding-top: calc(var(--site-header-height) + var(--anchor-clearance));
   scroll-behavior: smooth;
 }
 

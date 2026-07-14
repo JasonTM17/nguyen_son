@@ -43,6 +43,7 @@
 
 main {
   overflow: clip;
+  scroll-margin-top: calc(var(--site-header-height) + var(--anchor-clearance));
 }
 
 .section {
@@ -50,7 +51,7 @@ main {
 }
 
 section[id] {
-  scroll-margin-top: 6.5rem;
+  scroll-margin-top: calc(var(--site-header-height) + var(--anchor-clearance));
 }
 
 .hero {
@@ -79,6 +80,7 @@ section[id] {
 }
 
 .section--work,
+.section--archive,
 .section--principles,
 .section--about {
   border-top: 1px solid var(--line);
@@ -100,6 +102,10 @@ section[id] {
   .site-header__inner {
     grid-template-columns: minmax(10rem, 1fr) auto minmax(10rem, 1fr);
     min-height: 5.35rem;
+  }
+
+  :root {
+    --site-header-height: 5.5rem;
   }
 
   .site-navigation {

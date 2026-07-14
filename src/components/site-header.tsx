@@ -14,6 +14,7 @@ export function SiteHeader({ motionPreference }: SiteHeaderProps) {
         </a>
         <nav aria-label="Primary navigation" className="site-navigation">
           <a href="#work">Work</a>
+          <a href="#archive">Archive</a>
           <a href="#principles">Principles</a>
           <a href="#about">About</a>
         </nav>

@@ -34,6 +34,7 @@ function StudioSceneInstance({ disabled }: StudioSceneInstanceProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
   const [canvasReady, setCanvasReady] = useState(false);
+  const [isInteractive, setIsInteractive] = useState(false);
 
   useEffect(() => {
     if (disabled || !hostRef.current) return;
@@ -91,15 +92,31 @@ function StudioSceneInstance({ disabled }: StudioSceneInstanceProps) {
     };
   }, [disabled]);
 
+  const toggleInteraction = () => {
+    const nextInteractiveState = !isInteractive;
+    setIsInteractive(nextInteractiveState);
+    if (!nextInteractiveState) hostRef.current?.dispatchEvent(new Event("studioreset"));
+  };
+
   return (
-    <div className="studio-scene" data-canvas-ready={canvasReady}>
+    <div className="studio-scene" data-canvas-ready={canvasReady} data-interactive={isInteractive}>
       <img
         alt=""
         className="studio-scene__portrait"
         src="/nguyen-son-studio-avatar-clean.png"
       />
       <StudioSceneFallback />
-      <div aria-hidden="true" className="studio-scene-host" ref={hostRef} />
+      <div aria-hidden="true" className="studio-scene-host" data-interactive={isInteractive} ref={hostRef} />
+      {!disabled && canvasReady && (
+        <button
+          aria-pressed={isInteractive}
+          className="studio-scene__control"
+          onClick={toggleInteraction}
+          type="button"
+        >
+          {isInteractive ? "Reset 3D view" : "Interact with 3D"}
+        </button>
+      )}
       <div aria-hidden="true" className="studio-scene__meta">
         <span>Nguyen Son / systems studio</span>
         <span>Software engineering + DevOps</span>

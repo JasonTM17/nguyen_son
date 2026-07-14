@@ -12,18 +12,18 @@ export function HeroSection({ motionPreference }: HeroSectionProps) {
   return (
     <section className="hero section" aria-labelledby="hero-heading">
       <div className="hero__copy">
-        <p className="eyebrow">Software Engineer / DevOps</p>
+        <p className="eyebrow">Student Software Engineer / DevOps learner</p>
         <h1 id="hero-heading">
           <span className="hero__name">Nguyen Son</span>
-          <span className="hero__statement">Build reliably. Ship deliberately.</span>
+          <span className="hero__statement">Learn deliberately. Build in public.</span>
         </h1>
         <p className="hero__lede">
-          I build practical product systems across web, mobile, real-time services, and applied AI.
-          I am continuously learning and welcome thoughtful feedback from the community.
+          I am a student developer learning by building practical systems across web, mobile, real-time
+          services, and applied AI. I welcome thoughtful feedback from the community.
         </p>
         <div className="hero__actions">
           <a className="button button--primary" href="#work">
-            Explore selected work
+            Explore learning projects
           </a>
           <a className="button button--quiet" href={githubLink.href} target="_blank" rel="noreferrer">
             GitHub profile
@@ -35,7 +35,7 @@ export function HeroSection({ motionPreference }: HeroSectionProps) {
           ))}
         </ul>
       </div>
-      <div className="hero__visual" aria-hidden="true">
+      <div className="hero__visual">
         <StudioScene reduceMotion={motionPreference.reduceMotion} />
       </div>
     </section>

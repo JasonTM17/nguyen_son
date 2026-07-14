@@ -1,0 +1,195 @@
+.portfolio-assistant__panel {
+  display: grid;
+  width: min(26.5rem, calc(100vw - 1.5rem));
+  max-height: min(39rem, calc(100dvh - 6rem));
+  grid-template-rows: auto auto minmax(7rem, 1fr) auto auto;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--indigo), transparent 55%);
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 95% 0%, rgba(25, 140, 135, 0.16), transparent 10rem),
+    var(--paper);
+  box-shadow: 0 1.5rem 3.4rem color-mix(in srgb, var(--shadow), transparent 15%);
+  animation: portfolio-assistant-enter 180ms ease-out both;
+}
+
+.portfolio-assistant__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.1rem 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--line), transparent 22%);
+}
+
+.portfolio-assistant__header p,
+.portfolio-assistant__header h2,
+.portfolio-assistant__budget,
+.portfolio-assistant__message p,
+.portfolio-assistant__message small,
+.portfolio-assistant__thinking {
+  margin: 0;
+}
+
+.portfolio-assistant__header p {
+  margin-bottom: 0.32rem;
+  color: var(--teal);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.63rem;
+  font-weight: 820;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.portfolio-assistant__header h2 {
+  max-width: 16rem;
+  font-size: 1.25rem;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.portfolio-assistant__close {
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--indigo), transparent 65%);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--indigo);
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.portfolio-assistant__budget {
+  padding: 0.6rem 1.1rem;
+  background: color-mix(in srgb, var(--teal), transparent 92%);
+  color: var(--indigo);
+  font-size: 0.75rem;
+  font-weight: 720;
+}
+
+.portfolio-assistant__messages {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  overflow-y: auto;
+  padding: 1rem 1.1rem;
+  scroll-behavior: smooth;
+}
+
+.portfolio-assistant__message {
+  width: fit-content;
+  max-width: 92%;
+  border: 1px solid color-mix(in srgb, var(--indigo), transparent 76%);
+  border-radius: 0.9rem;
+  padding: 0.7rem 0.8rem;
+  font-size: 0.87rem;
+  line-height: 1.48;
+}
+
+.portfolio-assistant__message--assistant {
+  background: color-mix(in srgb, var(--surface), white 10%);
+}
+
+.portfolio-assistant__message--user {
+  justify-self: end;
+  border-color: color-mix(in srgb, var(--teal), transparent 45%);
+  background: color-mix(in srgb, var(--teal), transparent 87%);
+}
+
+.portfolio-assistant__message small {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--muted);
+  font-size: 0.67rem;
+  line-height: 1.35;
+}
+
+.portfolio-assistant__thinking {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.portfolio-assistant__quick-questions {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0 1.1rem 0.8rem;
+}
+
+.portfolio-assistant__quick-questions button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  border: 1px solid color-mix(in srgb, var(--indigo), transparent 66%);
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  background: transparent;
+  color: var(--indigo);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 740;
+}
+
+.portfolio-assistant__form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  padding: 0.85rem 1.1rem 1.1rem;
+  border-top: 1px solid color-mix(in srgb, var(--line), transparent 22%);
+}
+
+.portfolio-assistant__form textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid color-mix(in srgb, var(--indigo), transparent 60%);
+  border-radius: 0.7rem;
+  padding: 0.55rem 0.65rem;
+  background: color-mix(in srgb, var(--surface), white 10%);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.portfolio-assistant__form button {
+  align-self: end;
+  min-height: 42px;
+  border: 1px solid var(--amber);
+  border-radius: 0.7rem;
+  padding: 0.45rem 0.75rem;
+  background: var(--amber);
+  color: #311b03;
+  cursor: pointer;
+  font-weight: 820;
+}
+
+.portfolio-assistant button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+[data-reduce-motion="true"] .portfolio-assistant__panel {
+  animation: none;
+}
+
+@keyframes portfolio-assistant-enter {
+  from { opacity: 0; transform: translateY(0.6rem) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 440px) {
+  .portfolio-assistant__panel { max-height: min(36rem, calc(100dvh - 5.2rem)); }
+  .portfolio-assistant__launcher { min-height: 46px; }
+}
+
+@media (forced-colors: active) {
+  .portfolio-assistant__panel,
+  .portfolio-assistant__message,
+  .portfolio-assistant__close,
+  .portfolio-assistant__quick-questions button,
+  .portfolio-assistant__form textarea,
+  .portfolio-assistant__form button { border: 1px solid CanvasText; }
+}

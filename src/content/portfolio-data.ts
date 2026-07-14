@@ -5,10 +5,10 @@ export const profileLinks: readonly ExternalLink[] = [
 ];
 
 export const focusAreas = [
-  "Full-stack products",
+  "Learning full-stack products",
   "Real-time workflows",
-  "Mobile applications",
-  "Applied AI systems",
+  "Java & system design",
+  "DevOps & applied AI",
 ] as const;
 
 export const selectedProjects = [
@@ -47,7 +47,7 @@ export const selectedProjects = [
 ] as const satisfies readonly PortfolioProject[];
 
 export const workingPrinciples = [
-  "Start from the real user workflow, then make the system earn its complexity.",
-  "Keep interfaces clear across web, mobile, service, and hardware boundaries.",
-  "Make reliability visible through thoughtful states, observability, and delivery tooling.",
+  "Start from a real user workflow, then learn what the system actually needs.",
+  "Build across web, mobile, service, and hardware boundaries — and document what each attempt teaches.",
+  "Ask for feedback early, improve in public, and make the next iteration more reliable.",
 ] as const;

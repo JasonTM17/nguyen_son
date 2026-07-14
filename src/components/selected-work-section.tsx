@@ -4,8 +4,8 @@ export function SelectedWorkSection() {
   return (
     <section className="section section--work" id="work" aria-labelledby="work-heading">
       <div className="section-heading">
-        <p className="eyebrow">Selected work</p>
-        <h2 id="work-heading">Four systems, each built around a real-world workflow.</h2>
+        <p className="eyebrow">Featured learning projects</p>
+        <h2 id="work-heading">Four projects that taught me how real workflows fit together.</h2>
       </div>
       <div className="project-grid">
         {selectedProjects.map((project, index) => (

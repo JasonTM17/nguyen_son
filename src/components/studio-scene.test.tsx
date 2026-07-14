@@ -1,4 +1,4 @@
-import { act, cleanup, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { StudioScene } from "./studio-scene";
 
@@ -87,5 +87,19 @@ describe("StudioScene", () => {
 
     expect(runtimeCleanup).toHaveBeenCalledOnce();
     expect(container.querySelector(".studio-scene")).toHaveAttribute("data-canvas-ready", "false");
+  });
+
+  it("offers an explicit control for the interactive 3D view", async () => {
+    sceneRuntime.createStudioScene.mockImplementationOnce(() => vi.fn());
+    const { container } = render(<StudioScene reduceMotion={false} />);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(320);
+    });
+    const control = screen.getByRole("button", { name: "Interact with 3D" });
+    fireEvent.click(control);
+
+    expect(control).toHaveAccessibleName("Reset 3D view");
+    expect(container.querySelector(".studio-scene")).toHaveAttribute("data-interactive", "true");
   });
 });

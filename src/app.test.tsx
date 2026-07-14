@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "./app";
+import { publicProjectArchive } from "./content/public-project-archive";
 import { selectedProjects } from "./content/portfolio-data";
 
 afterEach(() => {
@@ -34,10 +35,12 @@ describe("App", () => {
 
     expect(screen.getByRole("main")).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/nguyen son/i);
-    expect(screen.getByText(/build reliably\. ship deliberately/i)).toBeInTheDocument();
+    expect(screen.getByText(/learn deliberately\. build in public/i)).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "View repository" })).toHaveLength(
-      selectedProjects.length,
+      selectedProjects.length + publicProjectArchive.length,
     );
+    expect(screen.getByRole("heading", { name: /nineteen public projects/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /ask son's guide/i })).toBeInTheDocument();
     expect(container.querySelector(".studio-scene-fallback")).toBeInTheDocument();
   });
 

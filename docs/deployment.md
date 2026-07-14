@@ -15,11 +15,24 @@ https://nguyen-son-portfolio.vercel.app
 | Framework | Vite (auto-detected by Vercel) |
 | Build command | `npm run build` |
 | Output directory | `dist` |
-| Environment variables | None required |
+| Serverless function | `api/chat.mjs` |
+
+## Production environment
+
+The portfolio assistant's credentials are configured in the Vercel Production environment, never in source control or browser code.
+
+| Variable | Purpose | Visibility |
+| --- | --- | --- |
+| `DEEPSEEK_API_KEY` | Authorizes the server-side DeepSeek request. | Sensitive Vercel secret. |
+| `DEEPSEEK_BASE_URL` | DeepSeek API base URL. | Server-side configuration. |
+| `DEEPSEEK_MODEL` | DeepSeek model identifier. | Server-side configuration. |
+| `PORTFOLIO_ASSISTANT_PROFILE` | Owner-supplied assistant profile facts. | Protected server configuration; include only facts the owner intentionally wants the public assistant to share. |
+
+Do not prefix these values with `VITE_`; that would expose them to the browser bundle.
 
 ## Availability
 
-This is a static Vite site. It has no sleeping application server, database, or background worker to keep alive. The production URL remains available while the Vercel project and account remain active.
+Static page assets have no sleeping application server, database, or background worker to keep alive. The production URL remains available while the Vercel project and account remain active. The optional `/api/chat` serverless function runs only for a chat request; it also needs no keep-alive job.
 
 ## Updates and rollback
 

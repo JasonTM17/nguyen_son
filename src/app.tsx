@@ -1,9 +1,11 @@
 import { HeroSection } from "./components/hero-section";
 import { PrinciplesSection } from "./components/principles-section";
+import { PublicProjectArchiveSection } from "./components/public-project-archive-section";
 import { SelectedWorkSection } from "./components/selected-work-section";
 import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
 import { profileLinks } from "./content/portfolio-data";
+import { PortfolioAssistant } from "./features/portfolio-assistant/portfolio-assistant";
 import { useMotionPreference } from "./hooks/use-motion-preference";
 
 function App() {
@@ -19,20 +21,21 @@ function App() {
       <main id="main-content">
         <HeroSection motionPreference={motionPreference} />
         <SelectedWorkSection />
+        <PublicProjectArchiveSection />
         <PrinciplesSection />
         <section className="section section--about" id="about" aria-labelledby="about-heading">
           <div className="section-heading">
-            <p className="eyebrow">About the work</p>
-            <h2 id="about-heading">Products are better when every layer has a purpose.</h2>
+            <p className="eyebrow">Learning in public</p>
+            <h2 id="about-heading">Learning by building systems that people can actually use.</h2>
           </div>
           <div className="about-copy">
             <p>
-              Nguyen Son&apos;s public work spans operations platforms, cross-platform mobile apps,
-              real-time delivery workflows, and AI-assisted systems connected to physical devices.
+              I am a student developer learning through real repositories — shipping small improvements,
+              revisiting assumptions, and asking for feedback along the way.
             </p>
             <p>
-              The common thread is practical: make the complex path clearer for the person who has
-              to use, operate, or extend it next.
+              Each project is part of an ongoing path across web, mobile, AI, DevOps, Java, and systems
+              engineering. I welcome thoughtful suggestions that help make the next iteration clearer.
             </p>
             <a className="text-link" href={githubLink.href} target="_blank" rel="noreferrer">
               Explore the full GitHub profile
@@ -41,6 +44,7 @@ function App() {
         </section>
       </main>
       <SiteFooter githubLink={githubLink} />
+      <PortfolioAssistant />
     </div>
   );
 }

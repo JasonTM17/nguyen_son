@@ -9,12 +9,12 @@ export function SiteFooter({ githubLink }: SiteFooterProps) {
     <footer className="site-footer">
       <div>
         <p className="eyebrow">Keep in touch</p>
-        <h2>Follow the next build.</h2>
+        <h2>Follow the next learning build.</h2>
       </div>
       <a className="button button--primary" href={githubLink.href} target="_blank" rel="noreferrer">
         Visit GitHub
       </a>
-      <p className="site-footer__note">Nguyen Son / a static portfolio with an optional 3D layer.</p>
+      <p className="site-footer__note">Nguyen Son / student developer learning in public through real projects.</p>
     </footer>
   );
 }

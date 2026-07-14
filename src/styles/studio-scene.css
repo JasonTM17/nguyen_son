@@ -1,4 +1,6 @@
 .studio-scene {
+  --studio-tilt-x: 0deg;
+  --studio-tilt-y: 0deg;
   position: relative;
   isolation: isolate;
   width: 100%;
@@ -55,12 +57,8 @@
   object-position: center bottom;
   padding: clamp(0.25rem, 1vw, 0.7rem);
   filter: saturate(0.97) contrast(1.02);
-  transform: scale(1.035);
-  transition: opacity 180ms ease;
-}
-
-.studio-scene-host {
-  z-index: 2;
+  transform: perspective(1100px) rotateX(var(--studio-tilt-x)) rotateY(var(--studio-tilt-y)) scale(1.035);
+  transition: opacity 180ms ease, transform 220ms ease-out;
 }
 
 .studio-scene-host canvas {

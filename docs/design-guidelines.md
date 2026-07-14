@@ -34,7 +34,7 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 
 - The content width is `min(100% - 2rem, 1320px)` and the body has a 320px minimum width.
 - Mobile is the baseline: header navigation occupies a rounded second row; hero and about content stack; project cards use an auto-fit grid.
-- At 740px and above, the header becomes three columns, the hero becomes a balanced copy/artwork grid, and the about/footer align across columns.
+- At 740px and above, the header becomes three columns, the hero becomes a balanced copy/artwork grid, and the about/footer align across columns. Anchor targets reserve header clearance so an editorial heading is never clipped behind the sticky header.
 - The hero visual keeps a generous responsive height so the studio reads as artwork instead of a small decorative tile.
 
 ## Components
@@ -44,8 +44,11 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 | Header | Sticky, compact wordmark, rounded anchor navigation, and a motion control. |
 | Hero | Large identity, factual engineering/DevOps slogan, feedback invitation, verified GitHub action, and selected-work anchor. |
 | Systems Studio | Rounded ivory scene surface with a local owner portrait artwork, an optional Three.js depth layer, original inline SVG fallback, and small metadata labels. |
+| 3D interaction | A visible only-when-ready control enables drag-to-rotate; use it as a contained enhancement, with a reset state and no information dependency. |
 | Primary actions | Amber-filled primary button; GitHub action remains quiet and bordered. |
 | Project cards | Light raised surfaces with project index, category label, concise description, technology tags, and GitHub link. A restrained top rail and lift provide feedback on fine pointers. |
+| Public archive | Smaller raised cards, a live-sync status line, and view-timeline entrance motion only where supported and motion is not reduced. |
+| Portfolio assistant | Lower-right navy launcher with a small teal/amber dimensional signal; panel stays warm and compact, distinguishes visitor/assistant bubbles, and keeps the 75-question budget visible. |
 | Principle list | Ordered, ruled rows with amber sequence numbers. |
 | Footer | Short close, GitHub action, and static-portfolio note. |
 
@@ -58,6 +61,8 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 - In forced-colors mode, use system color tokens, hide the portrait and WebGL host, and retain the SVG fallback.
 - The portrait artwork and Three.js enhancement are decorative. They must not carry information absent from semantic HTML.
 - Keep the canvas opacity restrained so it enriches the studio rather than obscuring the owner artwork.
+- Keep the portfolio assistant fully operable by keyboard: launcher, close button, suggestions, labeled text area, send button, and source labels are standard HTML controls/content.
+- Assistant animation is a short panel entrance only; reduced-motion rules must continue to disable it.
 
 ## Style ownership
 
@@ -67,7 +72,10 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 | `src/styles/layout.css` | Page shell, header, section, hero, about, footer, and responsive layout. |
 | `src/styles/components.css` | Skip link, navigation, controls, typographic scale, actions, and focus-area pills. |
 | `src/styles/studio-scene.css` | Studio surface, owner artwork, Three.js host, inline SVG fallback, metadata, and forced-colors behavior. |
+| `src/styles/studio-scene-interaction.css` | Drag interaction cursor/state and the explicit 3D control. |
 | `src/styles/content-sections.css` | Project cards, tags, principle list, about/footer detail, and local motion override. |
+| `src/styles/public-project-archive.css` | Full public-project archive cards, live-sync status, and progressive entrance motion. |
+| `src/styles/portfolio-assistant*.css` | Fixed launcher and compact assistant panel. |
 
 ## References
 

@@ -1,0 +1,40 @@
+.studio-scene-host {
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.studio-scene[data-interactive="true"] .studio-scene-host {
+  cursor: grab;
+  touch-action: none;
+}
+
+.studio-scene-host.is-dragging {
+  cursor: grabbing;
+}
+
+.studio-scene[data-dragging="true"] .studio-scene__portrait {
+  transition-duration: 30ms;
+}
+
+.studio-scene__control {
+  position: absolute;
+  z-index: 4;
+  right: clamp(0.85rem, 2vw, 1.35rem);
+  bottom: clamp(0.85rem, 2vw, 1.35rem);
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--indigo), transparent 55%);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  background: color-mix(in srgb, var(--paper), transparent 7%);
+  box-shadow: 0 0.6rem 1.25rem color-mix(in srgb, var(--shadow), transparent 55%);
+  color: var(--indigo);
+  cursor: pointer;
+  font-size: clamp(0.68rem, 1vw, 0.78rem);
+  font-weight: 820;
+}
+
+.studio-scene__control[aria-pressed="true"] {
+  border-color: var(--teal);
+  background: color-mix(in srgb, var(--teal), var(--paper) 88%);
+  color: var(--teal);
+}
