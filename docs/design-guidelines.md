@@ -40,9 +40,9 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 | --- | --- |
 | Header | Sticky, compact, anchored navigation, text wordmark, and motion control. |
 | Primary actions | Amber-filled primary button; quiet action remains bordered. |
-| Project cards | Bordered surface with project index, concise description, technology tags, and GitHub link. |
+| Project cards | Bordered surface with project index, category label, concise description, technology tags, and GitHub link. On fine pointers, a restrained top signal rail, surface lift, and link-arrow movement indicate the destination without hiding information behind hover. |
 | Principle list | Ordered, ruled rows with amber sequence numbers. |
-| Signal Lattice | Rounded framed surface with SVG baseline and optional canvas enhancement. |
+| Signal Lattice | Rounded framed surface with SVG baseline and optional canvas enhancement. A decorative topology overlay labels the four build domains and the selected-system count, so the visual reads as a product map rather than a generic 3D object. |
 | Footer | Short close, GitHub action, and static-portfolio note. |
 
 ## Accessibility and motion
@@ -53,6 +53,7 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 - Reduced-motion CSS removes nonessential animation and transitions. The local page control can further reduce motion, but cannot override an operating-system reduced-motion preference.
 - In forced-colors mode, use system color tokens and do not show the WebGL host.
 - Keep the SVG fallback available. The decorative lattice must not carry product information unavailable elsewhere on the page.
+- Preserve the visual topology overlay as decorative; its labels reinforce information already present in the page content.
 
 ## Style ownership
 

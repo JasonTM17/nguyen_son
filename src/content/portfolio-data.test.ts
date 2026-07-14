@@ -8,6 +8,7 @@ describe("portfolio data", () => {
 
       expect(url.hostname).toBe("github.com");
       expect(url.pathname).toMatch(/^\/JasonTM17\/[A-Za-z0-9_-]+$/);
+      expect(project.category.length).toBeGreaterThan(5);
       expect(project.description.length).toBeGreaterThan(40);
       expect(project.tags.length).toBeGreaterThan(1);
     }

@@ -108,6 +108,20 @@ function SignalLatticeInstance({ disabled }: SignalLatticeInstanceProps) {
     <div className="signal-lattice" data-canvas-ready={canvasReady}>
       <SignalLatticeFallback />
       <div aria-hidden="true" className="signal-lattice-host" ref={hostRef} />
+      <div aria-hidden="true" className="signal-lattice__meta">
+        <div className="signal-lattice__meta-row">
+          <span>Project topology</span>
+          <span className="signal-lattice__metric">
+            <span className="signal-lattice__metric-dot" />4 selected systems
+          </span>
+        </div>
+        <div className="signal-lattice__legend">
+          <span>Web</span>
+          <span>Mobile</span>
+          <span>Real-time</span>
+          <span>AI</span>
+        </div>
+      </div>
     </div>
   );
 }

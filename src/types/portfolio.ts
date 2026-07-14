@@ -4,6 +4,7 @@ export type ExternalLink = {
 };
 
 export type PortfolioProject = {
+  readonly category: string;
   readonly description: string;
   readonly href: string;
   readonly tags: readonly string[];

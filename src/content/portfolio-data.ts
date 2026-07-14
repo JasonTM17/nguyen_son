@@ -13,6 +13,7 @@ export const focusAreas = [
 
 export const selectedProjects = [
   {
+    category: "Operations / delivery",
     title: "FoodFlow",
     description:
       "A real-time food-delivery platform with a NestJS API, Next.js operations apps, Flutter clients, Supabase Realtime/PostGIS, and Docker.",
@@ -20,6 +21,7 @@ export const selectedProjects = [
     href: "https://github.com/JasonTM17/FoodDelivery_App",
   },
   {
+    category: "Mobile / finance",
     title: "Money Management",
     description:
       "An offline-first Flutter finance app with PIN/biometrics, SQLite, Riverpod, and a Fastify/PostgreSQL API.",
@@ -27,6 +29,7 @@ export const selectedProjects = [
     href: "https://github.com/JasonTM17/Money_Management_App",
   },
   {
+    category: "AI / travel planning",
     title: "VN TravelAI",
     description:
       "A Vietnam travel marketplace with an AI trip planner, built with Next.js, Fastify, and Docker.",
@@ -34,6 +37,7 @@ export const selectedProjects = [
     href: "https://github.com/JasonTM17/VN_TravelAI",
   },
   {
+    category: "AI / physical systems",
     title: "AI-powered waste sorting",
     description:
       "A waste-sorting system that brings together YOLO, a PySide6 desktop app, dashboard tooling, UART/Arduino, and Supabase.",

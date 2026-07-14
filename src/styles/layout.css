@@ -47,6 +47,10 @@ main {
   padding-block: clamp(4rem, 10vw, 8rem);
 }
 
+section[id] {
+  scroll-margin-top: 6.5rem;
+}
+
 .hero {
   display: grid;
   gap: 2.5rem;

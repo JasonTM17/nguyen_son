@@ -10,9 +10,12 @@ export function SelectedWorkSection() {
       <div className="project-grid">
         {selectedProjects.map((project, index) => (
           <article className="project-card" key={project.href}>
-            <p className="project-card__index" aria-label={`Project ${index + 1}`}>
-              {String(index + 1).padStart(2, "0")}
-            </p>
+            <div className="project-card__meta">
+              <p className="project-card__index" aria-label={`Project ${index + 1}`}>
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <p className="project-card__category">{project.category}</p>
+            </div>
             <h3>{project.title}</h3>
             <p>{project.description}</p>
             <ul className="tag-list" aria-label={`${project.title} technologies`}>
@@ -21,7 +24,7 @@ export function SelectedWorkSection() {
               ))}
             </ul>
             <a className="text-link" href={project.href} target="_blank" rel="noreferrer">
-              View repository
+              View repository <span aria-hidden="true">↗</span>
             </a>
           </article>
         ))}
