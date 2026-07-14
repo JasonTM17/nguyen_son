@@ -1,0 +1,125 @@
+.page-shell {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 86% 2%, rgba(99, 217, 201, 0.13), transparent 26rem),
+    radial-gradient(circle at 8% 28%, rgba(255, 188, 113, 0.08), transparent 30rem),
+    var(--canvas);
+}
+
+.site-header {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--line), transparent 35%);
+  background: color-mix(in srgb, var(--canvas), transparent 12%);
+  backdrop-filter: blur(16px);
+}
+
+.site-header__inner,
+.section,
+.site-footer {
+  width: min(100% - 2rem, 1120px);
+  margin-inline: auto;
+}
+
+.site-header__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  min-height: 4.5rem;
+  padding-block: 0.35rem;
+}
+
+.site-navigation {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+main {
+  overflow: clip;
+}
+
+.section {
+  padding-block: clamp(4rem, 10vw, 8rem);
+}
+
+.hero {
+  display: grid;
+  gap: 2.5rem;
+  padding-top: clamp(4rem, 12vw, 9rem);
+}
+
+.hero__copy,
+.section-heading,
+.about-copy {
+  min-width: 0;
+}
+
+.hero__copy {
+  max-width: 48rem;
+}
+
+.hero__visual {
+  min-height: 18rem;
+}
+
+.section-heading {
+  max-width: 46rem;
+}
+
+.section--work,
+.section--principles {
+  border-top: 1px solid var(--line);
+}
+
+.section--about {
+  display: grid;
+  gap: 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.site-footer {
+  display: grid;
+  gap: 1.5rem;
+  padding-block: 3rem;
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 720px) {
+  .site-header__inner {
+    grid-template-columns: minmax(10rem, 1fr) auto auto;
+    min-height: 5rem;
+  }
+
+  .site-navigation {
+    grid-column: auto;
+    justify-content: center;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+    align-items: center;
+  }
+
+  .hero__visual {
+    min-height: 30rem;
+  }
+
+  .section--about {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.82fr);
+    align-items: start;
+  }
+
+  .site-footer {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .site-footer__note {
+    grid-column: 1 / -1;
+  }
+}
