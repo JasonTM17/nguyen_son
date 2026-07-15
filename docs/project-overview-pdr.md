@@ -28,7 +28,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 7. Open external GitHub destinations in a separate browsing context with `rel="noreferrer"`.
 8. Give visitors a motion-reduction control when the operating system has not already requested reduced motion.
 9. Always render the local studio artwork and an inline SVG studio fallback; add the Three.js canvas only when the current preference and forced-colors state allow it.
-10. Once WebGL is ready, let a visitor opt into drag-to-rotate 3D interaction and reset it without making the visual necessary for content.
+10. Once WebGL is ready, let a visitor drag or swipe the complete 3D diorama directly, and provide keyboard-accessible rotate/reset controls without making the visual necessary for content.
 11. Offer a lower-right assistant that answers only portfolio questions through same-origin `/api/chat`, displays sources, keeps its UI in the selected language, starts a fresh localized transient conversation after a language change, sends only a validated `en` or `vi` language value, and enforces a 75-question rolling 24-hour browser budget with a best-effort server abuse check.
 
 ## Non-functional requirements
@@ -42,7 +42,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 | Typography | Manrope is the primary sans-serif stack; IBM Plex Mono is used for systems-style details and controls. |
 | Motion | `prefers-reduced-motion` is a hard lower bound; the optional local setting can only reduce further motion. |
 | High contrast | Forced-colors mode replaces CSS tokens with system colors, suppresses the WebGL host, and uses the SVG fallback. |
-| Performance | The Three.js runtime is lazily imported; fine-pointer icon motion is capped at roughly 14fps and stops when the scene is offscreen or the document is hidden. |
+| Performance | The Three.js runtime is lazily imported; rendering is capped at roughly 45fps on desktop and 30fps on compact screens, uses capped device pixel ratios, reduces mascot count on compact screens, and stops when offscreen or hidden. |
 | Resource lifecycle | Scene setup failure and normal cleanup dispose Three.js resources and the renderer. |
 | Asset privacy | The owner artwork is a local repository asset; no runtime remote portrait request occurs. |
 | Public data resilience | The project archive remains complete from local typed data if GitHub API metadata is unavailable. Vietnamese archive categories/descriptions are always local; English may show live GitHub descriptions. |
@@ -66,7 +66,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 | Student project archive and assistant launcher | `src/app.test.tsx` checks the 19-project archive heading, expanded repository-link count, and assistant entry point. |
 | Assistant client and language contract | `src/features/portfolio-assistant/*.test.*`, `api/chat.test.mjs`, and `api/portfolio-assistant-rag.test.mjs` check the anonymous session, 75-question budget, selected-language request, Vietnamese UI/error behavior, language validation, and model guidance. |
 | Project-link ownership | `src/content/portfolio-data.test.ts` verifies GitHub host and `JasonTM17` repository paths. |
-| Scene initialization and interaction | `src/components/studio-scene.test.tsx` verifies that a failing runtime leaves the static path in place and that a successful canvas exposes the interaction control. |
+| Scene initialization and interaction | `src/components/studio-scene.test.tsx` verifies fallback behavior and accessible controls; Playwright verifies a direct drag changes both model axes, reset restores the rest angle, and mobile retains vertical touch scrolling. |
 | Browser accessibility | `tests/portfolio-accessibility.spec.ts` uses axe, checks console errors, keyboard focus, 320px overflow, clear anchor positions, 3D interaction, assistant rendering, operating-system reduced motion, forced colors, and a mobile coarse-pointer case across two Chromium projects. |
 
 ## References

@@ -53,7 +53,9 @@ npm run build
 - Keep the local owner artwork and SVG fallback available independently of WebGL.
 - Keep Three.js loading isolated behind the existing dynamic import and preference checks.
 - Dispose event listeners, observers, geometries, materials, renderer context, and canvas during normal cleanup or setup failure.
-- Avoid uncontrolled animation loops. The Studio Scene's fine-pointer icon drift is the explicit exception: cap it at roughly 14fps and stop it when the visual is offscreen, hidden, reduced-motion, or coarse-pointer.
+- Keep the complete diorama procedural and project-owned; do not add remote model or texture dependencies for decorative details.
+- Preserve direct group rotation, `touch-action: pan-y`, and the native rotate/reset button path together so mouse, touch, keyboard, and vertical page scrolling remain supported.
+- Avoid uncontrolled animation loops. Keep the current 45fps desktop and 30fps compact caps, reduced compact mascot count, device-pixel-ratio limits, and offscreen/hidden pausing.
 
 ## Styling rules
 

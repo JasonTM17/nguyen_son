@@ -2,7 +2,7 @@
 
 A Vite + React portfolio for Nguyen Son. It presents a student developer's public work across full-stack products, real-time workflows, mobile applications, applied AI systems, Java, and DevOps in English and Vietnamese.
 
-The opening experience is an original light-mode systems studio: a local 3D portrait artwork based on the portfolio owner's supplied image, with a Three.js spatial overlay. Visitors can explicitly enable a drag-to-rotate interaction; the visual remains optional and accessible when WebGL or motion is unavailable. The presentation takes inspiration from the polish of modern creative portfolios without using another project's code, models, copy, or assets.
+The opening experience is an original light-mode systems studio: a fully procedural Three.js diorama inspired by the portfolio owner's supplied image, with a student avatar, desk, developer equipment, and animated computer-science mascots. Visitors can drag or swipe the whole model directly, or use accessible rotate/reset controls. The visual remains optional when WebGL or motion is unavailable. The presentation takes inspiration from polished creative portfolios without using another project's code, models, copy, or assets.
 
 ## Local setup
 
@@ -41,12 +41,13 @@ The interface uses Manrope for the primary sans-serif stack and IBM Plex Mono fo
 
 The Systems Studio visual is an optional enhancement. Meaningful content does not depend on WebGL:
 
-- The local portrait artwork in `public/nguyen-son-studio-avatar-clean.png` remains visible without a canvas.
+- The local portrait artwork in `public/nguyen-son-studio-avatar-clean.png` remains the static no-canvas fallback.
 - An inline SVG studio remains available as a no-WebGL/forced-colors fallback.
 - The Three.js runtime is dynamically imported only when motion is allowed and forced-colors mode is inactive.
 - The runtime can start when the visual is near the viewport or during an idle-time fallback.
-- On fine-pointer devices only, the decorative computer-science icons drift at a gentle 14fps while the scene is visible; they stop when it leaves the viewport or the tab is hidden.
-- The interaction control appears only after the WebGL canvas is ready. It clearly explains the drag-to-orbit action, sits apart from the assistant dock, and lets visitors reset the studio to rest.
+- The procedural scene uses real geometry, lighting, shadows, a stylized avatar, a developer desk, and eight small developer mascots. Compact screens use six mascots and a lower pixel-ratio cap.
+- Animation is capped at about 45fps on desktop and 30fps on compact screens, and pauses when the scene leaves the viewport or the tab is hidden.
+- Dragging or swiping rotates the complete model directly. `touch-action: pan-y` preserves vertical page scrolling, while three HTML buttons provide rotate-left, reset, and rotate-right access for keyboard and assistive-technology users.
 - Reduced-motion preferences and forced-colors mode keep the static path instead of creating a canvas.
 - A lost WebGL context disposes and removes the canvas, then restores the static path.
 - The visual is decorative and hidden from assistive technology; headings, links, the interaction button, and the motion control remain standard HTML controls.

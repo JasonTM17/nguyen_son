@@ -44,8 +44,8 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 | --- | --- |
 | Header | Sticky, compact wordmark, rounded anchor navigation with an active-section state, `EN`/`VI` pressed-button selector, and a motion control. |
 | Hero | Large identity, factual engineering/DevOps slogan, feedback invitation, verified GitHub action, and selected-work anchor; its user-facing copy follows the selected language. |
-| Systems Studio | Rounded ivory scene surface with a local owner portrait artwork, an optional Three.js depth layer, original inline SVG fallback, and small metadata labels. |
-| 3D interaction | A visible only-when-ready control on the lower-left enables drag-to-rotate, explains the current action, and offers a reset without overlapping the assistant dock. |
+| Systems Studio | Rounded ivory scene surface with a fully procedural Three.js avatar/desk diorama, eight clay-like computer-science mascots on desktop, six on compact screens, a project-local portrait fallback, an inline SVG fallback, and small metadata labels. |
+| 3D interaction | The complete diorama rotates directly by mouse drag or horizontal touch swipe. A visible only-when-ready three-button strip adds rotate-left, reset, and rotate-right keyboard access without overlapping the assistant dock. |
 | Primary actions | Amber-filled primary button; GitHub action remains quiet and bordered. |
 | Project cards | Light raised surfaces with project index, category label, concise description, technology tags, and GitHub link. Vietnamese categories and descriptions come from maintained local copy; titles and repository links stay canonical. A restrained top rail and lift provide feedback on fine pointers. |
 | Public archive | Smaller raised cards, a live-sync status line, and view-timeline entrance motion only where supported and motion is not reduced. All 19 Vietnamese archive descriptions are local so a GitHub metadata refresh cannot replace them; live language, topic, and update metadata can still appear. |
@@ -63,7 +63,7 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 - Reduced-motion CSS removes nonessential transitions. The local control can reduce motion but cannot override an operating-system preference.
 - In forced-colors mode, use system color tokens, hide the portrait and WebGL host, and retain the SVG fallback.
 - The portrait artwork and Three.js enhancement are decorative. They must not carry information absent from semantic HTML.
-- Keep the canvas opacity restrained so it enriches the studio rather than obscuring the owner artwork.
+- Treat the procedural canvas as the primary visual only while it is healthy; restore the local portrait/SVG path after initialization failure, context loss, reduced motion, or forced colors.
 - Keep the portfolio assistant fully operable by keyboard: launcher, close button, suggestions, labeled text area, send button, and source labels are standard HTML controls/content.
 - Assistant animation is a short panel entrance only; reduced-motion rules must continue to disable it.
 
@@ -75,7 +75,7 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 | `src/styles/layout.css` | Page shell, header, section, hero, about, footer, and responsive layout. |
 | `src/styles/components.css` | Skip link, navigation, language and motion controls, typographic scale, actions, and focus-area pills. |
 | `src/styles/studio-scene.css` | Studio surface, owner artwork, Three.js host, inline SVG fallback, metadata, and forced-colors behavior. |
-| `src/styles/studio-scene-interaction.css` | Drag interaction cursor/state and the explicit 3D control. |
+| `src/styles/studio-scene-interaction.css` | Direct drag/swipe surface, touch-scroll preservation, cursor state, and accessible 3D control strip. |
 | `src/styles/content-sections.css` | Project cards, tags, principle list, about/footer detail, and local motion override. |
 | `src/styles/public-project-archive.css` | Full public-project archive cards, live-sync status, and progressive entrance motion. |
 | `src/styles/portfolio-assistant*.css` | Fixed launcher and compact assistant panel. |
