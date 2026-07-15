@@ -2,7 +2,7 @@ import {
   ACESFilmicToneMapping,
   DirectionalLight,
   HemisphereLight,
-  PCFSoftShadowMap,
+  PCFShadowMap,
   PerspectiveCamera,
   Scene,
   SRGBColorSpace,
@@ -29,7 +29,7 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
 
     renderer.outputColorSpace = SRGBColorSpace;
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = PCFSoftShadowMap;
+    renderer.shadowMap.type = PCFShadowMap;
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
     renderer.setClearColor(0x000000, 0);
