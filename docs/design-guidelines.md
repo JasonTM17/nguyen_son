@@ -44,8 +44,8 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 | --- | --- |
 | Header | Sticky, compact wordmark, rounded anchor navigation with an active-section state, `EN`/`VI` pressed-button selector, and a motion control. |
 | Hero | Large identity, factual engineering/DevOps slogan, feedback invitation, verified GitHub action, and selected-work anchor; its user-facing copy follows the selected language. |
-| Systems Studio | Rounded ivory scene surface with a fully procedural Three.js avatar/desk diorama, eight clay-like computer-science mascots on desktop, six on compact screens, a project-local portrait fallback, an inline SVG fallback, and small metadata labels. |
-| 3D interaction | The complete diorama rotates directly by mouse drag or horizontal touch swipe within a curated isometric arc; presentation-breaking front/back angles are not reachable. A visible only-when-ready three-button strip adds rotate-left, reset, and rotate-right keyboard access without overlapping the assistant dock. |
+| Systems Studio | Rounded ivory scene surface with the project-local high-detail studio artwork as the primary image, four restrained Three.js icons on the right edge, an inline SVG forced-colors fallback, and small metadata labels. |
+| 3D interaction | Mouse drag or horizontal touch swipe rotates only the icon layer within a restrained arc; the portrait artwork is never warped or replaced. A visible only-when-ready three-button strip adds rotate-left, reset, and rotate-right keyboard access without overlapping the assistant dock. |
 | Primary actions | Amber-filled primary button; GitHub action remains quiet and bordered. |
 | Project cards | Light raised surfaces with project index, category label, concise description, technology tags, and GitHub link. Vietnamese categories and descriptions come from maintained local copy; titles and repository links stay canonical. A restrained top rail and lift provide feedback on fine pointers. |
 | Public archive | Smaller raised cards, a live-sync status line, and view-timeline entrance motion only where supported and motion is not reduced. All 19 Vietnamese archive descriptions are local so a GitHub metadata refresh cannot replace them; live language, topic, and update metadata can still appear. |
@@ -63,7 +63,7 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 - Reduced-motion CSS removes nonessential transitions. The local control can reduce motion but cannot override an operating-system preference.
 - In forced-colors mode, use system color tokens, hide the portrait and WebGL host, and retain the SVG fallback.
 - The portrait artwork and Three.js enhancement are decorative. They must not carry information absent from semantic HTML.
-- Treat the procedural canvas as the primary visual only while it is healthy; restore the local portrait/SVG path after initialization failure, context loss, reduced motion, or forced colors.
+- Keep the portrait artwork visible when the optional canvas is healthy or unavailable. Forced-colors uses the inline SVG path instead.
 - Keep the portfolio assistant fully operable by keyboard: launcher, close button, suggestions, labeled text area, send button, and source labels are standard HTML controls/content.
 - Assistant animation is a short panel entrance only; reduced-motion rules must continue to disable it.
 

@@ -28,7 +28,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 7. Open external GitHub destinations in a separate browsing context with `rel="noreferrer"`.
 8. Give visitors a motion-reduction control when the operating system has not already requested reduced motion.
 9. Always render the local studio artwork and an inline SVG studio fallback; add the Three.js canvas only when the current preference and forced-colors state allow it.
-10. Once WebGL is ready, let a visitor drag or swipe the complete 3D diorama directly within a presentation-safe isometric arc, and provide keyboard-accessible rotate/reset controls without making the visual necessary for content.
+10. Once WebGL is ready, let a visitor drag or swipe the decorative 3D icon layer within a restrained arc, keep the primary artwork visually unchanged, and provide keyboard-accessible rotate/reset controls.
 11. Offer a lower-right assistant that answers only portfolio questions through same-origin `/api/chat`, displays sources, keeps its UI in the selected language, starts a fresh localized transient conversation after a language change, sends only a validated `en` or `vi` language value, and enforces a 75-question rolling 24-hour browser budget with a best-effort server abuse check.
 
 ## Non-functional requirements
@@ -42,7 +42,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 | Typography | Manrope is the primary sans-serif stack; IBM Plex Mono is used for systems-style details and controls. |
 | Motion | `prefers-reduced-motion` is a hard lower bound; the optional local setting can only reduce further motion. |
 | High contrast | Forced-colors mode replaces CSS tokens with system colors, suppresses the WebGL host, and uses the SVG fallback. |
-| Performance | The Three.js runtime is lazily imported; rendering is capped at roughly 45fps on desktop and 30fps on compact screens, uses capped device pixel ratios, reduces mascot count on compact screens, and stops when offscreen or hidden. |
+| Performance | The Three.js runtime is lazily imported; it renders only four small icons, caps rendering at roughly 45fps on desktop and 30fps on compact screens, uses capped device pixel ratios, and stops when offscreen or hidden. |
 | Resource lifecycle | Scene setup failure and normal cleanup dispose Three.js resources and the renderer. |
 | Asset privacy | The owner artwork is a local repository asset; no runtime remote portrait request occurs. |
 | Public data resilience | The project archive remains complete from local typed data if GitHub API metadata is unavailable. Vietnamese archive categories/descriptions are always local; English may show live GitHub descriptions. |

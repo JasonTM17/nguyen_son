@@ -53,9 +53,9 @@ npm run build
 - Keep the local owner artwork and SVG fallback available independently of WebGL.
 - Keep Three.js loading isolated behind the existing dynamic import and preference checks.
 - Dispose event listeners, observers, geometries, materials, renderer context, and canvas during normal cleanup or setup failure.
-- Keep the complete diorama procedural and project-owned; do not add remote model or texture dependencies for decorative details.
-- Preserve direct group rotation, the presentation-safe isometric bounds, `touch-action: pan-y`, and the native rotate/reset button path together so mouse, touch, keyboard, vertical page scrolling, and visual quality remain supported.
-- Avoid uncontrolled animation loops. Keep the current 45fps desktop and 30fps compact caps, reduced compact mascot count, device-pixel-ratio limits, and offscreen/hidden pausing.
+- Keep the high-detail local studio artwork as the primary visual; do not replace it with a procedural human/avatar model or remote asset.
+- Keep the optional Three.js layer limited to project-owned decorative icons and preserve restrained group rotation, `touch-action: pan-y`, and the native rotate/reset button path.
+- Avoid uncontrolled animation loops. Keep the current 45fps desktop and 30fps compact caps, the four-icon scene budget, device-pixel-ratio limits, and offscreen/hidden pausing.
 
 ## Styling rules
 
