@@ -106,7 +106,7 @@ describe("StudioScene", () => {
     fireEvent.click(screen.getByRole("button", { name: "Reset 3D view" }));
 
     expect(screen.getByRole("group", { name: "3D studio controls" })).toBeInTheDocument();
-    expect(screen.getByText("Drag or swipe the diorama to rotate it.")).toBeInTheDocument();
+    expect(screen.getByText("Drag or swipe the 3D icon layer to rotate it.")).toBeInTheDocument();
     expect(rotateListener).toHaveBeenCalledOnce();
     expect(resetListener).toHaveBeenCalledOnce();
   });

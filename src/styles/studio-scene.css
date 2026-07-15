@@ -75,10 +75,6 @@
   transition: opacity 180ms ease;
 }
 
-.studio-scene[data-canvas-ready="true"] .studio-scene__portrait {
-  opacity: 0;
-}
-
 .studio-scene-fallback__shadow ellipse {
   fill: color-mix(in srgb, var(--ink), transparent 83%);
 }

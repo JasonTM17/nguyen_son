@@ -135,7 +135,7 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
 
     renderer.domElement.addEventListener("webglcontextlost", handleContextLost);
     host.append(renderer.domElement);
-    sceneElement?.setAttribute("data-scene-mode", "procedural-3d");
+    sceneElement?.setAttribute("data-scene-mode", "hybrid-artwork-3d");
     intersectionObserver?.observe(host);
     resizeObserver?.observe(host);
     document.addEventListener("visibilitychange", onVisibilityChange);

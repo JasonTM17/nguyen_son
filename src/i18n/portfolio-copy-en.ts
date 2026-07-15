@@ -59,7 +59,7 @@ export const englishPortfolioCopy: PortfolioCopy = {
   },
   studio: {
     controlsLabel: "3D studio controls",
-    dragHint: "Drag or swipe the diorama to rotate it.",
+    dragHint: "Drag or swipe the 3D icon layer to rotate it.",
     meta: ["Nguyen Son / systems studio", "Software engineering + DevOps"],
     reset: "Reset 3D view",
     rotateLeft: "Rotate 3D studio left",

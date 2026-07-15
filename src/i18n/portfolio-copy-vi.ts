@@ -59,7 +59,7 @@ export const vietnamesePortfolioCopy: PortfolioCopy = {
   },
   studio: {
     controlsLabel: "Điều khiển studio 3D",
-    dragHint: "Kéo hoặc vuốt mô hình để xoay góc nhìn.",
+    dragHint: "Kéo hoặc vuốt lớp icon 3D để thay đổi góc nhìn.",
     meta: ["Nguyễn Sơn / studio hệ thống", "Kỹ nghệ phần mềm + DevOps"],
     reset: "Đặt lại góc nhìn 3D",
     rotateLeft: "Xoay studio 3D sang trái",

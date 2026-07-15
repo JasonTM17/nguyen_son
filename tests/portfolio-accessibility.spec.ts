@@ -49,7 +49,9 @@ test("keeps keyboard access and avoids mobile horizontal overflow", async ({ pag
 test("keeps anchor headings clear of the sticky header and exposes direct 3D controls", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
-  await expect(page.locator(".studio-scene")).toHaveAttribute("data-scene-mode", "procedural-3d");
+  await expect(page.locator(".studio-scene__portrait")).toBeVisible();
+  await expect(page.locator(".studio-scene__portrait")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".studio-scene")).toHaveAttribute("data-scene-mode", "hybrid-artwork-3d");
   await expect(page.getByRole("group", { name: "3D studio controls" })).toBeVisible();
 
   await page.getByRole("link", { name: "Archive" }).click();
