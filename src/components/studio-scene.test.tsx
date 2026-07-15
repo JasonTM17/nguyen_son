@@ -100,6 +100,7 @@ describe("StudioScene", () => {
     fireEvent.click(control);
 
     expect(control).toHaveAccessibleName("Reset 3D view");
+    expect(screen.getByText("Drag the studio to orbit. Reset to rest.")).toBeInTheDocument();
     expect(container.querySelector(".studio-scene")).toHaveAttribute("data-interactive", "true");
   });
 });

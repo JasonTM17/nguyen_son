@@ -29,7 +29,7 @@ Vite prints the local development URL when the server starts.
 
 ## Content and interaction model
 
-The page contains a hero, anchor navigation, four selected-work cards, all 19 verified public project cards, learning principles, an about section, and links to the `JasonTM17` GitHub profile and repositories. Editorial project content is typed in [`src/content/portfolio-data.ts`](./src/content/portfolio-data.ts) and [`src/content/public-project-archive.ts`](./src/content/public-project-archive.ts). The archive refreshes public GitHub metadata on page load and retains a local verified fallback when GitHub is unavailable or rate limited.
+The page contains a hero, anchor navigation that marks the section currently in view, four selected-work cards, all 19 verified public project cards, learning principles, an about section, and links to the `JasonTM17` GitHub profile and repositories. Editorial project content is typed in [`src/content/portfolio-data.ts`](./src/content/portfolio-data.ts) and [`src/content/public-project-archive.ts`](./src/content/public-project-archive.ts). The archive refreshes public GitHub metadata on page load and retains a local verified fallback when GitHub is unavailable or rate limited.
 
 The Systems Studio visual is an optional enhancement. Meaningful content does not depend on WebGL:
 
@@ -38,7 +38,7 @@ The Systems Studio visual is an optional enhancement. Meaningful content does no
 - The Three.js runtime is dynamically imported only when motion is allowed and forced-colors mode is inactive.
 - The runtime can start when the visual is near the viewport or during an idle-time fallback.
 - On fine-pointer devices only, the decorative computer-science icons drift at a gentle 14fps while the scene is visible; they stop when it leaves the viewport or the tab is hidden.
-- The interaction button appears only after the WebGL canvas is ready. It lets visitors drag the systems studio to rotate the spatial overlay and tilt the local portrait artwork; a reset returns the scene to rest.
+- The interaction control appears only after the WebGL canvas is ready. It clearly explains the drag-to-orbit action, sits apart from the assistant dock, and lets visitors reset the studio to rest.
 - Reduced-motion preferences and forced-colors mode keep the static path instead of creating a canvas.
 - A lost WebGL context disposes and removes the canvas, then restores the static path.
 - The visual is decorative and hidden from assistive technology; headings, links, the interaction button, and the motion control remain standard HTML controls.
@@ -47,7 +47,7 @@ The motion control stores an optional local preference in the browser. An operat
 
 ## Portfolio assistant
 
-The lower-right assistant is a grounded RAG-style guide for public portfolio questions. Its server-side Vercel function retrieves relevant project facts from [`api/portfolio-assistant-knowledge.mjs`](./api/portfolio-assistant-knowledge.mjs), adds only owner-approved public profile configuration held in Vercel, supplies that context to DeepSeek, and returns a concise response plus its portfolio sources.
+The lower-right assistant is a grounded RAG-style guide for public portfolio questions. Its compact dimensional orb expands a text label on hover, keyboard focus, or while open, so it stays discoverable while minimizing obstruction on narrow screens. Its server-side Vercel function retrieves relevant project facts from [`api/portfolio-assistant-knowledge.mjs`](./api/portfolio-assistant-knowledge.mjs), adds only owner-approved public profile configuration held in Vercel, supplies that context to DeepSeek, and returns a concise response plus its portfolio sources.
 
 - The browser never receives `DEEPSEEK_API_KEY`.
 - Input is bounded and normalized; the endpoint accepts only `POST` and returns generic upstream failures.

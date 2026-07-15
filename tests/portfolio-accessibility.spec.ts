@@ -34,10 +34,16 @@ test("keeps keyboard access and avoids mobile horizontal overflow", async ({ pag
   await expect(page.getByText("Skip to content")).toBeFocused();
   await expect(page.getByRole("button", { name: "Reduce motion" })).toBeVisible();
 
+  const headerHeight = await page.locator(".site-header").evaluate((header) => header.getBoundingClientRect().height);
+  expect(headerHeight).toBeLessThanOrEqual(110);
+
   const hasHorizontalOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth > window.innerWidth,
   );
   expect(hasHorizontalOverflow).toBe(false);
+
+  const launcherBounds = await page.getByRole("button", { name: /ask son's guide/i }).boundingBox();
+  expect(launcherBounds?.width).toBeLessThanOrEqual(56);
 });
 
 test("keeps anchor headings clear of the sticky header and exposes the 3D interaction", async ({ page }) => {
@@ -48,6 +54,7 @@ test("keeps anchor headings clear of the sticky header and exposes the 3D intera
   await expect(page.getByRole("button", { name: "Reset 3D view" })).toHaveAttribute("aria-pressed", "true");
 
   await page.getByRole("link", { name: "Archive" }).click();
+  await expect(page.getByRole("link", { name: "Archive" })).toHaveAttribute("aria-current", "location");
   const positions = await page.evaluate(() => {
     const header = document.querySelector(".site-header")?.getBoundingClientRect();
     const heading = document.querySelector("#archive-heading")?.getBoundingClientRect();

@@ -108,14 +108,20 @@ function StudioSceneInstance({ disabled }: StudioSceneInstanceProps) {
       <StudioSceneFallback />
       <div aria-hidden="true" className="studio-scene-host" data-interactive={isInteractive} ref={hostRef} />
       {!disabled && canvasReady && (
-        <button
-          aria-pressed={isInteractive}
-          className="studio-scene__control"
-          onClick={toggleInteraction}
-          type="button"
-        >
-          {isInteractive ? "Reset 3D view" : "Interact with 3D"}
-        </button>
+        <div className="studio-scene__interaction">
+          <button
+            aria-describedby="studio-scene-interaction-hint"
+            aria-pressed={isInteractive}
+            className="studio-scene__control"
+            onClick={toggleInteraction}
+            type="button"
+          >
+            {isInteractive ? "Reset 3D view" : "Interact with 3D"}
+          </button>
+          <p className="studio-scene__interaction-hint" id="studio-scene-interaction-hint">
+            {isInteractive ? "Drag the studio to orbit. Reset to rest." : "Enable the drag-to-orbit studio view."}
+          </p>
+        </div>
       )}
       <div aria-hidden="true" className="studio-scene__meta">
         <span>Nguyen Son / systems studio</span>

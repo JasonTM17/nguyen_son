@@ -33,7 +33,7 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 ## Layout and responsive behavior
 
 - The content width is `min(100% - 2rem, 1320px)` and the body has a 320px minimum width.
-- Mobile is the baseline: header navigation occupies a rounded second row; hero and about content stack; project cards use an auto-fit grid.
+- Mobile is the baseline: header navigation occupies a rounded second row, highlights the section currently in view, hero and about content stack, and project cards use an auto-fit grid.
 - At 740px and above, the header becomes three columns, the hero becomes a balanced copy/artwork grid, and the about/footer align across columns. Anchor targets reserve header clearance so an editorial heading is never clipped behind the sticky header.
 - The hero visual keeps a generous responsive height so the studio reads as artwork instead of a small decorative tile.
 
@@ -41,14 +41,14 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 
 | Element | Guidance reflected in source |
 | --- | --- |
-| Header | Sticky, compact wordmark, rounded anchor navigation, and a motion control. |
+| Header | Sticky, compact wordmark, rounded anchor navigation with an active-section state, and a motion control. |
 | Hero | Large identity, factual engineering/DevOps slogan, feedback invitation, verified GitHub action, and selected-work anchor. |
 | Systems Studio | Rounded ivory scene surface with a local owner portrait artwork, an optional Three.js depth layer, original inline SVG fallback, and small metadata labels. |
-| 3D interaction | A visible only-when-ready control enables drag-to-rotate; use it as a contained enhancement, with a reset state and no information dependency. |
+| 3D interaction | A visible only-when-ready control on the lower-left enables drag-to-rotate, explains the current action, and offers a reset without overlapping the assistant dock. |
 | Primary actions | Amber-filled primary button; GitHub action remains quiet and bordered. |
 | Project cards | Light raised surfaces with project index, category label, concise description, technology tags, and GitHub link. A restrained top rail and lift provide feedback on fine pointers. |
 | Public archive | Smaller raised cards, a live-sync status line, and view-timeline entrance motion only where supported and motion is not reduced. |
-| Portfolio assistant | Lower-right navy launcher with a small teal/amber dimensional signal; panel stays warm and compact, distinguishes visitor/assistant bubbles, and keeps the 75-question budget visible. |
+| Portfolio assistant | Lower-right navy 3D orb launcher that reveals its label on hover, keyboard focus, or open state; the panel stays warm and compact, distinguishes visitor/assistant bubbles, and keeps the 75-question budget visible. |
 | Principle list | Ordered, ruled rows with amber sequence numbers. |
 | Footer | Short close, GitHub action, and static-portfolio note. |
 

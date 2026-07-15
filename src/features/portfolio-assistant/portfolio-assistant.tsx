@@ -96,13 +96,15 @@ export function PortfolioAssistant() {
       <button
         aria-controls="portfolio-assistant-panel"
         aria-expanded={isOpen}
+        aria-haspopup="dialog"
+        aria-label="Ask Son's guide"
         className="portfolio-assistant__launcher"
         onClick={() => (isOpen ? closeAssistant() : setIsOpen(true))}
         ref={launcherRef}
         type="button"
       >
-        <span aria-hidden="true">✦</span>
-        Ask Son&apos;s guide
+        <span aria-hidden="true" className="portfolio-assistant__launcher-orb" />
+        <span className="portfolio-assistant__launcher-label">Ask Son&apos;s guide</span>
       </button>
       {isOpen && (
         <section aria-labelledby="portfolio-assistant-heading" className="portfolio-assistant__panel" id="portfolio-assistant-panel" onKeyDown={handlePanelKeyDown} role="dialog">

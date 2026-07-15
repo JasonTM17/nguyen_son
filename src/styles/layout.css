@@ -31,6 +31,7 @@
 }
 
 .site-navigation {
+  grid-row: 2;
   grid-column: 1 / -1;
   display: flex;
   justify-content: space-between;
@@ -39,6 +40,12 @@
   border: 1px solid color-mix(in srgb, var(--line), transparent 25%);
   border-radius: 999px;
   background: color-mix(in srgb, var(--paper), transparent 8%);
+}
+
+.motion-control {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
 }
 
 main {
@@ -110,10 +117,13 @@ section[id] {
 
   .site-navigation {
     grid-column: auto;
+    grid-row: auto;
     justify-content: center;
   }
 
   .motion-control {
+    grid-column: auto;
+    grid-row: auto;
     justify-self: end;
   }
 
