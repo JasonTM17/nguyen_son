@@ -138,21 +138,22 @@ export function createStudioMascots(
   compact: boolean,
 ): { animate: (time: number) => void; group: Group } {
   const group = new Group();
-  const definitions: readonly [Group, Vector, number][] = [
-    [createCloud(resources, materials), [-3.25, 2.22, -0.4], 0.2],
-    [createTerminal(resources, materials), [3.2, 2.02, 0.55], 1.2],
-    [createDatabase(resources, materials), [3.28, -1.28, 0.45], 2.1],
-    [createCodeCube(resources, materials), [-3.24, -1.18, 0.35], 2.9],
-    [createGitBranch(resources, materials), [-2.82, 0.65, -1.38], 3.7],
-    [createJavaCup(resources, materials), [2.72, 3.02, -1.35], 4.5],
-    [createContainer(resources, materials), [-2.45, 3.02, -1.05], 5.2],
-    [createAiOrb(resources, materials), [3.35, 0.38, -1.35], 6.1],
+  const definitions: readonly [() => Group, Vector, number][] = [
+    [() => createCloud(resources, materials), [2.28, 2.35, -1.2], 0.2],
+    [() => createTerminal(resources, materials), [3.05, 1.6, 0.28], 1.2],
+    [() => createDatabase(resources, materials), [3.02, -0.92, 0.28], 2.1],
+    [() => createCodeCube(resources, materials), [2.28, -0.02, -1.25], 2.9],
+    [() => createGitBranch(resources, materials), [2.28, 1.1, -1.35], 3.7],
+    [() => createJavaCup(resources, materials), [3.02, 2.82, -0.2], 4.5],
+    [() => createContainer(resources, materials), [2.28, -1.24, -1.2], 5.2],
+    [() => createAiOrb(resources, materials), [3.16, 0.38, 0.72], 6.1],
   ];
   const mascots: FloatingMascot[] = [];
 
-  definitions.slice(0, compact ? 6 : definitions.length).forEach(([visual, position, phase]) => {
+  definitions.slice(0, compact ? 6 : definitions.length).forEach(([createVisual, position, phase]) => {
+    const visual = createVisual();
     visual.position.set(...position);
-    visual.scale.setScalar(compact ? 0.55 : 0.64);
+    visual.scale.setScalar(compact ? 0.5 : 0.58);
     group.add(visual);
     mascots.push({ amplitude: 0.1 + (phase % 2) * 0.035, base: new Vector3(...position), phase, visual });
   });

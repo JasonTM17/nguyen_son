@@ -17,6 +17,8 @@ export function createStudioObjects(compact: boolean): StudioAssets {
   const diorama = createStudioDiorama(resources, materials);
   const mascots = createStudioMascots(resources, materials, compact);
 
+  diorama.position.x = compact ? -0.28 : -0.42;
+  mascots.group.position.x = compact ? 0.05 : 0.18;
   group.add(diorama, mascots.group);
   group.scale.setScalar(compact ? 0.78 : 0.88);
   group.position.y = compact ? -0.22 : -0.12;

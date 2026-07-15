@@ -2,6 +2,10 @@ import type { Group } from "three";
 
 const DEFAULT_ROTATION_X = 0.08;
 const DEFAULT_ROTATION_Y = -0.36;
+const MAX_ROTATION_X = 0.2;
+const MAX_ROTATION_Y = -0.2;
+const MIN_ROTATION_X = -0.08;
+const MIN_ROTATION_Y = -0.58;
 
 function clamp(value: number, minimum: number, maximum: number): number {
   return Math.max(minimum, Math.min(maximum, value));
@@ -73,8 +77,10 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
     }
     lastX = event.clientX;
     lastY = event.clientY;
-    targetY += deltaX * 0.0045;
-    if (event.pointerType !== "touch") targetX = clamp(targetX + deltaY * 0.0032, -0.28, 0.34);
+    targetY = clamp(targetY + deltaX * 0.0038, MIN_ROTATION_Y, MAX_ROTATION_Y);
+    if (event.pointerType !== "touch") {
+      targetX = clamp(targetX + deltaY * 0.0028, MIN_ROTATION_X, MAX_ROTATION_X);
+    }
     velocityY = deltaX * 0.0009;
   };
 
@@ -91,7 +97,7 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
   const rotate = (event: Event) => {
     const delta = (event as CustomEvent<{ delta?: unknown }>).detail?.delta;
     if (typeof delta !== "number" || !Number.isFinite(delta)) return;
-    targetY += delta;
+    targetY = clamp(targetY + delta, MIN_ROTATION_Y, MAX_ROTATION_Y);
     velocityY = 0;
   };
 
@@ -120,7 +126,7 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
     },
     update() {
       if (!isDragging && Math.abs(velocityY) > 0.0001) {
-        targetY += velocityY;
+        targetY = clamp(targetY + velocityY, MIN_ROTATION_Y, MAX_ROTATION_Y);
         velocityY *= 0.9;
       }
       currentX += (targetX - currentX) * 0.14;

@@ -113,6 +113,7 @@ test("keeps a manual 3D rotation until it is explicitly reset", async ({ page },
   await expect.poll(async () => Math.abs(await page.locator(".studio-scene").evaluate((element) =>
     Number.parseFloat(element.style.getPropertyValue("--studio-rotation-y")),
   ) - initialRotation.y)).toBeLessThan(0.25);
+
 });
 
 test("opens a grounded portfolio assistant in the lower-right corner", async ({ page }) => {
@@ -224,6 +225,7 @@ test("restores the static studio illustration after a WebGL context loss", async
 
 test("keeps touch scrolling and 3D controls available on coarse-pointer devices", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "Runs only in the coarse-pointer project.");
+  test.slow();
   await page.goto("/");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
   expect(await page.evaluate(() => window.matchMedia("(pointer: fine)").matches)).toBe(false);
@@ -249,6 +251,8 @@ test("keeps touch scrolling and 3D controls available on coarse-pointer devices"
   });
   await browserSession.send("Input.dispatchTouchEvent", { touchPoints: [], type: "touchEnd" });
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(scrollBeforeSwipe + 10);
+  await host.scrollIntoViewIfNeeded();
+  await expect(host).toBeInViewport();
 
   const rotationBefore = await page.locator(".studio-scene").evaluate((element) =>
     Number.parseFloat(element.style.getPropertyValue("--studio-rotation-y")),

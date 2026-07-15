@@ -114,7 +114,7 @@ function StudioSceneInstance({ copy, disabled }: StudioSceneInstanceProps) {
       {!disabled && canvasReady && (
         <div className="studio-scene__interaction">
           <div aria-label={copy.controlsLabel} className="studio-scene__controls" role="group">
-            <StudioControl label={copy.rotateLeft} onClick={() => rotateStudio(-0.42)}>
+            <StudioControl label={copy.rotateLeft} onClick={() => rotateStudio(-0.16)}>
               <RotationArrow direction="left" />
             </StudioControl>
             <StudioControl
@@ -124,7 +124,7 @@ function StudioSceneInstance({ copy, disabled }: StudioSceneInstanceProps) {
             >
               {copy.reset}
             </StudioControl>
-            <StudioControl label={copy.rotateRight} onClick={() => rotateStudio(0.42)}>
+            <StudioControl label={copy.rotateRight} onClick={() => rotateStudio(0.16)}>
               <RotationArrow direction="right" />
             </StudioControl>
           </div>
