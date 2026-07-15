@@ -60,7 +60,7 @@
 
 .archive-card__meta span {
   color: var(--teal);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.72rem;
   font-weight: 850;
   letter-spacing: 0.08em;

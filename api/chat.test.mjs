@@ -117,6 +117,36 @@ describe("portfolio assistant chat handler", () => {
     expect(response.body.sources).toContain("DevHire Cloud project");
   });
 
+  it("uses the visitor-selected Vietnamese response language for model guidance and errors", async () => {
+    process.env["DEEPSEEK_API_KEY"] = "unit-test-placeholder";
+    const fetchMock = vi.fn().mockResolvedValue({
+      json: async () => ({ choices: [{ message: { content: "DevHire Cloud là một dự án học Java và DevOps." } }] }),
+      ok: true,
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const response = createResponse();
+
+    await handler({
+      body: { language: "vi", message: "Dự án nào dùng Java?", sessionId: "visitor-session" },
+      headers: { "x-forwarded-for": uniqueIdentifier("handler-vietnamese") },
+      method: "POST",
+    }, response);
+
+    const requestPayload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(requestPayload.messages[0].content).toContain("The visitor selected Vietnamese");
+    expect(response.body.answer).toContain("DevHire Cloud");
+
+    delete process.env.DEEPSEEK_API_KEY;
+    const unavailableResponse = createResponse();
+    await handler({
+      body: { language: "vi", message: "Dự án nào dùng Java?", sessionId: "visitor-session" },
+      headers: { "x-forwarded-for": uniqueIdentifier("handler-vietnamese-unavailable") },
+      method: "POST",
+    }, unavailableResponse);
+
+    expect(unavailableResponse.body.error).toMatch(/đang được cấu hình/i);
+  });
+
   it("refunds the best-effort server allowance when DeepSeek is unavailable", async () => {
     process.env["DEEPSEEK_API_KEY"] = "unit-test-placeholder";
     const identifier = uniqueIdentifier("handler-refund");

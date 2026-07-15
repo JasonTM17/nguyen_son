@@ -1,14 +1,18 @@
 import type { MotionPreference } from "../hooks/use-motion-preference";
+import { portfolioCopy } from "../i18n/portfolio-copy";
+import { usePortfolioLanguage } from "../i18n/portfolio-language-context";
 
 type MotionPreferenceToggleProps = {
   readonly preference: MotionPreference;
 };
 
 export function MotionPreferenceToggle({ preference }: MotionPreferenceToggleProps) {
-  const buttonLabel = preference.reduceMotion ? "Motion reduced" : "Reduce motion";
+  const { language } = usePortfolioLanguage();
+  const copy = portfolioCopy[language].motion;
+  const buttonLabel = preference.reduceMotion ? copy.reduced : copy.reduce;
   const description = preference.systemReduced
-    ? "Your operating system is reducing motion."
-    : "Choose a calmer presentation on this device.";
+    ? copy.systemDescription
+    : copy.calmDescription;
 
   return (
     <div className="motion-control">

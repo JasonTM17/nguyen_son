@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useForcedColors } from "../hooks/use-forced-colors";
+import { portfolioCopy, type PortfolioCopy } from "../i18n/portfolio-copy";
+import { usePortfolioLanguage } from "../i18n/portfolio-language-context";
 import { StudioSceneFallback } from "./studio-scene-fallback";
 
 type StudioSceneProps = {
@@ -23,14 +25,23 @@ function scheduleIdleTask(task: () => void): () => void {
 
 export function StudioScene({ reduceMotion }: StudioSceneProps) {
   const forcedColors = useForcedColors();
-  return <StudioSceneInstance disabled={reduceMotion || forcedColors} key={`${reduceMotion}-${forcedColors}`} />;
+  const { language } = usePortfolioLanguage();
+
+  return (
+    <StudioSceneInstance
+      copy={portfolioCopy[language].studio}
+      disabled={reduceMotion || forcedColors}
+      key={`${reduceMotion}-${forcedColors}`}
+    />
+  );
 }
 
 type StudioSceneInstanceProps = {
+  readonly copy: PortfolioCopy["studio"];
   readonly disabled: boolean;
 };
 
-function StudioSceneInstance({ disabled }: StudioSceneInstanceProps) {
+function StudioSceneInstance({ copy, disabled }: StudioSceneInstanceProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
   const [canvasReady, setCanvasReady] = useState(false);
@@ -116,16 +127,16 @@ function StudioSceneInstance({ disabled }: StudioSceneInstanceProps) {
             onClick={toggleInteraction}
             type="button"
           >
-            {isInteractive ? "Reset 3D view" : "Interact with 3D"}
+            {isInteractive ? copy.reset : copy.interact}
           </button>
           <p className="studio-scene__interaction-hint" id="studio-scene-interaction-hint">
-            {isInteractive ? "Drag the studio to orbit. Reset to rest." : "Enable the drag-to-orbit studio view."}
+            {isInteractive ? copy.resetHint : copy.enableHint}
           </p>
         </div>
       )}
       <div aria-hidden="true" className="studio-scene__meta">
-        <span>Nguyen Son / systems studio</span>
-        <span>Software engineering + DevOps</span>
+        <span>{copy.meta[0]}</span>
+        <span>{copy.meta[1]}</span>
       </div>
     </div>
   );

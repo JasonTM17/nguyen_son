@@ -1,31 +1,37 @@
 import { useEffect, useState } from "react";
 import type { MotionPreference } from "../hooks/use-motion-preference";
+import { portfolioCopy } from "../i18n/portfolio-copy";
+import { usePortfolioLanguage } from "../i18n/portfolio-language-context";
+import { LanguageToggle } from "./language-toggle";
 import { MotionPreferenceToggle } from "./motion-preference-toggle";
 
 type SiteHeaderProps = {
   readonly motionPreference: MotionPreference;
 };
 
-const navigationItems = [
-  { href: "#work", id: "work", label: "Work" },
-  { href: "#archive", id: "archive", label: "Archive" },
-  { href: "#principles", id: "principles", label: "Principles" },
-  { href: "#about", id: "about", label: "About" },
-] as const;
+const navigationIds = ["work", "archive", "principles", "about"] as const;
 
 function getSectionFromHash(): string | undefined {
   if (typeof window === "undefined") return undefined;
 
   const sectionId = window.location.hash.slice(1);
-  return navigationItems.some((item) => item.id === sectionId) ? sectionId : undefined;
+  return navigationIds.includes(sectionId as (typeof navigationIds)[number]) ? sectionId : undefined;
 }
 
 export function SiteHeader({ motionPreference }: SiteHeaderProps) {
   const [activeSection, setActiveSection] = useState<string | undefined>(getSectionFromHash);
+  const { language } = usePortfolioLanguage();
+  const copy = portfolioCopy[language];
+  const navigationItems = [
+    { href: "#work", id: "work", label: copy.navigation.work },
+    { href: "#archive", id: "archive", label: copy.navigation.archive },
+    { href: "#principles", id: "principles", label: copy.navigation.principles },
+    { href: "#about", id: "about", label: copy.navigation.about },
+  ] as const;
 
   useEffect(() => {
-    const sections = navigationItems
-      .map((item) => document.getElementById(item.id))
+    const sections = navigationIds
+      .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => section !== null);
 
     const updateActiveSection = () => {
@@ -57,10 +63,10 @@ export function SiteHeader({ motionPreference }: SiteHeaderProps) {
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <a className="wordmark" href="#main-content" aria-label="Nguyen Son home">
+        <a className="wordmark" href="#main-content" aria-label={copy.homeLabel}>
           nguyen_son
         </a>
-        <nav aria-label="Primary navigation" className="site-navigation">
+        <nav aria-label={copy.navigationLabel} className="site-navigation">
           {navigationItems.map((item) => (
             <a
               aria-current={activeSection === item.id ? "location" : undefined}
@@ -72,7 +78,10 @@ export function SiteHeader({ motionPreference }: SiteHeaderProps) {
             </a>
           ))}
         </nav>
-        <MotionPreferenceToggle preference={motionPreference} />
+        <div className="site-header__controls">
+          <LanguageToggle />
+          <MotionPreferenceToggle preference={motionPreference} />
+        </div>
       </div>
     </header>
   );

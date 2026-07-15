@@ -156,6 +156,7 @@
   justify-content: space-between;
   gap: 0.5rem;
   color: var(--indigo);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: clamp(0.55rem, 1vw, 0.68rem);
   font-weight: 800;
   letter-spacing: 0.1em;

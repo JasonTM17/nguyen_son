@@ -1,4 +1,6 @@
 import type { PortfolioProject } from "../types/portfolio";
+import type { PortfolioLanguage } from "../i18n/portfolio-language-context";
+import { publicProjectArchiveVietnameseCopy } from "./public-project-archive-vi";
 
 export const publicProjectArchive = [
   {
@@ -135,3 +137,12 @@ export const publicProjectArchive = [
     href: "https://github.com/JasonTM17/AI_Algothrithm_Invidual_Study_University",
   },
 ] as const satisfies readonly PortfolioProject[];
+
+export function getPublicProjectArchive(language: PortfolioLanguage): readonly PortfolioProject[] {
+  if (language === "en") return publicProjectArchive;
+
+  return publicProjectArchive.map((project, index) => ({
+    ...project,
+    ...publicProjectArchiveVietnameseCopy[index],
+  }));
+}

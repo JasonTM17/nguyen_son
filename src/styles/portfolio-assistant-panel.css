@@ -34,7 +34,7 @@
 .portfolio-assistant__header p {
   margin-bottom: 0.32rem;
   color: var(--teal);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.63rem;
   font-weight: 820;
   letter-spacing: 0.08em;

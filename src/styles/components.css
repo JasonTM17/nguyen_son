@@ -21,7 +21,7 @@
   align-items: center;
   min-height: 44px;
   color: var(--teal);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.9rem;
   font-weight: 850;
   letter-spacing: 0.04em;
@@ -40,6 +40,46 @@
   font-size: 0.79rem;
   font-weight: 760;
   text-decoration: none;
+}
+
+.language-toggle {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  padding: 2px;
+  border: 1px solid color-mix(in srgb, var(--indigo), transparent 65%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper), transparent 12%);
+}
+
+.language-toggle__button {
+  min-width: 2.35rem;
+  min-height: 36px;
+  border-radius: 999px;
+  padding: 0.35rem 0.5rem;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.language-toggle__button[aria-pressed="true"] {
+  background: var(--indigo);
+  color: var(--paper);
+}
+
+.language-toggle__button:hover,
+.language-toggle__button:focus-visible {
+  color: var(--teal);
+}
+
+.language-toggle__button[aria-pressed="true"]:hover,
+.language-toggle__button[aria-pressed="true"]:focus-visible {
+  background: var(--teal);
+  color: var(--paper);
 }
 
 .site-navigation a:hover,
@@ -77,7 +117,7 @@
 .project-card__index {
   margin-bottom: 1rem;
   color: var(--teal);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.11em;
@@ -222,6 +262,8 @@ h3 {
 @media (forced-colors: active) {
   .site-navigation,
   .motion-control__button,
+  .language-toggle,
+  .language-toggle__button,
   .button,
   .focus-list li,
   .tag-list li {

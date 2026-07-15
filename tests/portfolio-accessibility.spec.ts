@@ -135,6 +135,44 @@ test("opens a grounded portfolio assistant in the lower-right corner", async ({ 
   await expect(page.getByText(/devhire cloud is a java and devops learning project/i)).toBeVisible();
 });
 
+test("keeps the Vietnamese interface, chat request, and compact header in sync", async ({ page }) => {
+  await page.route("**/api/chat", async (route) => {
+    const request = JSON.parse(route.request().postData() ?? "{}");
+    expect(request.language).toBe("vi");
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        answer: "DevHire Cloud là dự án học Java và DevOps.",
+        serverRemaining: 74,
+        sources: ["DevHire Cloud project"],
+      }),
+    });
+  });
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Vietnamese" }).click();
+
+  await expect(page.locator("html")).toHaveAttribute("lang", "vi");
+  await expect(page).toHaveTitle("Nguyễn Sơn | Kỹ sư phần mềm & DevOps");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    "Portfolio của Nguyễn Sơn: kỹ nghệ phần mềm, DevOps, quy trình thời gian thực, ứng dụng di động và AI ứng dụng.",
+  );
+  await expect(page.getByText("Học sâu. Xây thật.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Kho dự án" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Tương tác 3D" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Hỏi trợ lý của Sơn" }).click();
+  await page.getByLabel("Hỏi về portfolio của Nguyễn Sơn").fill("Dự án nào dùng Java?");
+  await page.getByRole("button", { name: "Gửi" }).click();
+  await expect(page.getByText(/devhire cloud là dự án học java/i)).toBeVisible();
+
+  const hasHorizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > window.innerWidth,
+  );
+  expect(hasHorizontalOverflow).toBe(false);
+});
+
 test("keeps the skip-link target clear of the sticky header on a narrow viewport", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 720 });
   await page.goto("/");

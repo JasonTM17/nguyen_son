@@ -7,6 +7,7 @@ import { selectedProjects } from "./content/portfolio-data";
 afterEach(() => {
   cleanup();
   window.localStorage.clear();
+  document.documentElement.lang = "en";
   Object.defineProperty(window, "matchMedia", {
     configurable: true,
     value: defaultMatchMedia,
@@ -52,6 +53,22 @@ describe("App", () => {
 
     expect(button).toHaveAttribute("aria-pressed", "true");
     expect(button).toHaveAccessibleName("Motion reduced");
+  });
+
+  it("switches the public interface to Vietnamese and remembers the selection", () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Vietnamese" }));
+
+    expect(document.documentElement).toHaveAttribute("lang", "vi");
+    expect(window.localStorage.getItem("nguyen-son-portfolio-language")).toBe("vi");
+    expect(document.title).toBe("Nguyễn Sơn | Kỹ sư phần mềm & DevOps");
+    expect(screen.getByText("Học sâu. Xây thật.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /mười chín dự án công khai/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Xem repository" })).toHaveLength(
+      selectedProjects.length + publicProjectArchive.length,
+    );
+    expect(screen.getByRole("button", { name: "Hỏi trợ lý của Sơn" })).toBeInTheDocument();
   });
 
   it("keeps operating-system reduced motion as the lower bound", () => {

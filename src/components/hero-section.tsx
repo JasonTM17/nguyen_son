@@ -1,5 +1,7 @@
-import { focusAreas, profileLinks } from "../content/portfolio-data";
+import { getFocusAreas, profileLinks } from "../content/portfolio-data";
 import type { MotionPreference } from "../hooks/use-motion-preference";
+import { portfolioCopy } from "../i18n/portfolio-copy";
+import { usePortfolioLanguage } from "../i18n/portfolio-language-context";
 import { StudioScene } from "./studio-scene";
 
 type HeroSectionProps = {
@@ -7,29 +9,29 @@ type HeroSectionProps = {
 };
 
 export function HeroSection({ motionPreference }: HeroSectionProps) {
+  const { language } = usePortfolioLanguage();
+  const copy = portfolioCopy[language].hero;
   const githubLink = profileLinks[0];
+  const focusAreas = getFocusAreas(language);
 
   return (
     <section className="hero section" aria-labelledby="hero-heading">
       <div className="hero__copy">
-        <p className="eyebrow">Student Software Engineer / DevOps learner</p>
+        <p className="eyebrow">{copy.eyebrow}</p>
         <h1 id="hero-heading">
           <span className="hero__name">Nguyen Son</span>
-          <span className="hero__statement">Learn deliberately. Build in public.</span>
+          <span className="hero__statement">{copy.statement}</span>
         </h1>
-        <p className="hero__lede">
-          I am a student developer learning by building practical systems across web, mobile, real-time
-          services, and applied AI. I welcome thoughtful feedback from the community.
-        </p>
+        <p className="hero__lede">{copy.lede}</p>
         <div className="hero__actions">
           <a className="button button--primary" href="#work">
-            Explore learning projects
+            {copy.actions.work}
           </a>
           <a className="button button--quiet" href={githubLink.href} target="_blank" rel="noreferrer">
-            GitHub profile
+            {copy.actions.github}
           </a>
         </div>
-        <ul className="focus-list" aria-label="Focus areas">
+        <ul className="focus-list" aria-label={copy.focusAreas}>
           {focusAreas.map((area) => (
             <li key={area}>{area}</li>
           ))}

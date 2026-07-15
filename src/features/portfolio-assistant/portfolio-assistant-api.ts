@@ -1,4 +1,6 @@
 import type { PortfolioAssistantMessage, PortfolioAssistantReply } from "./portfolio-assistant-types";
+import { portfolioCopy } from "../../i18n/portfolio-copy";
+import type { PortfolioLanguage } from "../../i18n/portfolio-language-context";
 
 type ApiPayload = {
   answer?: unknown;
@@ -17,10 +19,15 @@ function getSources(payload: ApiPayload): readonly string[] {
   return Array.isArray(payload.sources) ? payload.sources.filter((source): source is string => typeof source === "string") : [];
 }
 
+function getAnswer(payload: ApiPayload): string | null {
+  return typeof payload.answer === "string" && payload.answer.trim() ? payload.answer.trim() : null;
+}
+
 export async function askPortfolioAssistant(
   message: string,
   history: readonly PortfolioAssistantMessage[],
   sessionId: string,
+  language: PortfolioLanguage,
 ): Promise<PortfolioAssistantReply> {
   const response = await fetch("/api/chat", {
     method: "POST",
@@ -28,14 +35,16 @@ export async function askPortfolioAssistant(
     body: JSON.stringify({
       message,
       history: history.slice(-6).map(({ content, role }) => ({ content, role })),
+      language,
       sessionId,
     }),
   });
   const payload = (await response.json().catch(() => ({}))) as ApiPayload;
-  if (!response.ok || typeof payload.answer !== "string") {
-    const error = typeof payload.error === "string" ? payload.error : "The assistant is unavailable. Please try again shortly.";
+  const answer = getAnswer(payload);
+  if (!response.ok || !answer) {
+    const error = typeof payload.error === "string" ? payload.error : portfolioCopy[language].assistant.unavailable;
     throw new PortfolioAssistantApiError(error);
   }
 
-  return { answer: payload.answer, sources: getSources(payload) };
+  return { answer, sources: getSources(payload) };
 }

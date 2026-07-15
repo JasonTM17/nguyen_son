@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { profileLinks, selectedProjects } from "./portfolio-data";
+import { getFocusAreas, getSelectedProjects, profileLinks, selectedProjects } from "./portfolio-data";
+import { getPublicProjectArchive, publicProjectArchive } from "./public-project-archive";
 
 describe("portfolio data", () => {
   it("links every selected project to Nguyen Son's verified GitHub account", () => {
@@ -18,5 +19,18 @@ describe("portfolio data", () => {
     expect(profileLinks).toEqual([
       { label: "GitHub", href: "https://github.com/JasonTM17" },
     ]);
+  });
+
+  it("keeps project identities stable while presenting Vietnamese learning copy", () => {
+    const vietnameseSelectedProjects = getSelectedProjects("vi");
+    const vietnameseArchive = getPublicProjectArchive("vi");
+
+    expect(getFocusAreas("vi")).toContain("Java & thiết kế hệ thống");
+    expect(vietnameseSelectedProjects).toHaveLength(selectedProjects.length);
+    expect(vietnameseSelectedProjects.map((project) => project.href)).toEqual(selectedProjects.map((project) => project.href));
+    expect(vietnameseSelectedProjects[0]?.description).toContain("Nền tảng giao đồ ăn");
+    expect(vietnameseArchive).toHaveLength(publicProjectArchive.length);
+    expect(vietnameseArchive.map((project) => project.title)).toEqual(publicProjectArchive.map((project) => project.title));
+    expect(vietnameseArchive[5]?.description).toContain("microservice tuyển dụng");
   });
 });
