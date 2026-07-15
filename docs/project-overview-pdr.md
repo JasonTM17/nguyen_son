@@ -28,7 +28,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 7. Open external GitHub destinations in a separate browsing context with `rel="noreferrer"`.
 8. Give visitors a motion-reduction control when the operating system has not already requested reduced motion.
 9. Always render the local studio artwork and an inline SVG studio fallback; add the Three.js canvas only when the current preference and forced-colors state allow it.
-10. Once WebGL is ready, let a visitor drag or swipe the complete 3D diorama directly, and provide keyboard-accessible rotate/reset controls without making the visual necessary for content.
+10. Once WebGL is ready, let a visitor drag or swipe the complete 3D diorama directly within a presentation-safe isometric arc, and provide keyboard-accessible rotate/reset controls without making the visual necessary for content.
 11. Offer a lower-right assistant that answers only portfolio questions through same-origin `/api/chat`, displays sources, keeps its UI in the selected language, starts a fresh localized transient conversation after a language change, sends only a validated `en` or `vi` language value, and enforces a 75-question rolling 24-hour browser budget with a best-effort server abuse check.
 
 ## Non-functional requirements
