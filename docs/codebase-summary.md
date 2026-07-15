@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This repository is a Vite + React + TypeScript implementation of the Nguyen Son student portfolio. Its public interface supports English and Vietnamese through browser-local selection. Most page content is authored locally, while a public GitHub metadata hook refreshes the 19-project archive. A small Vercel serverless endpoint grounds portfolio questions in local fact chunks before calling DeepSeek; it has no database or persistent transcript.
+This repository is a Vite + React + TypeScript implementation of the Nguyen Son student portfolio. Its public interface supports English and Vietnamese through browser-local selection. Most page content is authored locally, while a public GitHub feed adds newly public project repositories and refreshes archive metadata. A small Vercel serverless endpoint grounds portfolio questions in local fact chunks before calling DeepSeek; it has no database or persistent transcript.
 
 ## Top-level layout
 
@@ -38,7 +38,7 @@ Generated `dist/`, `node_modules/`, Playwright reports, test results, TypeScript
 
 ## Page composition
 
-`App` is wrapped in `PortfolioLanguageProvider` and renders the header, hero, selected work, full public archive, principles, about section, footer, and fixed assistant. The provider restores a valid browser-local `en`/`vi` choice or derives a first-visit default from the browser locale, then updates the document language, title, and description. It supplies localized copy to the UI and selected/archive project-data helpers. `App` provides one `MotionPreference` result to the header control and hero visual. The selected-work section maps static project data into cards; the archive uses static verified records and overlays public GitHub metadata when the page-load request succeeds. Vietnamese archive categories/descriptions remain local.
+`App` is wrapped in `PortfolioLanguageProvider` and renders the header, hero, selected work, full public archive, principles, about section, footer, and fixed assistant. The provider restores a valid browser-local `en`/`vi` choice or derives a first-visit default from the browser locale, then updates the document language, title, and description. It supplies localized copy to the UI and selected/archive project-data helpers. `App` provides one `MotionPreference` result to the header control and hero visual. The selected-work section maps static project data into cards; the archive combines curated records with the latest public GitHub owner snapshot. Newly public repositories are inserted first, while a successful snapshot removes entries that are no longer public. The feed checks on page load, after returning to the tab, and every five visible minutes; local content and the last valid browser cache provide failure resilience.
 
 The hero contains `StudioScene`. The project-local high-detail portrait/desk artwork remains the primary image in normal and no-WebGL rendering; forced-colors uses the inline SVG fallback. When motion and color preferences allow it, a dynamically imported Three.js layer adds four procedural icons at the right edge. Direct drag/swipe and HTML left/reset/right controls rotate only this icon group, leaving the artwork unchanged. Runtime orchestration lives in `studio-scene-runtime.ts`, icon geometry in `studio-scene-objects.ts`, rotation behavior in `studio-scene-rotation-controller.ts`, and cleanup helpers in `three-resource-cleanup.ts`.
 

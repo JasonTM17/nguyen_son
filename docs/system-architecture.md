@@ -37,14 +37,14 @@ flowchart TD
 4. `App` composes the page shell and shares its motion-preference result with the header control and hero visual.
 5. When the active language changes, the provider updates `html[lang]`, `document.title`, and the description meta tag.
 6. `StudioScene` always renders the local owner artwork and a decorative inline SVG. When allowed, it also creates the optional canvas host.
-7. Selected work reads static records from `src/content/portfolio-data.ts`; the full project archive reads verified records from `src/content/public-project-archive.ts` and refreshes public metadata from GitHub on page load. A local cache is only a fallback for a failed or rate-limited GitHub request.
+7. Selected work reads static records from `src/content/portfolio-data.ts`; the full project archive merges curated records with a paginated public GitHub owner snapshot. It refreshes on page load, after the visitor returns to the tab, and every five minutes while visible. Local records and the last valid browser cache cover failed or rate-limited requests.
 8. `PortfolioAssistant` is a fixed lower-right UI. It sends bounded text, a short conversation history, and the selected language to same-origin `/api/chat`; no DeepSeek credential is bundled into the Vite client.
 
 ## Language path
 
 `src/i18n/portfolio-language.tsx` accepts only `en` and `vi`. A valid saved browser preference wins; if it is missing or unavailable, a browser locale beginning with `vi` selects Vietnamese and every other locale selects English. The header exposes the two values as `EN` and `VI` buttons.
 
-General interface copy is held in `src/i18n/portfolio-copy-*.ts`. `src/content/portfolio-data.ts` supplies Vietnamese selected-work categories and descriptions, while `src/content/public-project-archive-vi.ts` supplies Vietnamese categories and descriptions for all 19 archived projects. Project titles and repository links do not change. English archive descriptions can be overlaid with live public GitHub descriptions; Vietnamese descriptions remain local.
+General interface copy is held in `src/i18n/portfolio-copy-*.ts`. `src/content/portfolio-data.ts` supplies Vietnamese selected-work categories and descriptions, while `src/content/public-project-archive-vi.ts` supplies maintained Vietnamese copy for curated archive projects. `src/content/merge-public-project-archive.ts` converts previously unknown public repositories into localized project cards. English descriptions can be overlaid with live GitHub descriptions; maintained Vietnamese descriptions remain local.
 
 When a visitor changes language, `PortfolioAssistant` clears its transient draft and message list, starts the matching localized welcome, and ignores a response from the previous conversation version.
 
@@ -66,7 +66,7 @@ On normal component cleanup it cancels scheduled frames, disconnects observers, 
 
 | Boundary | Behavior |
 | --- | --- |
-| Portfolio data | Local typed constants provide the verified 19-project fallback; public GitHub metadata refreshes on page load. |
+| Portfolio data | Local typed constants provide the curated fallback; the current public GitHub owner snapshot controls the live archive after a successful sync. |
 | Owner artwork | Project-local static image; no runtime third-party asset request. |
 | Browser preferences, language, and budget | Media queries control visual modes; local storage holds the optional motion setting, selected `en`/`vi` language, public-repository cache, anonymous chat session, and 75-question browser budget. |
 | Localized portfolio content | General UI copy is local to `src/i18n/`; selected-work and archive Vietnamese categories/descriptions are local typed content. No locale route, server-rendered locale, or remote translation service is used. |

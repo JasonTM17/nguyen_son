@@ -29,13 +29,13 @@ Vite prints the local development URL when the server starts.
 
 ## Content and interaction model
 
-The page contains a hero, anchor navigation that marks the section currently in view, four selected-work cards, all 19 verified public project cards, learning principles, an about section, and links to the `JasonTM17` GitHub profile and repositories. Editorial project content is typed in [`src/content/portfolio-data.ts`](./src/content/portfolio-data.ts) and [`src/content/public-project-archive.ts`](./src/content/public-project-archive.ts). The archive refreshes public GitHub metadata on page load and retains a local verified fallback when GitHub is unavailable or rate limited.
+The page contains a hero, anchor navigation that marks the section currently in view, four selected-work cards, a live archive of the owner's public project repositories, learning principles, an about section, and links to the `JasonTM17` GitHub profile and repositories. Editorial project content is typed in [`src/content/portfolio-data.ts`](./src/content/portfolio-data.ts) and [`src/content/public-project-archive.ts`](./src/content/public-project-archive.ts). The archive fetches every current public owner repository on page load, refreshes when a visitor returns to the tab, checks again every five minutes while visible, and retains the verified local catalogue plus the last valid browser cache if GitHub is unavailable or rate limited. The profile README repository and this portfolio repository are excluded.
 
 ## Language and typography
 
 The header provides explicit `EN` and `VI` controls. A valid saved choice takes priority; otherwise, a browser locale beginning with `vi` starts in Vietnamese and every other locale starts in English. Switching language updates the document `lang`, title, and description, along with navigation, actions, interaction labels, page copy, and the assistant UI.
 
-Vietnamese selected-work and archive copy includes maintained local categories and descriptions, including all 19 archive projects. Project titles and repository links remain canonical. English archive cards can use current public GitHub descriptions when that metadata request succeeds.
+Vietnamese selected-work and archive copy includes maintained local categories and descriptions for the curated catalogue. Newly public repositories appear automatically with their GitHub description or a localized learning-project fallback. Project titles and repository links remain canonical. English archive cards can use current public GitHub descriptions when that metadata request succeeds.
 
 The interface uses Manrope for the primary sans-serif stack and IBM Plex Mono for system-style details such as the wordmark, labels, indices, and language selector.
 

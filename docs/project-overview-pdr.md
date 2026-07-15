@@ -8,7 +8,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 
 | Goal | Source-backed implementation |
 | --- | --- |
-| Present Nguyen Son's work clearly | Student-focused hero/about copy, four featured project records, and a complete 19-project archive. |
+| Present Nguyen Son's work clearly | Student-focused hero/about copy, four featured project records, and a complete archive synchronized with current public project repositories. |
 | Give the portfolio a distinctive personal identity | A large light-mode hero with a project-local 3D portrait studio and factual engineering/DevOps statement. |
 | Serve English- and Vietnamese-speaking visitors clearly | An explicit `EN`/`VI` header selector, browser-local preference, localized page/interaction copy, and language-aware assistant responses. |
 | Let visitors reach relevant sections quickly | Sticky anchor navigation plus a skip link. |
@@ -24,7 +24,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 3. Apply the selected language to user-facing page copy, navigation, actions, studio/motion interaction labels, and `html[lang]`, document title, and description after the client mounts.
 4. Provide in-page navigation to Work, Archive, Principles, and About without a sticky header obscuring target headings.
 5. Render the selected work from typed static data: FoodFlow, Money Management, VN TravelAI, and AI-powered waste sorting.
-6. Render all 19 verified public project records. English can refresh public GitHub description/language/update metadata on page load while keeping a local fallback; Vietnamese keeps maintained local categories and descriptions while live language, topic, and update metadata can refresh.
+6. Render every current public owner project repository except the profile README and portfolio metadata repositories. Refresh on page load, after returning to the tab, and every five visible minutes. Curated copy remains the resilient fallback; newly public repositories receive current GitHub metadata and localized generic copy where needed.
 7. Open external GitHub destinations in a separate browsing context with `rel="noreferrer"`.
 8. Give visitors a motion-reduction control when the operating system has not already requested reduced motion.
 9. Always render the local studio artwork and an inline SVG studio fallback; add the Three.js canvas only when the current preference and forced-colors state allow it.
@@ -45,7 +45,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 | Performance | The Three.js runtime is lazily imported; it renders only four small icons, caps rendering at roughly 45fps on desktop and 30fps on compact screens, uses capped device pixel ratios, and stops when offscreen or hidden. |
 | Resource lifecycle | Scene setup failure and normal cleanup dispose Three.js resources and the renderer. |
 | Asset privacy | The owner artwork is a local repository asset; no runtime remote portrait request occurs. |
-| Public data resilience | The project archive remains complete from local typed data if GitHub API metadata is unavailable. Vietnamese archive categories/descriptions are always local; English may show live GitHub descriptions. |
+| Public data resilience | The project archive remains useful from local typed data and the last valid browser cache if GitHub is unavailable. A successful GitHub snapshot is authoritative for which project repositories are currently public. |
 | Assistant security | DeepSeek credentials stay in Vercel environment variables; client input and language are validated; upstream error details and private data are not exposed. |
 | Assistant scope | Retrieval is limited to verified student/profile and public-project fact chunks; the system prompt directs output to the selected language, and transcripts are not persisted by the application. |
 
@@ -63,7 +63,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 | Primary content and visual fallback | `src/app.test.tsx` renders the page, slogan, and studio fallback. |
 | Local motion preference | `src/app.test.tsx` checks the motion button's pressed state and accessible name. |
 | Language selection | `src/app.test.tsx` checks Vietnamese switching, persisted preference, localized content, and `html[lang]`; `tests/portfolio-accessibility.spec.ts` covers the compact 320px Vietnamese flow and document metadata. |
-| Student project archive and assistant launcher | `src/app.test.tsx` checks the 19-project archive heading, expanded repository-link count, and assistant entry point. |
+| Student project archive and assistant launcher | `src/app.test.tsx` checks the local fallback count and assistant entry point; merge tests and Playwright verify that an uncurated public repository becomes a visible twentieth card. |
 | Assistant client and language contract | `src/features/portfolio-assistant/*.test.*`, `api/chat.test.mjs`, and `api/portfolio-assistant-rag.test.mjs` check the anonymous session, 75-question budget, selected-language request, Vietnamese UI/error behavior, language validation, and model guidance. |
 | Project-link ownership | `src/content/portfolio-data.test.ts` verifies GitHub host and `JasonTM17` repository paths. |
 | Scene initialization and interaction | `src/components/studio-scene.test.tsx` verifies fallback behavior and accessible controls; Playwright verifies a direct drag changes both model axes, reset restores the rest angle, and mobile retains vertical touch scrolling. |
