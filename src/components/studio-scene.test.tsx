@@ -67,7 +67,7 @@ describe("StudioScene", () => {
     expect(container.querySelector(".studio-scene-fallback")).toBeInTheDocument();
   });
 
-  it("restores the SVG fallback after a WebGL context loss", async () => {
+  it("restores the static fallback after a WebGL context loss", async () => {
     const runtimeCleanup = vi.fn();
     let notifyContextLoss: (() => void) | undefined;
     sceneRuntime.createStudioScene.mockImplementationOnce((_host, onContextLost) => {

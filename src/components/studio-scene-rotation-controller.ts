@@ -21,7 +21,10 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
   let velocityY = 0;
   let lastX = 0;
   let lastY = 0;
+  let pointerOriginX = 0;
+  let pointerOriginY = 0;
   let isDragging = false;
+  let touchDirection: "horizontal" | "pending" | undefined;
 
   const syncCssState = () => {
     sceneElement?.style.setProperty("--studio-rotation-x", toDegrees(currentX));
@@ -34,6 +37,7 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
     }
     activePointerId = undefined;
     isDragging = false;
+    touchDirection = undefined;
     host.classList.remove("is-dragging");
     sceneElement?.removeAttribute("data-dragging");
   };
@@ -43,8 +47,11 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
     activePointerId = event.pointerId;
     lastX = event.clientX;
     lastY = event.clientY;
+    pointerOriginX = event.clientX;
+    pointerOriginY = event.clientY;
     velocityY = 0;
     isDragging = true;
+    touchDirection = event.pointerType === "touch" ? "pending" : undefined;
     host.setPointerCapture(event.pointerId);
     host.classList.add("is-dragging");
     sceneElement?.setAttribute("data-dragging", "true");
@@ -54,12 +61,21 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
     if (!isDragging || event.pointerId !== activePointerId) return;
     const deltaX = event.clientX - lastX;
     const deltaY = event.clientY - lastY;
+    if (touchDirection === "pending") {
+      const totalX = event.clientX - pointerOriginX;
+      const totalY = event.clientY - pointerOriginY;
+      if (Math.hypot(totalX, totalY) < 8) return;
+      if (Math.abs(totalY) > Math.abs(totalX)) {
+        releasePointer();
+        return;
+      }
+      touchDirection = "horizontal";
+    }
     lastX = event.clientX;
     lastY = event.clientY;
     targetY += deltaX * 0.0045;
-    targetX = clamp(targetX + deltaY * 0.0032, -0.28, 0.34);
+    if (event.pointerType !== "touch") targetX = clamp(targetX + deltaY * 0.0032, -0.28, 0.34);
     velocityY = deltaX * 0.0009;
-    if (event.pointerType === "touch" && Math.abs(deltaX) > Math.abs(deltaY)) event.preventDefault();
   };
 
   const onPointerEnd = (event: PointerEvent) => {

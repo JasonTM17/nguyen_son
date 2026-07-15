@@ -193,8 +193,9 @@ test("uses the static studio illustration when the operating system reduces moti
   await page.goto("/");
   await page.waitForTimeout(500);
 
-  await expect(page.locator(".studio-scene-fallback")).toBeVisible();
-  await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".studio-scene__portrait")).toBeVisible();
+  await expect(page.locator(".studio-scene__portrait")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "0");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(0);
 });
 
@@ -216,8 +217,9 @@ test("restores the static studio illustration after a WebGL context loss", async
   await canvas.dispatchEvent("webglcontextlost");
 
   await expect(canvas).toHaveCount(0);
-  await expect(page.locator(".studio-scene-fallback")).toBeVisible();
-  await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".studio-scene__portrait")).toBeVisible();
+  await expect(page.locator(".studio-scene__portrait")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "0");
 });
 
 test("keeps touch scrolling and 3D controls available on coarse-pointer devices", async ({ page }, testInfo) => {
@@ -225,7 +227,28 @@ test("keeps touch scrolling and 3D controls available on coarse-pointer devices"
   await page.goto("/");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
   expect(await page.evaluate(() => window.matchMedia("(pointer: fine)").matches)).toBe(false);
-  await expect(page.locator(".studio-scene-host")).toHaveCSS("touch-action", "pan-y");
+  const host = page.locator(".studio-scene-host");
+  await expect(host).toHaveCSS("touch-action", "pan-y");
+
+  await host.scrollIntoViewIfNeeded();
+  const touchPath = await host.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    const headerBottom = document.querySelector(".site-header")?.getBoundingClientRect().bottom ?? 0;
+    const startY = Math.min(window.innerHeight - 90, Math.max(headerBottom + 180, rect.top + rect.height * 0.65));
+    return { endY: startY - 110, startY, x: rect.left + rect.width * 0.5 };
+  });
+  const scrollBeforeSwipe = await page.evaluate(() => window.scrollY);
+  const browserSession = await page.context().newCDPSession(page);
+  await browserSession.send("Input.dispatchTouchEvent", {
+    touchPoints: [{ x: touchPath.x, y: touchPath.startY }],
+    type: "touchStart",
+  });
+  await browserSession.send("Input.dispatchTouchEvent", {
+    touchPoints: [{ x: touchPath.x + 2, y: touchPath.endY }],
+    type: "touchMove",
+  });
+  await browserSession.send("Input.dispatchTouchEvent", { touchPoints: [], type: "touchEnd" });
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(scrollBeforeSwipe + 10);
 
   const rotationBefore = await page.locator(".studio-scene").evaluate((element) =>
     Number.parseFloat(element.style.getPropertyValue("--studio-rotation-y")),

@@ -71,12 +71,11 @@
   z-index: 1;
   padding: 0.8rem;
   color: var(--indigo);
-  opacity: 1;
+  opacity: 0;
   transition: opacity 180ms ease;
 }
 
-.studio-scene[data-canvas-ready="true"] .studio-scene__portrait,
-.studio-scene[data-canvas-ready="true"] .studio-scene-fallback {
+.studio-scene[data-canvas-ready="true"] .studio-scene__portrait {
   opacity: 0;
 }
 

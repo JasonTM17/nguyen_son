@@ -66,7 +66,7 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
     const tick = (time: number) => {
       frame = undefined;
       if (!visible || !inViewport) return;
-      if (rotationController.isDragging || time - lastRenderTime >= frameInterval) {
+      if (time - lastRenderTime >= frameInterval) {
         lastRenderTime = time;
         rotationController.update();
         studio.animate(time);
