@@ -1,4 +1,5 @@
 import { getPublicProjectArchive } from "../content/public-project-archive";
+import { mergePublicProjectArchive } from "../content/merge-public-project-archive";
 import { usePublicGithubRepositories } from "../hooks/use-public-github-repositories";
 import { portfolioCopy } from "../i18n/portfolio-copy";
 import { usePortfolioLanguage } from "../i18n/portfolio-language-context";
@@ -9,6 +10,16 @@ function formatUpdatedAt(updatedAt: string | null, language: "en" | "vi"): strin
   const date = new Date(updatedAt);
   if (Number.isNaN(date.getTime())) return null;
   return new Intl.DateTimeFormat(language === "vi" ? "vi-VN" : "en", { month: "short", year: "numeric" }).format(date);
+}
+
+function formatSyncedAt(syncedAt: string | null, language: "en" | "vi"): string | null {
+  if (!syncedAt) return null;
+  const date = new Date(syncedAt);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat(language === "vi" ? "vi-VN" : "en", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 }
 
 function getLiveRepository(
@@ -22,14 +33,19 @@ export function PublicProjectArchiveSection() {
   const { error, isLoading, repositories, syncedAt } = usePublicGithubRepositories();
   const { language } = usePortfolioLanguage();
   const copy = portfolioCopy[language].archive;
-  const publicProjectArchive = getPublicProjectArchive(language);
-  const syncedLabel = formatUpdatedAt(syncedAt, language);
+  const publicProjectArchive = mergePublicProjectArchive(
+    getPublicProjectArchive(language),
+    repositories,
+    language,
+    syncedAt !== null,
+  );
+  const syncedLabel = formatSyncedAt(syncedAt, language);
 
   return (
     <section className="section section--archive" id="archive" aria-labelledby="archive-heading">
       <div className="section-heading">
         <p className="eyebrow">{copy.eyebrow}</p>
-        <h2 id="archive-heading">{copy.heading}</h2>
+        <h2 id="archive-heading">{copy.heading(publicProjectArchive.length)}</h2>
       </div>
       <p className="archive-intro">
         {copy.intro}

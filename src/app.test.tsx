@@ -40,7 +40,7 @@ describe("App", () => {
     expect(screen.getAllByRole("link", { name: "View repository" })).toHaveLength(
       selectedProjects.length + publicProjectArchive.length,
     );
-    expect(screen.getByRole("heading", { name: /nineteen public projects/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /19 public projects/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /ask son's guide/i })).toBeInTheDocument();
     expect(container.querySelector(".studio-scene-fallback")).toBeInTheDocument();
   });
@@ -64,7 +64,7 @@ describe("App", () => {
     expect(window.localStorage.getItem("nguyen-son-portfolio-language")).toBe("vi");
     expect(document.title).toBe("Nguyễn Sơn | Sinh viên CNTT · Software & DevOps");
     expect(screen.getByText("Học có mục tiêu. Xây từng bước.")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /mười chín dự án công khai/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /19 dự án công khai/i })).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Xem repository" })).toHaveLength(
       selectedProjects.length + publicProjectArchive.length,
     );

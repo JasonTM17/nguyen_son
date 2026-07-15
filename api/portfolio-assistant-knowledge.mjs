@@ -58,7 +58,7 @@ const foundationDocuments = [
     id: "portfolio-catalog",
     title: "Portfolio catalog",
     keywords: "how many projects repository repositories github public portfolio archive",
-    content: "The portfolio has 19 verified public project repositories. The GitHub profile README and the portfolio repository itself are metadata repositories, not project entries. Four projects are featured while the full public archive lists all 19.",
+    content: "The portfolio archive automatically follows Son's current public GitHub project repositories. The GitHub profile README and the portfolio repository itself are metadata repositories, not project entries. Four curated learning projects are featured while the full archive refreshes from GitHub.",
   },
   {
     id: "assistant-boundary",

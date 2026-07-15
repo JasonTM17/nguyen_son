@@ -30,8 +30,8 @@ export const englishPortfolioCopy: PortfolioCopy = {
   },
   archive: {
     eyebrow: "Public project archive",
-    heading: "Nineteen public projects — each one a step in the learning journey.",
-    intro: "The full catalogue stays visible here while GitHub refreshes language, description, and update metadata on page load.",
+    heading: (count) => `${count} public projects — each one a step in the learning journey.`,
+    intro: "The catalogue follows Son's public GitHub projects automatically and refreshes while this page is open.",
     language: "Language",
     projectNumber: (index) => `Project ${index}`,
     syncFallback: "Showing the verified project archive while live GitHub metadata reconnects.",

@@ -30,8 +30,8 @@ export const vietnamesePortfolioCopy: PortfolioCopy = {
   },
   archive: {
     eyebrow: "Kho dự án công khai",
-    heading: "Mười chín dự án công khai — mỗi dự án là một bước trên hành trình học tập.",
-    intro: "Toàn bộ danh mục luôn hiển thị tại đây; GitHub làm mới metadata ngôn ngữ và cập nhật khi trang được mở, còn mô tả tiếng Việt được giữ nhất quán.",
+    heading: (count) => `${count} dự án công khai — mỗi dự án là một bước trên hành trình học tập.`,
+    intro: "Danh mục tự động theo dõi các dự án GitHub công khai của Sơn và tiếp tục làm mới khi trang đang mở.",
     language: "Ngôn ngữ",
     projectNumber: (index) => `Dự án ${index}`,
     syncFallback: "Đang hiển thị kho dự án đã xác thực trong khi metadata GitHub kết nối lại.",

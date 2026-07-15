@@ -23,7 +23,7 @@ export type PortfolioCopy = Readonly<{
   }>;
   archive: Readonly<{
     eyebrow: string;
-    heading: string;
+    heading: (count: number) => string;
     intro: string;
     language: string;
     projectNumber: (index: number) => string;

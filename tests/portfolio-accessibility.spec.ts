@@ -1,9 +1,31 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { publicProjectArchive } from "../src/content/public-project-archive";
+
+const newlyPublishedRepository = {
+  description: "A newly public learning game project.",
+  html_url: "https://github.com/JasonTM17/Horror_Game_Funny",
+  language: "GDScript",
+  name: "Horror_Game_Funny",
+  topics: ["game-development"],
+  updated_at: "2026-07-15T01:00:00Z",
+};
+
+const curatedRepositorySnapshot = publicProjectArchive.map((project) => ({
+  description: project.description,
+  html_url: project.href,
+  language: project.tags[0] ?? null,
+  name: project.href.split("/").at(-1),
+  topics: project.tags.map((tag) => tag.toLowerCase()),
+  updated_at: "2026-07-14T01:00:00Z",
+}));
 
 test.beforeEach(async ({ page }) => {
   await page.route(/^https:\/\/api\.github\.com\/users\/JasonTM17\/repos\?/, async (route) => {
-    await route.fulfill({ contentType: "application/json", body: "[]" });
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify([newlyPublishedRepository, ...curatedRepositorySnapshot]),
+    });
   });
 });
 
@@ -48,6 +70,8 @@ test("keeps keyboard access and avoids mobile horizontal overflow", async ({ pag
 
 test("keeps anchor headings clear of the sticky header and exposes direct 3D controls", async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByRole("heading", { name: /20 public projects/i })).toBeVisible();
+  await expect(page.locator("a[href='https://github.com/JasonTM17/Horror_Game_Funny']")).toBeVisible();
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
   await expect(page.locator(".studio-scene__portrait")).toBeVisible();
   await expect(page.locator(".studio-scene__portrait")).toHaveCSS("opacity", "1");
