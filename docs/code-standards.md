@@ -25,7 +25,7 @@ npm run build
 - Use named exports for reusable components and hooks; `App` is the current default export entry component.
 - Model component props and shared records with explicit types. Existing component props use `readonly` fields.
 - Use type-only imports when importing only types.
-- Keep static portfolio content in `src/content/portfolio-data.ts` and preserve its `as const satisfies readonly PortfolioProject[]` contract.
+- Keep general interface copy in `src/i18n/portfolio-copy-*.ts`; keep localized project data in the existing `src/content/` helpers and preserve their `as const satisfies readonly PortfolioProject[]` contracts.
 - Prefer small focused files. Existing component, hook, and stylesheet boundaries separate page composition, media preferences, scene runtime, and cleanup.
 
 ## File and naming conventions
@@ -42,6 +42,7 @@ npm run build
 
 - Preserve semantic landmarks, section headings, and the `#main-content` skip-link target.
 - Preserve the visible `:focus-visible` outline and at least the current 44px minimum interactive target sizing for navigation and text links.
+- Keep the `EN`/`VI` selector as labelled native buttons with an accurate `aria-pressed` state. A language change must continue to update `html[lang]`, title, description, and user-facing interaction labels together.
 - Use native links for navigation and external destinations; retain `target="_blank"` with `rel="noreferrer"` where the current external-link pattern requires it.
 - Keep query use behind `useMediaQuery` so absent `matchMedia` and legacy media-query listeners remain safe.
 - Treat operating-system reduced motion as a stricter preference than the local toggle.
@@ -57,13 +58,14 @@ npm run build
 ## Styling rules
 
 - Reuse CSS custom properties from `base.css` for palette and focus tokens.
+- Keep Manrope as the primary sans-serif stack and IBM Plex Mono for systems-style labels/controls unless a source-verified design change updates both the font request and fallback stacks.
 - Keep layout rules in `layout.css`, control and typography rules in `components.css`, visual-specific rules in `studio-scene.css`, and work/principle/about/footer rules in `content-sections.css`.
 - Preserve the 740px desktop layout breakpoint and the 320px minimum viewport baseline unless a tested responsive change requires otherwise.
 - Honor `prefers-reduced-motion` and `forced-colors` fallbacks when adding transitions, animation, or non-text visuals.
 
 ## Content changes
 
-When changing selected work, update the static record and its accompanying content tests. Keep public claims limited to what the linked public repository supports; do not add achievement metrics, contact details, availability, social accounts, or skills that are not represented by the current portfolio content.
+When changing selected work or archive descriptions, update the corresponding English/Vietnamese local records and accompanying content tests together. Keep public claims limited to what the linked public repository supports; do not add achievement metrics, contact details, availability, social accounts, or skills that are not represented by the current portfolio content.
 
 ## References
 

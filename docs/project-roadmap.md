@@ -2,15 +2,15 @@
 
 ## Current baseline
 
-The source implements a static Nguyen Son portfolio with typed selected-work data, anchor navigation, a local motion preference, forced-colors handling, a local owner studio artwork, an SVG fallback, and an optional Three.js systems-studio depth layer. The repository also contains unit, content-contract, browser accessibility, lint, typecheck, and build scripts.
+The source implements a bilingual static Nguyen Son portfolio with typed selected-work/archive data, browser-local English/Vietnamese selection, anchor navigation, a local motion preference, forced-colors handling, a local owner studio artwork, an SVG fallback, and an optional Three.js systems-studio depth layer. The repository also contains unit, content-contract, browser accessibility, lint, typecheck, and build scripts.
 
 ## Near-term priorities
 
 | Priority | Outcome | Evidence or action |
 | --- | --- | --- |
 | Release verification | Re-run the repository's typecheck, lint, unit, browser, and build commands on the final source. | `npm run typecheck`, `npm run lint`, `npm run test`, `npm run test:e2e`, `npm run build` |
-| Content accuracy | Keep project descriptions and links aligned with the linked public repositories. | Update `src/content/portfolio-data.ts` and its content test together. |
-| Accessibility regression prevention | Preserve keyboard, 320px, forced-colors, system reduced-motion, and mobile coarse-pointer coverage when UI behavior changes. | Extend `tests/portfolio-accessibility.spec.ts` when a new behavior creates a relevant risk. |
+| Content accuracy | Keep English and Vietnamese project descriptions and links aligned with the linked public repositories. | Update the matching `src/content/` records and content test together. |
+| Accessibility regression prevention | Preserve keyboard, 320px, bilingual metadata/assistant, forced-colors, system reduced-motion, and mobile coarse-pointer coverage when UI behavior changes. | Extend `tests/portfolio-accessibility.spec.ts` when a new behavior creates a relevant risk. |
 | Visual performance | Keep the 3D layer optional, lazy-loaded, disposable, and secondary to HTML content. | Preserve the Studio Scene preference and cleanup paths, plus its fine-pointer-only 14fps icon motion cap. |
 | Portrait stewardship | Replace the local studio artwork only with the portfolio owner's consent and verify the updated asset at desktop and mobile sizes. | Review `public/nguyen-son-studio-avatar-clean.png` and rerun visual checks. |
 

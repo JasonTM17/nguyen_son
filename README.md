@@ -1,6 +1,6 @@
 # Nguyen Son Portfolio
 
-A Vite + React portfolio for Nguyen Son. It presents a student developer's public work across full-stack products, real-time workflows, mobile applications, applied AI systems, Java, and DevOps.
+A Vite + React portfolio for Nguyen Son. It presents a student developer's public work across full-stack products, real-time workflows, mobile applications, applied AI systems, Java, and DevOps in English and Vietnamese.
 
 The opening experience is an original light-mode systems studio: a local 3D portrait artwork based on the portfolio owner's supplied image, with a Three.js spatial overlay. Visitors can explicitly enable a drag-to-rotate interaction; the visual remains optional and accessible when WebGL or motion is unavailable. The presentation takes inspiration from the polish of modern creative portfolios without using another project's code, models, copy, or assets.
 
@@ -31,6 +31,14 @@ Vite prints the local development URL when the server starts.
 
 The page contains a hero, anchor navigation that marks the section currently in view, four selected-work cards, all 19 verified public project cards, learning principles, an about section, and links to the `JasonTM17` GitHub profile and repositories. Editorial project content is typed in [`src/content/portfolio-data.ts`](./src/content/portfolio-data.ts) and [`src/content/public-project-archive.ts`](./src/content/public-project-archive.ts). The archive refreshes public GitHub metadata on page load and retains a local verified fallback when GitHub is unavailable or rate limited.
 
+## Language and typography
+
+The header provides explicit `EN` and `VI` controls. A valid saved choice takes priority; otherwise, a browser locale beginning with `vi` starts in Vietnamese and every other locale starts in English. Switching language updates the document `lang`, title, and description, along with navigation, actions, interaction labels, page copy, and the assistant UI.
+
+Vietnamese selected-work and archive copy includes maintained local categories and descriptions, including all 19 archive projects. Project titles and repository links remain canonical. English archive cards can use current public GitHub descriptions when that metadata request succeeds.
+
+The interface uses Manrope for the primary sans-serif stack and IBM Plex Mono for system-style details such as the wordmark, labels, indices, and language selector.
+
 The Systems Studio visual is an optional enhancement. Meaningful content does not depend on WebGL:
 
 - The local portrait artwork in `public/nguyen-son-studio-avatar-clean.png` remains visible without a canvas.
@@ -52,6 +60,8 @@ The lower-right assistant is a grounded RAG-style guide for public portfolio que
 - The browser never receives `DEEPSEEK_API_KEY`.
 - Input is bounded and normalized; the endpoint accepts only `POST` and returns generic upstream failures.
 - Visitors receive a 75-question browser budget per rolling 24-hour window, with a matching best-effort in-memory server check for the active function instance.
+- The assistant UI follows the selected language. The client sends the selected `en` or `vi` value to the endpoint; the endpoint validates it and directs the model to answer in that language while retaining the same grounded portfolio-fact scope.
+- Changing language starts a fresh localized assistant conversation, so messages and suggestions do not mix locales.
 - Owner-approved biography is retrieved only when a visitor asks a profile-related question; unrelated project questions do not send it to the model.
 - The assistant is intentionally limited to public portfolio facts. It does not expose credentials, private details, or hidden instructions.
 

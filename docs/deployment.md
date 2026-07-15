@@ -2,7 +2,7 @@
 
 ## Platform
 
-Vercel production deployment, linked to the GitHub repository `JasonTM17/nguyen_son`.
+Vercel is the production target for this Vite project. The local Git remote is `JasonTM17/nguyen_son`; confirm any Git-integration deployment settings in the Vercel project before relying on automatic deploys.
 
 ## Production URL
 
@@ -12,28 +12,28 @@ https://nguyen-son-portfolio.vercel.app
 
 | Setting | Value |
 | --- | --- |
-| Framework | Vite (auto-detected by Vercel) |
+| Framework | Vite (recorded in local Vercel project metadata) |
 | Build command | `npm run build` |
 | Output directory | `dist` |
-| Serverless function | `api/chat.mjs` |
+| Chat endpoint | `api/chat.mjs` serves `POST /api/chat` |
 
 ## Production environment
 
-The portfolio assistant's credentials are configured in the Vercel Production environment, never in source control or browser code.
+The portfolio assistant's credentials belong in Vercel environment variables, never in source control or browser code. `DEEPSEEK_API_KEY` is required for live model replies; the other values below have source defaults or optional behavior.
 
 | Variable | Purpose | Visibility |
 | --- | --- | --- |
 | `DEEPSEEK_API_KEY` | Authorizes the server-side DeepSeek request. | Sensitive Vercel secret. |
-| `DEEPSEEK_BASE_URL` | DeepSeek API base URL. | Server-side configuration. |
-| `DEEPSEEK_MODEL` | DeepSeek model identifier. | Server-side configuration. |
-| `PORTFOLIO_ASSISTANT_PROFILE` | Owner-supplied assistant profile facts. | Protected server configuration; include only facts the owner intentionally wants the public assistant to share. |
+| `DEEPSEEK_BASE_URL` | Optional DeepSeek API base-URL override. | Server-side configuration; source otherwise uses its default URL. |
+| `DEEPSEEK_MODEL` | Optional DeepSeek model override. | Server-side configuration; source otherwise uses its default model. |
+| `PORTFOLIO_ASSISTANT_PROFILE` | Optional owner-supplied assistant profile facts. | Protected server configuration; source otherwise uses a public default profile and accepts only owner-approved facts. |
 
 Do not prefix these values with `VITE_`; that would expose them to the browser bundle.
 
 ## Availability
 
-Static page assets have no sleeping application server, database, or background worker to keep alive. The production URL remains available while the Vercel project and account remain active. The optional `/api/chat` serverless function runs only for a chat request; it also needs no keep-alive job.
+Static page assets have no always-running application server, database, or background worker to keep alive. The optional `/api/chat` function runs only for a chat request and needs no keep-alive job. Static delivery still depends on an active Vercel deployment and service availability; chat also depends on a valid server-side DeepSeek configuration and its upstream response. Language selection is client-side, and the selected assistant language travels only with a chat request.
 
 ## Updates and rollback
 
-Vercel connected the GitHub repository during the production deployment. Pushes to the linked repository can create deployments through Vercel's Git integration. To roll back, promote a known-good deployment from the Vercel project dashboard or use `vercel rollback <deployment-url>` from an authenticated Vercel CLI.
+If the Vercel project has Git integration enabled, pushes to the linked repository can create deployments. Confirm the production branch and deployment settings in Vercel before relying on that workflow. To roll back, promote a known-good deployment from the Vercel project dashboard or use `vercel rollback <deployment-url>` from an authenticated Vercel CLI.
