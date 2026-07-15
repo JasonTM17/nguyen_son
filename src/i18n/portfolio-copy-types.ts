@@ -38,11 +38,12 @@ export type PortfolioCopy = Readonly<{
   about: Readonly<{ eyebrow: string; heading: string; paragraphs: readonly string[]; profileLink: string }>;
   footer: Readonly<{ eyebrow: string; heading: string; note: string; visitGithub: string }>;
   studio: Readonly<{
-    enableHint: string;
-    interact: string;
+    controlsLabel: string;
+    dragHint: string;
     meta: readonly [string, string];
     reset: string;
-    resetHint: string;
+    rotateLeft: string;
+    rotateRight: string;
   }>;
   assistant: Readonly<{
     budget: (remaining: number, limit: number) => string;

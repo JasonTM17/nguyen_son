@@ -2,7 +2,7 @@ import type { PortfolioCopy } from "./portfolio-copy-types";
 
 export const vietnamesePortfolioCopy: PortfolioCopy = {
   documentDescription: "Portfolio của Nguyễn Sơn: kỹ nghệ phần mềm, DevOps, quy trình thời gian thực, ứng dụng di động và AI ứng dụng.",
-  documentTitle: "Nguyễn Sơn | Kỹ sư phần mềm & DevOps",
+  documentTitle: "Nguyễn Sơn | Sinh viên CNTT · Software & DevOps",
   skipLink: "Đến nội dung chính",
   homeLabel: "Trang chủ Nguyễn Sơn",
   navigationLabel: "Điều hướng chính",
@@ -18,12 +18,12 @@ export const vietnamesePortfolioCopy: PortfolioCopy = {
     actions: { github: "Hồ sơ GitHub", work: "Khám phá dự án đang học" },
     eyebrow: "Sinh viên kỹ nghệ phần mềm / Người học DevOps",
     focusAreas: "Trọng tâm học tập",
-    lede: "Tôi là sinh viên CNTT học qua việc xây dựng những hệ thống thực tế cho web, mobile, dịch vụ thời gian thực và AI ứng dụng. Tôi luôn trân trọng những góp ý xây dựng từ cộng đồng.",
-    statement: "Học sâu. Xây thật.",
+    lede: "Tôi là sinh viên CNTT học qua các dự án học tập về web, mobile, dịch vụ thời gian thực và AI ứng dụng. Tôi luôn trân trọng những góp ý xây dựng từ cộng đồng.",
+    statement: "Học có mục tiêu. Xây từng bước.",
   },
   selectedWork: {
     eyebrow: "Dự án học tập nổi bật",
-    heading: "Bốn dự án giúp tôi hiểu cách các quy trình thực tế vận hành cùng nhau.",
+    heading: "Bốn dự án giúp tôi kết nối kiến thức giữa nhiều quy trình phần mềm.",
     projectNumber: (index) => `Dự án ${index}`,
     technologies: (title) => `Công nghệ của ${title}`,
     viewRepository: "Xem repository",
@@ -41,12 +41,12 @@ export const vietnamesePortfolioCopy: PortfolioCopy = {
     updated: "Cập nhật",
     viewRepository: "Xem repository",
   },
-  principles: { eyebrow: "Nguyên tắc làm việc", heading: "Luôn bám sát những ràng buộc thực tế." },
+  principles: { eyebrow: "Nguyên tắc học tập", heading: "Giữ từng mục tiêu học tập rõ ràng và có thể kiểm chứng." },
   about: {
     eyebrow: "Học tập công khai",
-    heading: "Học bằng cách xây dựng những hệ thống mọi người thật sự có thể sử dụng.",
+    heading: "Học bằng cách xây dựng dự án, xem lại và cải tiến từng bước.",
     paragraphs: [
-      "Tôi là sinh viên học qua các repository thực tế — hoàn thiện từng cải tiến nhỏ, xem lại giả định và chủ động xin góp ý trong quá trình làm.",
+      "Tôi là sinh viên học qua các repository công khai — hoàn thiện từng cải tiến nhỏ, xem lại giả định và chủ động xin góp ý trong quá trình làm.",
       "Mỗi dự án là một phần của hành trình học web, mobile, AI, DevOps, Java và systems engineering. Tôi luôn chào đón những đề xuất giúp lần cải tiến tiếp theo rõ ràng hơn.",
     ],
     profileLink: "Khám phá toàn bộ hồ sơ GitHub",
@@ -54,15 +54,16 @@ export const vietnamesePortfolioCopy: PortfolioCopy = {
   footer: {
     eyebrow: "Kết nối cùng tôi",
     heading: "Theo dõi bản xây dựng tiếp theo.",
-    note: "Nguyễn Sơn / sinh viên học tập công khai qua những dự án thực tế.",
+    note: "Nguyễn Sơn / sinh viên CNTT học tập công khai qua các dự án cá nhân.",
     visitGithub: "Ghé GitHub",
   },
   studio: {
-    enableHint: "Bật chế độ kéo để xoay studio 3D.",
-    interact: "Tương tác 3D",
+    controlsLabel: "Điều khiển studio 3D",
+    dragHint: "Kéo hoặc vuốt mô hình để xoay góc nhìn.",
     meta: ["Nguyễn Sơn / studio hệ thống", "Kỹ nghệ phần mềm + DevOps"],
     reset: "Đặt lại góc nhìn 3D",
-    resetHint: "Kéo studio để xoay. Chọn đặt lại để trở về ban đầu.",
+    rotateLeft: "Xoay studio 3D sang trái",
+    rotateRight: "Xoay studio 3D sang phải",
   },
   assistant: {
     budget: (remaining, limit) => `Bạn còn ${remaining} / ${limit} câu hỏi trên trình duyệt này hôm nay.`,

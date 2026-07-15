@@ -46,12 +46,11 @@ test("keeps keyboard access and avoids mobile horizontal overflow", async ({ pag
   expect(launcherBounds?.width).toBeLessThanOrEqual(56);
 });
 
-test("keeps anchor headings clear of the sticky header and exposes the 3D interaction", async ({ page }) => {
+test("keeps anchor headings clear of the sticky header and exposes direct 3D controls", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
-
-  await page.getByRole("button", { name: "Interact with 3D" }).click();
-  await expect(page.getByRole("button", { name: "Reset 3D view" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".studio-scene")).toHaveAttribute("data-scene-mode", "procedural-3d");
+  await expect(page.getByRole("group", { name: "3D studio controls" })).toBeVisible();
 
   await page.getByRole("link", { name: "Archive" }).click();
   await expect(page.getByRole("link", { name: "Archive" })).toHaveAttribute("aria-current", "location");
@@ -69,10 +68,13 @@ test("keeps a manual 3D rotation until it is explicitly reset", async ({ page },
 
   await page.goto("/");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
-  await page.getByRole("button", { name: "Interact with 3D" }).click();
 
   const host = page.locator(".studio-scene-host");
   await host.scrollIntoViewIfNeeded();
+  const initialRotation = await page.locator(".studio-scene").evaluate((element) => ({
+    x: Number.parseFloat(element.style.getPropertyValue("--studio-rotation-x")),
+    y: Number.parseFloat(element.style.getPropertyValue("--studio-rotation-y")),
+  }));
   const bounds = await host.boundingBox();
   if (!bounds) throw new Error("The 3D interaction surface has no layout bounds.");
 
@@ -98,21 +100,19 @@ test("keeps a manual 3D rotation until it is explicitly reset", async ({ page },
   await expect(page.locator(".studio-scene")).not.toHaveAttribute("data-dragging");
 
   const rotationBeforeReset = await page.locator(".studio-scene").evaluate((element) => ({
-    x: element.style.getPropertyValue("--studio-tilt-x"),
-    y: element.style.getPropertyValue("--studio-tilt-y"),
+    x: Number.parseFloat(element.style.getPropertyValue("--studio-rotation-x")),
+    y: Number.parseFloat(element.style.getPropertyValue("--studio-rotation-y")),
   }));
-  expect(rotationBeforeReset.x).not.toBe("0deg");
-  expect(rotationBeforeReset.y).not.toBe("0deg");
+  expect(rotationBeforeReset.x).not.toBeCloseTo(initialRotation.x, 1);
+  expect(rotationBeforeReset.y).not.toBeCloseTo(initialRotation.y, 1);
 
   await page.getByRole("button", { name: "Reset 3D view" }).click();
-  await expect(page.getByRole("button", { name: "Interact with 3D" })).toHaveAttribute("aria-pressed", "false");
-  await expect(page.locator(".studio-scene")).toHaveAttribute("data-interactive", "false");
-
-  const rotationAfterReset = await page.locator(".studio-scene").evaluate((element) => ({
-    x: element.style.getPropertyValue("--studio-tilt-x"),
-    y: element.style.getPropertyValue("--studio-tilt-y"),
-  }));
-  expect(rotationAfterReset).toEqual({ x: "0deg", y: "0deg" });
+  await expect.poll(async () => Math.abs(await page.locator(".studio-scene").evaluate((element) =>
+    Number.parseFloat(element.style.getPropertyValue("--studio-rotation-x")),
+  ) - initialRotation.x)).toBeLessThan(0.25);
+  await expect.poll(async () => Math.abs(await page.locator(".studio-scene").evaluate((element) =>
+    Number.parseFloat(element.style.getPropertyValue("--studio-rotation-y")),
+  ) - initialRotation.y)).toBeLessThan(0.25);
 });
 
 test("opens a grounded portfolio assistant in the lower-right corner", async ({ page }) => {
@@ -153,14 +153,14 @@ test("keeps the Vietnamese interface, chat request, and compact header in sync",
   await page.getByRole("button", { name: "Vietnamese" }).click();
 
   await expect(page.locator("html")).toHaveAttribute("lang", "vi");
-  await expect(page).toHaveTitle("Nguyễn Sơn | Kỹ sư phần mềm & DevOps");
+  await expect(page).toHaveTitle("Nguyễn Sơn | Sinh viên CNTT · Software & DevOps");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     "content",
     "Portfolio của Nguyễn Sơn: kỹ nghệ phần mềm, DevOps, quy trình thời gian thực, ứng dụng di động và AI ứng dụng.",
   );
-  await expect(page.getByText("Học sâu. Xây thật.")).toBeVisible();
+  await expect(page.getByText("Học có mục tiêu. Xây từng bước.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Kho dự án" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Tương tác 3D" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Đặt lại góc nhìn 3D" })).toBeVisible();
 
   await page.getByRole("button", { name: "Hỏi trợ lý của Sơn" }).click();
   await page.getByLabel("Hỏi về portfolio của Nguyễn Sơn").fill("Dự án nào dùng Java?");
@@ -220,38 +220,18 @@ test("restores the static studio illustration after a WebGL context loss", async
   await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "1");
 });
 
-test("keeps the scene optional for coarse-pointer devices", async ({ page }, testInfo) => {
+test("keeps touch scrolling and 3D controls available on coarse-pointer devices", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "Runs only in the coarse-pointer project.");
-
-  await page.addInitScript(() => {
-    const originalRequestAnimationFrame = window.requestAnimationFrame.bind(window);
-    let scheduledFrames = 0;
-
-    Object.defineProperty(window, "__signalScheduledFrames", {
-      get: () => scheduledFrames,
-    });
-    window.requestAnimationFrame = (callback) => {
-      scheduledFrames += 1;
-      return originalRequestAnimationFrame(callback);
-    };
-  });
   await page.goto("/");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(1);
-  await page.waitForTimeout(100);
-
-  const framesBeforePointerMove = await page.evaluate(
-    () => (window as unknown as { __signalScheduledFrames: number }).__signalScheduledFrames,
-  );
-  await page.locator(".studio-scene-host").dispatchEvent("pointermove", {
-    clientX: 120,
-    clientY: 160,
-  });
-  await page.waitForTimeout(100);
-
-  const framesAfterPointerMove = await page.evaluate(
-    () => (window as unknown as { __signalScheduledFrames: number }).__signalScheduledFrames,
-  );
-
   expect(await page.evaluate(() => window.matchMedia("(pointer: fine)").matches)).toBe(false);
-  expect(framesAfterPointerMove).toBe(framesBeforePointerMove);
+  await expect(page.locator(".studio-scene-host")).toHaveCSS("touch-action", "pan-y");
+
+  const rotationBefore = await page.locator(".studio-scene").evaluate((element) =>
+    Number.parseFloat(element.style.getPropertyValue("--studio-rotation-y")),
+  );
+  await page.getByRole("button", { name: "Rotate 3D studio right" }).click();
+  await expect.poll(async () => page.locator(".studio-scene").evaluate((element) =>
+    Number.parseFloat(element.style.getPropertyValue("--studio-rotation-y")),
+  )).not.toBeCloseTo(rotationBefore, 1);
 });

@@ -89,18 +89,25 @@ describe("StudioScene", () => {
     expect(container.querySelector(".studio-scene")).toHaveAttribute("data-canvas-ready", "false");
   });
 
-  it("offers an explicit control for the interactive 3D view", async () => {
+  it("offers direct and keyboard-accessible controls for the 3D view", async () => {
     sceneRuntime.createStudioScene.mockImplementationOnce(() => vi.fn());
     const { container } = render(<StudioScene reduceMotion={false} />);
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(320);
     });
-    const control = screen.getByRole("button", { name: "Interact with 3D" });
-    fireEvent.click(control);
+    const host = container.querySelector<HTMLElement>(".studio-scene-host");
+    const rotateListener = vi.fn();
+    const resetListener = vi.fn();
+    host?.addEventListener("studiorotate", rotateListener);
+    host?.addEventListener("studioreset", resetListener);
 
-    expect(control).toHaveAccessibleName("Reset 3D view");
-    expect(screen.getByText("Drag the studio to orbit. Reset to rest.")).toBeInTheDocument();
-    expect(container.querySelector(".studio-scene")).toHaveAttribute("data-interactive", "true");
+    fireEvent.click(screen.getByRole("button", { name: "Rotate 3D studio right" }));
+    fireEvent.click(screen.getByRole("button", { name: "Reset 3D view" }));
+
+    expect(screen.getByRole("group", { name: "3D studio controls" })).toBeInTheDocument();
+    expect(screen.getByText("Drag or swipe the diorama to rotate it.")).toBeInTheDocument();
+    expect(rotateListener).toHaveBeenCalledOnce();
+    expect(resetListener).toHaveBeenCalledOnce();
   });
 });

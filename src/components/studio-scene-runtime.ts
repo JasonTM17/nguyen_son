@@ -1,168 +1,108 @@
 import {
-  AmbientLight,
+  ACESFilmicToneMapping,
   DirectionalLight,
-  OrthographicCamera,
+  HemisphereLight,
+  PCFSoftShadowMap,
+  PerspectiveCamera,
   Scene,
   SRGBColorSpace,
   WebGLRenderer,
 } from "three";
 import { createStudioObjects } from "./studio-scene-objects";
+import { createStudioRotationController } from "./studio-scene-rotation-controller";
 import { disposeRenderer, disposeResources } from "./three-resource-cleanup";
-
-function clamp(value: number): number {
-  return Math.max(-1, Math.min(1, value));
-}
 
 function matchesMediaQuery(query: string): boolean {
   return typeof window.matchMedia === "function" && window.matchMedia(query).matches;
 }
 
 export function createStudioScene(host: HTMLElement, onContextLost: () => void): () => void {
-  const renderer = new WebGLRenderer({ alpha: true, antialias: true, powerPreference: "low-power" });
+  const renderer = new WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
   let cleanup: (() => void) | undefined;
   let resources: ReturnType<typeof createStudioObjects>["resources"] = [];
 
   try {
-    const studio = createStudioObjects(matchesMediaQuery("(max-width: 767px)"));
-    const animateIcons = matchesMediaQuery("(pointer: fine)");
-    const supportsPointerInteraction = !matchesMediaQuery("(pointer: none)");
+    const compact = matchesMediaQuery("(max-width: 767px)");
+    const studio = createStudioObjects(compact);
+    const sceneElement = host.closest<HTMLElement>(".studio-scene");
     resources = studio.resources;
+
     renderer.outputColorSpace = SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = PCFSoftShadowMap;
+    renderer.toneMapping = ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    renderer.setClearColor(0x000000, 0);
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.tabIndex = -1;
     renderer.domElement.style.pointerEvents = "none";
 
     const scene = new Scene();
-    const camera = new OrthographicCamera(-4, 4, 3, -3, 0.1, 40);
-    const ambientLight = new AmbientLight(0xfffaf2, 2.25);
-    const keyLight = new DirectionalLight(0xffffff, 2.3);
-    const warmLight = new DirectionalLight(0xffb45d, 0.7);
-    keyLight.position.set(3, 5, 5);
-    warmLight.position.set(-4, 2, 3);
-    camera.position.set(0, 0, 10);
-    camera.lookAt(0, 0, 0);
-    scene.add(ambientLight, keyLight, warmLight, studio.group);
+    const camera = new PerspectiveCamera(31, 1, 0.1, 50);
+    const skyLight = new HemisphereLight(0xfffbf3, 0x8a7662, 2.15);
+    const keyLight = new DirectionalLight(0xffffff, 3.15);
+    const warmLight = new DirectionalLight(0xffc37b, 1.25);
+    keyLight.position.set(5, 8, 7);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.set(1024, 1024);
+    keyLight.shadow.camera.near = 1;
+    keyLight.shadow.camera.far = 28;
+    keyLight.shadow.camera.left = -8;
+    keyLight.shadow.camera.right = 8;
+    keyLight.shadow.camera.top = 8;
+    keyLight.shadow.camera.bottom = -8;
+    warmLight.position.set(-5, 2, 4);
+    camera.position.set(0, 0.75, compact ? 14.8 : 14.2);
+    camera.lookAt(0, -0.15, 0);
+    scene.add(skyLight, keyLight, warmLight, studio.group);
 
+    const rotationController = createStudioRotationController(host, studio.group);
+    const frameInterval = 1000 / (compact ? 30 : 45);
     let frame: number | undefined;
-    let animationTimer: number | undefined;
     let inViewport = true;
+    let lastRenderTime = 0;
     let visible = !document.hidden;
-    let pointerX = 0;
-    let pointerY = 0;
-    let isDragging = false;
-    let hasManualRotation = false;
-    let activePointerId: number | undefined;
 
-    const render = (time: number) => {
+    const tick = (time: number) => {
+      frame = undefined;
       if (!visible || !inViewport) return;
-      studio.animate(animateIcons ? time : 0);
-      const rotationStrength = isDragging || hasManualRotation ? 0.11 : 0.025;
-      studio.group.rotation.set(pointerY * rotationStrength, pointerX * rotationStrength * 1.4, 0);
-      renderer.render(scene, camera);
+      if (rotationController.isDragging || time - lastRenderTime >= frameInterval) {
+        lastRenderTime = time;
+        rotationController.update();
+        studio.animate(time);
+        renderer.render(scene, camera);
+      }
+      frame = window.requestAnimationFrame(tick);
     };
 
-    const scheduleAnimation = () => {
-      if (!animateIcons || !visible || !inViewport || animationTimer !== undefined) return;
-      animationTimer = window.setTimeout(() => {
-        animationTimer = undefined;
-        requestRender();
-      }, 70);
-    };
-
-    const requestRender = () => {
+    const startLoop = () => {
       if (!visible || !inViewport || frame !== undefined) return;
-      frame = window.requestAnimationFrame((time) => {
-        frame = undefined;
-        render(time);
-        scheduleAnimation();
-      });
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    const stopLoop = () => {
+      if (frame === undefined) return;
+      window.cancelAnimationFrame(frame);
+      frame = undefined;
     };
 
     const resize = () => {
       const { height, width } = host.getBoundingClientRect();
       if (width === 0 || height === 0) return;
-      const aspect = width / height;
-      const viewSize = aspect < 1 ? 4.85 : 4.25;
-      camera.left = -viewSize * aspect;
-      camera.right = viewSize * aspect;
-      camera.top = viewSize;
-      camera.bottom = -viewSize;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, width < 768 ? 1.25 : 1.5));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, width < 768 ? 1.2 : 1.55));
       renderer.setSize(width, height, false);
-      requestRender();
-    };
-
-    const applyPointerPosition = (event: PointerEvent) => {
-      const { height, left, top, width } = host.getBoundingClientRect();
-      if (width === 0 || height === 0) return;
-      pointerX = clamp(((event.clientX - left) / width) * 2 - 1);
-      pointerY = clamp(((event.clientY - top) / height) * 2 - 1);
-      if (isDragging) {
-        const sceneElement = host.closest<HTMLElement>(".studio-scene");
-        sceneElement?.style.setProperty("--studio-tilt-x", `${pointerY * -5}deg`);
-        sceneElement?.style.setProperty("--studio-tilt-y", `${pointerX * 6}deg`);
-      }
-      requestRender();
-    };
-
-    const resetPointer = () => {
-      pointerX = 0;
-      pointerY = 0;
-      hasManualRotation = false;
-      const sceneElement = host.closest<HTMLElement>(".studio-scene");
-      sceneElement?.style.setProperty("--studio-tilt-x", "0deg");
-      sceneElement?.style.setProperty("--studio-tilt-y", "0deg");
-      requestRender();
-    };
-
-    const finishDrag = () => {
-      if (!isDragging) return;
-      if (activePointerId !== undefined && host.hasPointerCapture(activePointerId)) {
-        host.releasePointerCapture(activePointerId);
-      }
-      activePointerId = undefined;
-      isDragging = false;
-      hasManualRotation = true;
-      host.classList.remove("is-dragging");
-      host.closest<HTMLElement>(".studio-scene")?.removeAttribute("data-dragging");
-      requestRender();
-    };
-
-    const resetInteraction = () => {
-      if (activePointerId !== undefined && host.hasPointerCapture(activePointerId)) {
-        host.releasePointerCapture(activePointerId);
-      }
-      activePointerId = undefined;
-      isDragging = false;
-      host.classList.remove("is-dragging");
-      host.closest<HTMLElement>(".studio-scene")?.removeAttribute("data-dragging");
-      resetPointer();
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      if (!isDragging && (!animateIcons || hasManualRotation)) return;
-      applyPointerPosition(event);
-    };
-
-    const onPointerDown = (event: PointerEvent) => {
-      if (!supportsPointerInteraction || host.dataset.interactive !== "true") return;
-      isDragging = true;
-      hasManualRotation = false;
-      activePointerId = event.pointerId;
-      host.setPointerCapture(event.pointerId);
-      host.classList.add("is-dragging");
-      host.closest<HTMLElement>(".studio-scene")?.setAttribute("data-dragging", "true");
-      applyPointerPosition(event);
-    };
-
-    const onPointerLeave = () => {
-      if (!isDragging && !hasManualRotation) resetPointer();
+      rotationController.update();
+      studio.animate(performance.now());
+      renderer.render(scene, camera);
+      startLoop();
     };
 
     const onVisibilityChange = () => {
       visible = !document.hidden;
-      if (visible) requestRender();
+      if (visible) startLoop();
+      else stopLoop();
     };
 
     const handleContextLost = (event: Event) => {
@@ -170,45 +110,34 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
       onContextLost();
     };
 
-    const intersectionObserver =
-      typeof IntersectionObserver === "undefined"
-        ? undefined
-        : new IntersectionObserver(([entry]) => {
-            inViewport = Boolean(entry?.isIntersecting);
-            if (inViewport) requestRender();
-          });
-    const resizeObserver =
-      typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(() => resize());
+    const intersectionObserver = typeof IntersectionObserver === "undefined"
+      ? undefined
+      : new IntersectionObserver(([entry]) => {
+          inViewport = Boolean(entry?.isIntersecting);
+          if (inViewport) startLoop();
+          else stopLoop();
+        });
+    const resizeObserver = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(resize);
 
     cleanup = () => {
-      if (frame !== undefined) window.cancelAnimationFrame(frame);
-      if (animationTimer !== undefined) window.clearTimeout(animationTimer);
+      stopLoop();
       intersectionObserver?.disconnect();
       resizeObserver?.disconnect();
-      host.removeEventListener("pointermove", onPointerMove);
-      host.removeEventListener("pointerdown", onPointerDown);
-      host.removeEventListener("pointerleave", onPointerLeave);
-      host.removeEventListener("pointerup", finishDrag);
-      host.removeEventListener("pointercancel", resetInteraction);
-      host.removeEventListener("studioreset", resetInteraction);
+      rotationController.dispose();
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("resize", resize);
       renderer.domElement.removeEventListener("webglcontextlost", handleContextLost);
-      scene.remove(ambientLight, keyLight, warmLight, studio.group);
+      scene.remove(skyLight, keyLight, warmLight, studio.group);
+      sceneElement?.removeAttribute("data-scene-mode");
       disposeResources(resources);
       disposeRenderer(renderer);
     };
 
     renderer.domElement.addEventListener("webglcontextlost", handleContextLost);
     host.append(renderer.domElement);
+    sceneElement?.setAttribute("data-scene-mode", "procedural-3d");
     intersectionObserver?.observe(host);
     resizeObserver?.observe(host);
-    host.addEventListener("pointermove", onPointerMove);
-    host.addEventListener("pointerdown", onPointerDown);
-    host.addEventListener("pointerleave", onPointerLeave);
-    host.addEventListener("pointerup", finishDrag);
-    host.addEventListener("pointercancel", resetInteraction);
-    host.addEventListener("studioreset", resetInteraction);
     document.addEventListener("visibilitychange", onVisibilityChange);
     window.addEventListener("resize", resize);
     resize();

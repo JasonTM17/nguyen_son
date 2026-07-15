@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useForcedColors } from "../hooks/use-forced-colors";
 import { portfolioCopy, type PortfolioCopy } from "../i18n/portfolio-copy";
 import { usePortfolioLanguage } from "../i18n/portfolio-language-context";
@@ -45,7 +45,6 @@ function StudioSceneInstance({ copy, disabled }: StudioSceneInstanceProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
   const [canvasReady, setCanvasReady] = useState(false);
-  const [isInteractive, setIsInteractive] = useState(false);
 
   useEffect(() => {
     if (disabled || !hostRef.current) return;
@@ -103,34 +102,34 @@ function StudioSceneInstance({ copy, disabled }: StudioSceneInstanceProps) {
     };
   }, [disabled]);
 
-  const toggleInteraction = () => {
-    const nextInteractiveState = !isInteractive;
-    setIsInteractive(nextInteractiveState);
-    if (!nextInteractiveState) hostRef.current?.dispatchEvent(new Event("studioreset"));
+  const rotateStudio = (delta: number) => {
+    hostRef.current?.dispatchEvent(new CustomEvent("studiorotate", { detail: { delta } }));
   };
 
   return (
-    <div className="studio-scene" data-canvas-ready={canvasReady} data-interactive={isInteractive}>
-      <img
-        alt=""
-        className="studio-scene__portrait"
-        src="/nguyen-son-studio-avatar-clean.png"
-      />
+    <div className="studio-scene" data-canvas-ready={canvasReady}>
+      <img alt="" className="studio-scene__portrait" src="/nguyen-son-studio-avatar-clean.png" />
       <StudioSceneFallback />
-      <div aria-hidden="true" className="studio-scene-host" data-interactive={isInteractive} ref={hostRef} />
+      <div aria-hidden="true" className="studio-scene-host" ref={hostRef} />
       {!disabled && canvasReady && (
         <div className="studio-scene__interaction">
-          <button
-            aria-describedby="studio-scene-interaction-hint"
-            aria-pressed={isInteractive}
-            className="studio-scene__control"
-            onClick={toggleInteraction}
-            type="button"
-          >
-            {isInteractive ? copy.reset : copy.interact}
-          </button>
+          <div aria-label={copy.controlsLabel} className="studio-scene__controls" role="group">
+            <StudioControl label={copy.rotateLeft} onClick={() => rotateStudio(-0.42)}>
+              <RotationArrow direction="left" />
+            </StudioControl>
+            <StudioControl
+              label={copy.reset}
+              onClick={() => hostRef.current?.dispatchEvent(new Event("studioreset"))}
+              wide
+            >
+              {copy.reset}
+            </StudioControl>
+            <StudioControl label={copy.rotateRight} onClick={() => rotateStudio(0.42)}>
+              <RotationArrow direction="right" />
+            </StudioControl>
+          </div>
           <p className="studio-scene__interaction-hint" id="studio-scene-interaction-hint">
-            {isInteractive ? copy.resetHint : copy.enableHint}
+            {copy.dragHint}
           </p>
         </div>
       )}
@@ -139,5 +138,45 @@ function StudioSceneInstance({ copy, disabled }: StudioSceneInstanceProps) {
         <span>{copy.meta[1]}</span>
       </div>
     </div>
+  );
+}
+
+type StudioControlProps = {
+  readonly children: ReactNode;
+  readonly label: string;
+  readonly onClick: () => void;
+  readonly wide?: boolean;
+};
+
+function StudioControl({ children, label, onClick, wide = false }: StudioControlProps) {
+  return (
+    <button
+      aria-describedby="studio-scene-interaction-hint"
+      aria-label={label}
+      className={`studio-scene__control${wide ? " studio-scene__control--wide" : ""}`}
+      onClick={onClick}
+      type="button"
+    >
+      {children}
+    </button>
+  );
+}
+
+function RotationArrow({ direction }: { readonly direction: "left" | "right" }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={direction === "right" ? "studio-scene__arrow studio-scene__arrow--right" : "studio-scene__arrow"}
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M8.2 7.2 3.4 12l4.8 4.8M4 12h8.5a6.5 6.5 0 1 1 0 13"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.2"
+      />
+    </svg>
   );
 }

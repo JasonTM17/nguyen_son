@@ -2,7 +2,7 @@ import type { PortfolioCopy } from "./portfolio-copy-types";
 
 export const englishPortfolioCopy: PortfolioCopy = {
   documentDescription: "Nguyen Son's portfolio: software engineering, DevOps, real-time workflows, mobile apps, and applied AI.",
-  documentTitle: "Nguyen Son | Software Engineer & DevOps",
+  documentTitle: "Nguyen Son | IT Student · Software & DevOps",
   skipLink: "Skip to content",
   homeLabel: "Nguyen Son home",
   navigationLabel: "Primary navigation",
@@ -16,14 +16,14 @@ export const englishPortfolioCopy: PortfolioCopy = {
   },
   hero: {
     actions: { github: "GitHub profile", work: "Explore learning projects" },
-    eyebrow: "Student software engineer / DevOps learner",
+    eyebrow: "IT student / Software & DevOps learner",
     focusAreas: "Focus areas",
-    lede: "I am a student developer learning by building practical systems across web, mobile, real-time services, and applied AI. I welcome thoughtful feedback from the community.",
+    lede: "I am an IT student learning through study projects across web, mobile, real-time services, and applied AI. I welcome thoughtful feedback from the community.",
     statement: "Learn deliberately. Build in public.",
   },
   selectedWork: {
     eyebrow: "Featured learning projects",
-    heading: "Four projects that taught me how real workflows fit together.",
+    heading: "Four projects that helped me connect ideas across different software workflows.",
     projectNumber: (index) => `Project ${index}`,
     technologies: (title) => `${title} technologies`,
     viewRepository: "View repository",
@@ -41,12 +41,12 @@ export const englishPortfolioCopy: PortfolioCopy = {
     updated: "Updated",
     viewRepository: "View repository",
   },
-  principles: { eyebrow: "Working principles", heading: "Stay close to the real constraints." },
+  principles: { eyebrow: "Learning principles", heading: "Keep each learning goal clear and testable." },
   about: {
     eyebrow: "Learning in public",
-    heading: "Learning by building systems that people can actually use.",
+    heading: "Learning by building projects, reviewing them, and improving step by step.",
     paragraphs: [
-      "I am a student developer learning through real repositories — shipping small improvements, revisiting assumptions, and asking for feedback along the way.",
+      "I am a student developer learning through public repositories — completing small improvements, revisiting assumptions, and asking for feedback along the way.",
       "Each project is part of an ongoing path across web, mobile, AI, DevOps, Java, and systems engineering. I welcome thoughtful suggestions that help make the next iteration clearer.",
     ],
     profileLink: "Explore the full GitHub profile",
@@ -54,15 +54,16 @@ export const englishPortfolioCopy: PortfolioCopy = {
   footer: {
     eyebrow: "Keep in touch",
     heading: "Follow the next learning build.",
-    note: "Nguyen Son / student developer learning in public through real projects.",
+    note: "Nguyen Son / IT student learning in public through study projects.",
     visitGithub: "Visit GitHub",
   },
   studio: {
-    enableHint: "Enable the drag-to-orbit studio view.",
-    interact: "Interact with 3D",
+    controlsLabel: "3D studio controls",
+    dragHint: "Drag or swipe the diorama to rotate it.",
     meta: ["Nguyen Son / systems studio", "Software engineering + DevOps"],
     reset: "Reset 3D view",
-    resetHint: "Drag the studio to orbit. Reset to rest.",
+    rotateLeft: "Rotate 3D studio left",
+    rotateRight: "Rotate 3D studio right",
   },
   assistant: {
     budget: (remaining, limit) => `${remaining} of ${limit} questions remain in this browser today.`,

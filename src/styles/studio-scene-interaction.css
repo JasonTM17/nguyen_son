@@ -1,19 +1,12 @@
 .studio-scene-host {
   z-index: 2;
   pointer-events: auto;
-}
-
-.studio-scene[data-interactive="true"] .studio-scene-host {
   cursor: grab;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
 .studio-scene-host.is-dragging {
   cursor: grabbing;
-}
-
-.studio-scene[data-dragging="true"] .studio-scene__portrait {
-  transition-duration: 30ms;
 }
 
 .studio-scene__interaction {
@@ -22,22 +15,64 @@
   left: clamp(0.85rem, 2vw, 1.35rem);
   bottom: clamp(0.85rem, 2vw, 1.35rem);
   display: grid;
-  justify-items: start;
-  gap: 0.35rem;
-  max-width: min(13rem, calc(100% - 1.7rem));
+  justify-items: center;
+  gap: 0.42rem;
+  max-width: min(20rem, calc(100% - 1.7rem));
+}
+
+.studio-scene__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.3rem;
+  border: 1px solid color-mix(in srgb, var(--indigo), transparent 72%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper), transparent 5%);
+  box-shadow: 0 0.7rem 1.5rem color-mix(in srgb, var(--shadow), transparent 48%);
+  backdrop-filter: blur(10px);
 }
 
 .studio-scene__control {
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
   min-height: 44px;
-  border: 1px solid color-mix(in srgb, var(--indigo), transparent 55%);
+  border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0.45rem 0.75rem;
-  background: color-mix(in srgb, var(--paper), transparent 7%);
-  box-shadow: 0 0.6rem 1.25rem color-mix(in srgb, var(--shadow), transparent 55%);
+  padding: 0.45rem;
+  background: transparent;
   color: var(--indigo);
   cursor: pointer;
   font-size: clamp(0.68rem, 1vw, 0.78rem);
   font-weight: 820;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.studio-scene__control--wide {
+  min-width: auto;
+  padding-inline: 0.9rem;
+  border-color: color-mix(in srgb, var(--teal), transparent 48%);
+  background: color-mix(in srgb, var(--teal), var(--paper) 91%);
+  color: var(--teal);
+}
+
+.studio-scene__control:hover {
+  background: color-mix(in srgb, var(--amber), var(--paper) 82%);
+  color: color-mix(in srgb, var(--indigo), black 12%);
+  transform: translateY(-1px);
+}
+
+.studio-scene__control:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.studio-scene__arrow {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.studio-scene__arrow--right {
+  transform: scaleX(-1);
 }
 
 .studio-scene__interaction-hint {
@@ -51,22 +86,16 @@
   font-size: clamp(0.57rem, 0.82vw, 0.67rem);
   font-weight: 720;
   line-height: 1.35;
-}
-
-.studio-scene__control[aria-pressed="true"] {
-  border-color: var(--teal);
-  background: color-mix(in srgb, var(--teal), var(--paper) 88%);
-  color: var(--teal);
-}
-
-.studio-scene[data-interactive="true"] .studio-scene__interaction-hint {
-  border-color: color-mix(in srgb, var(--teal), transparent 55%);
-  background: color-mix(in srgb, var(--teal), var(--paper) 90%);
-  color: var(--teal);
+  text-align: center;
 }
 
 @media (max-width: 440px) {
   .studio-scene__interaction {
     bottom: 0.75rem;
+    max-width: calc(100% - 1.5rem);
+  }
+
+  .studio-scene__interaction-hint {
+    max-width: 15rem;
   }
 }

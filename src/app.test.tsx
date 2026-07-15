@@ -62,8 +62,8 @@ describe("App", () => {
 
     expect(document.documentElement).toHaveAttribute("lang", "vi");
     expect(window.localStorage.getItem("nguyen-son-portfolio-language")).toBe("vi");
-    expect(document.title).toBe("Nguyễn Sơn | Kỹ sư phần mềm & DevOps");
-    expect(screen.getByText("Học sâu. Xây thật.")).toBeInTheDocument();
+    expect(document.title).toBe("Nguyễn Sơn | Sinh viên CNTT · Software & DevOps");
+    expect(screen.getByText("Học có mục tiêu. Xây từng bước.")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /mười chín dự án công khai/i })).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Xem repository" })).toHaveLength(
       selectedProjects.length + publicProjectArchive.length,
