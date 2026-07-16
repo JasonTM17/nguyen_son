@@ -4,6 +4,11 @@ import { releaseQuestionAllowance, takeQuestionAllowance } from "../server/portf
 const DEFAULT_BASE_URL = "https://api.deepseek.com";
 const DEFAULT_MODEL = "deepseek-v4-flash";
 
+function getEnvironmentValue(name, fallback = "") {
+  const value = process.env[name]?.trim();
+  return value || fallback;
+}
+
 function sendJson(response, statusCode, payload) {
   response.status(statusCode).json(payload);
 }
@@ -42,21 +47,28 @@ function getModelReply(payload) {
 async function requestDeepSeek(apiKey, messages) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15_000);
+  const baseUrl = getEnvironmentValue("DEEPSEEK_BASE_URL", DEFAULT_BASE_URL).replace(/\/+$/, "");
+  const model = getEnvironmentValue("DEEPSEEK_MODEL", DEFAULT_MODEL);
 
   try {
-    return await fetch(`${process.env.DEEPSEEK_BASE_URL || DEFAULT_BASE_URL}/chat/completions`, {
+    return await fetch(`${baseUrl}/chat/completions`, {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: process.env.DEEPSEEK_MODEL || DEFAULT_MODEL,
+        model,
         temperature: 0.25,
         max_tokens: 450,
         messages,
       }),
       signal: controller.signal,
     });
-  } catch {
-    console.error("Portfolio assistant upstream network request failed.");
+  } catch (error) {
+    const errorName = error instanceof Error ? error.name : "UnknownError";
+    const causeCode = typeof error?.cause?.code === "string" ? error.cause.code : "unknown";
+    console.error("Portfolio assistant upstream network request failed.", {
+      causeCode,
+      errorName,
+    });
     return null;
   } finally {
     clearTimeout(timeout);
@@ -73,7 +85,7 @@ export default async function handler(request, response) {
   const parsedRequest = parseChatRequest(request.body);
   if ("error" in parsedRequest) return sendJson(response, 400, parsedRequest);
 
-  const apiKey = process.env.DEEPSEEK_API_KEY;
+  const apiKey = getEnvironmentValue("DEEPSEEK_API_KEY");
   if (!apiKey) {
     return sendJson(response, 503, { error: getChatError(parsedRequest.language, "configuring") });
   }

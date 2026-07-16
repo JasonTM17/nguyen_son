@@ -32,6 +32,7 @@ The portfolio assistant's credentials belong in Vercel environment variables, ne
 | `PORTFOLIO_ASSISTANT_PROFILE` | Optional owner-supplied assistant profile facts. | Protected server configuration; source otherwise uses a public default profile and accepts only owner-approved facts. |
 
 Do not prefix these values with `VITE_`; that would expose them to the browser bundle.
+The server trims accidental leading or trailing whitespace from these values before use, but deployment owners should still paste secrets without surrounding spaces or line breaks.
 
 ## Availability
 
