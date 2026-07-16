@@ -15,7 +15,11 @@ function toDegrees(value: number): string {
   return `${((value * 180) / Math.PI).toFixed(2)}deg`;
 }
 
-export function createStudioRotationController(host: HTMLElement, group: Group) {
+export function createStudioRotationController(
+  host: HTMLElement,
+  group: Group,
+  renderCurrentFrame: () => void = () => undefined,
+) {
   const sceneElement = host.closest<HTMLElement>(".studio-scene");
   let activePointerId: number | undefined;
   let currentX = DEFAULT_ROTATION_X;
@@ -33,6 +37,19 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
   const syncCssState = () => {
     sceneElement?.style.setProperty("--studio-rotation-x", toDegrees(currentX));
     sceneElement?.style.setProperty("--studio-rotation-y", toDegrees(currentY));
+  };
+
+  const applyRotation = () => {
+    group.rotation.set(currentX, currentY, 0);
+    syncCssState();
+  };
+
+  const commitDirectInteraction = () => {
+    // Direct input must stay responsive when the background RAF loop is paused.
+    currentX = targetX;
+    currentY = targetY;
+    applyRotation();
+    renderCurrentFrame();
   };
 
   const releasePointer = () => {
@@ -82,6 +99,7 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
       targetX = clamp(targetX + deltaY * 0.0028, MIN_ROTATION_X, MAX_ROTATION_X);
     }
     velocityY = deltaX * 0.0009;
+    commitDirectInteraction();
   };
 
   const onPointerEnd = (event: PointerEvent) => {
@@ -92,6 +110,7 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
     targetX = DEFAULT_ROTATION_X;
     targetY = DEFAULT_ROTATION_Y;
     velocityY = 0;
+    commitDirectInteraction();
   };
 
   const rotate = (event: Event) => {
@@ -99,6 +118,7 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
     if (typeof delta !== "number" || !Number.isFinite(delta)) return;
     targetY = clamp(targetY + delta, MIN_ROTATION_Y, MAX_ROTATION_Y);
     velocityY = 0;
+    commitDirectInteraction();
   };
 
   host.addEventListener("pointerdown", onPointerDown);
@@ -107,7 +127,7 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
   host.addEventListener("pointercancel", onPointerEnd);
   host.addEventListener("studioreset", reset);
   host.addEventListener("studiorotate", rotate);
-  syncCssState();
+  applyRotation();
 
   return {
     dispose() {
@@ -131,8 +151,7 @@ export function createStudioRotationController(host: HTMLElement, group: Group) 
       }
       currentX += (targetX - currentX) * 0.14;
       currentY += (targetY - currentY) * 0.14;
-      group.rotation.set(currentX, currentY, 0);
-      syncCssState();
+      applyRotation();
     },
   };
 }
