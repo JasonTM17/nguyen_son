@@ -13,9 +13,12 @@ https://nguyen-son-portfolio.vercel.app
 | Setting | Value |
 | --- | --- |
 | Framework | Vite (recorded in local Vercel project metadata) |
+| Node.js | `24.x` in both Vercel project settings and `package.json` |
 | Build command | `npm run build` |
 | Output directory | `dist` |
 | Chat endpoint | `api/chat.mjs` serves `POST /api/chat` |
+
+Only `api/chat.mjs` lives in the Vercel `api/` convention directory. Retrieval, knowledge, rate limiting, and tests live under `server/portfolio-assistant/`, so Vercel bundles them as internal dependencies instead of publishing extra function routes.
 
 ## Production environment
 

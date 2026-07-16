@@ -11,7 +11,8 @@ This repository is a Vite + React + TypeScript implementation of the Nguyen Son 
 | `index.html` | Initial English browser shell/metadata, Manrope and IBM Plex Mono font requests, theme color, and React mount element. |
 | `public/` | Project-local artwork used by the hero studio. |
 | `src/` | Application source, styles, tests, typed content, and shared types. |
-| `api/` | Vercel portfolio-assistant endpoint, retrieval knowledge, request parsing, and best-effort rate limiting. |
+| `api/` | The single public Vercel portfolio-assistant endpoint: `POST /api/chat`. |
+| `server/portfolio-assistant/` | Internal retrieval knowledge, request parsing, best-effort rate limiting, and their tests; these files are bundled dependencies, not public Vercel routes. |
 | `tests/` | Playwright browser accessibility coverage. |
 | `package.json` | Scripts and package dependencies. |
 | `vite.config.ts` | React plugin and Vitest configuration. |

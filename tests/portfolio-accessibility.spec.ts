@@ -64,8 +64,11 @@ test("keeps keyboard access and avoids mobile horizontal overflow", async ({ pag
   );
   expect(hasHorizontalOverflow).toBe(false);
 
-  const launcherBounds = await page.getByRole("button", { name: /ask son's guide/i }).boundingBox();
-  expect(launcherBounds?.width).toBeLessThanOrEqual(56);
+  const launcher = page.getByRole("button", { name: /open sơn ai portfolio chatbot/i });
+  await expect(launcher.getByText("Portfolio chatbot")).toBeVisible();
+  const launcherBounds = await launcher.boundingBox();
+  expect(launcherBounds?.width).toBeGreaterThanOrEqual(140);
+  expect(launcherBounds?.width).toBeLessThanOrEqual(190);
 });
 
 test("keeps anchor headings clear of the sticky header and exposes direct 3D controls", async ({ page }) => {
@@ -154,9 +157,10 @@ test("opens a grounded portfolio assistant in the lower-right corner", async ({ 
     });
   });
   await page.goto("/");
-  await page.getByRole("button", { name: /ask son's guide/i }).click();
+  await page.getByRole("button", { name: /open sơn ai portfolio chatbot/i }).click();
 
   await expect(page.getByRole("dialog", { name: /ask about son's learning path/i })).toBeVisible();
+  await expect(page.getByText(/questions remain in this browser/i)).toHaveCount(0);
   await page.getByLabel(/ask about nguyen son's portfolio/i).fill("Which project uses Java?");
   await page.getByRole("button", { name: "Send" }).click();
   await expect(page.getByText(/devhire cloud is a java and devops learning project/i)).toBeVisible();
@@ -189,7 +193,7 @@ test("keeps the Vietnamese interface, chat request, and compact header in sync",
   await expect(page.getByRole("link", { name: "Kho dự án" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Đặt lại góc nhìn 3D" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Hỏi trợ lý của Sơn" }).click();
+  await page.getByRole("button", { name: "Mở chatbot portfolio Sơn AI" }).click();
   await page.getByLabel("Hỏi về portfolio của Nguyễn Sơn").fill("Dự án nào dùng Java?");
   await page.getByRole("button", { name: "Gửi" }).click();
   await expect(page.getByText(/devhire cloud là dự án học java/i)).toBeVisible();
@@ -224,6 +228,10 @@ test("uses the static studio illustration when the operating system reduces moti
   await expect(page.locator(".studio-scene__portrait")).toHaveCSS("opacity", "1");
   await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "0");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(0);
+  await expect(page.getByText("Portfolio chatbot")).toBeVisible();
+  await expect(page.locator(".portfolio-assistant__mascot")).toHaveCSS("animation-name", "none");
+  const launcherBounds = await page.getByRole("button", { name: /open sơn ai portfolio chatbot/i }).boundingBox();
+  expect(launcherBounds?.height).toBeGreaterThanOrEqual(44);
 });
 
 test("uses the static studio illustration in forced-colors mode", async ({ page }) => {
@@ -234,6 +242,9 @@ test("uses the static studio illustration in forced-colors mode", async ({ page 
   await expect(page.locator(".studio-scene-fallback")).toBeVisible();
   await expect(page.locator(".studio-scene-fallback")).toHaveCSS("opacity", "1");
   await expect(page.locator(".studio-scene-host canvas")).toHaveCount(0);
+  await expect(page.getByText("Portfolio chatbot")).toBeVisible();
+  await expect(page.locator(".portfolio-assistant__mascot")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".portfolio-assistant__launcher")).toHaveCSS("box-shadow", "none");
 });
 
 test("restores the static studio illustration after a WebGL context loss", async ({ page }) => {

@@ -6,7 +6,7 @@ The opening experience is an original light-mode systems studio built around the
 
 ## Local setup
 
-The project declares Node `^20.19.0 || >=22.12.0` in `package.json`.
+The project declares Node `24.x` in `package.json`, matching the linked Vercel project runtime.
 
 ```bash
 npm install
@@ -29,7 +29,7 @@ Vite prints the local development URL when the server starts.
 
 ## Content and interaction model
 
-The page contains a hero, anchor navigation that marks the section currently in view, four selected-work cards, a live archive of the owner's public project repositories, learning principles, an about section, and links to the `JasonTM17` GitHub profile and repositories. Editorial project content is typed in [`src/content/portfolio-data.ts`](./src/content/portfolio-data.ts) and [`src/content/public-project-archive.ts`](./src/content/public-project-archive.ts). The archive fetches every current public owner repository on page load, refreshes when a visitor returns to the tab, checks again every five minutes while visible, and retains the verified local catalogue plus the last valid browser cache if GitHub is unavailable or rate limited. The profile README repository and this portfolio repository are excluded.
+The page contains a hero, anchor navigation that marks the section currently in view, four selected-work cards, a live archive of the owner's public project repositories, learning principles, an about section, and links to the `JasonTM17` GitHub profile and repositories. Editorial project content is typed in [`src/content/portfolio-data.ts`](./src/content/portfolio-data.ts) and [`src/content/public-project-archive.ts`](./src/content/public-project-archive.ts). The archive fetches every current public owner repository on page load, refreshes when a visitor returns to the tab, checks again every five minutes while visible, and retains the verified local catalogue plus the last valid browser cache if GitHub is unavailable or rate limited. Private, forked, disabled, profile, and portfolio-metadata repositories are excluded.
 
 ## Language and typography
 
@@ -56,7 +56,7 @@ The motion control stores an optional local preference in the browser. An operat
 
 ## Portfolio assistant
 
-The lower-right assistant is a grounded RAG-style guide for public portfolio questions. Its compact dimensional orb expands a text label on hover, keyboard focus, or while open, so it stays discoverable while minimizing obstruction on narrow screens. Its server-side Vercel function retrieves relevant project facts from [`api/portfolio-assistant-knowledge.mjs`](./api/portfolio-assistant-knowledge.mjs), adds only owner-approved public profile configuration held in Vercel, supplies that context to DeepSeek, and returns a concise response plus its portfolio sources.
+The lower-right assistant is a grounded RAG-style guide for public portfolio questions. Its dimensional Sơn AI mascot uses a small face, antenna, subtle float, and blink, while the always-visible two-line label identifies it as a portfolio chatbot before interaction. Motion reduction removes the decorative animation. Its server-side Vercel function retrieves relevant project facts from [`server/portfolio-assistant/portfolio-assistant-knowledge.mjs`](./server/portfolio-assistant/portfolio-assistant-knowledge.mjs), adds only owner-approved public profile configuration held in Vercel, supplies that context to DeepSeek, and returns a concise response plus its portfolio sources.
 
 - The browser never receives `DEEPSEEK_API_KEY`.
 - Input is bounded and normalized; the endpoint accepts only `POST` and returns generic upstream failures.

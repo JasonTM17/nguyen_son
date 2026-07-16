@@ -41,7 +41,7 @@ describe("App", () => {
       selectedProjects.length + publicProjectArchive.length,
     );
     expect(screen.getByRole("heading", { name: /19 public projects/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /ask son's guide/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i })).toBeInTheDocument();
     expect(container.querySelector(".studio-scene-fallback")).toBeInTheDocument();
   });
 
@@ -68,7 +68,7 @@ describe("App", () => {
     expect(screen.getAllByRole("link", { name: "Xem repository" })).toHaveLength(
       selectedProjects.length + publicProjectArchive.length,
     );
-    expect(screen.getByRole("button", { name: "Hỏi trợ lý của Sơn" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Mở chatbot portfolio Sơn AI" })).toBeInTheDocument();
   });
 
   it("keeps operating-system reduced motion as the lower bound", () => {
