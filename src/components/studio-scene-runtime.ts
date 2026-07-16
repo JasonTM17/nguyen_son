@@ -56,7 +56,11 @@ export function createStudioScene(host: HTMLElement, onContextLost: () => void):
     camera.lookAt(0, -0.15, 0);
     scene.add(skyLight, keyLight, warmLight, studio.group);
 
-    const rotationController = createStudioRotationController(host, studio.group);
+    const renderCurrentFrame = () => {
+      studio.animate(performance.now());
+      renderer.render(scene, camera);
+    };
+    const rotationController = createStudioRotationController(host, studio.group, renderCurrentFrame);
     const frameInterval = 1000 / (compact ? 30 : 45);
     let frame: number | undefined;
     let inViewport = true;
