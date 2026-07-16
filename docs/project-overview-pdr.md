@@ -35,7 +35,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 
 | Area | Requirement reflected in source |
 | --- | --- |
-| Rendering | React 19 and Vite build a static client-side page; `package.json` declares Node `^20.19.0 || >=22.12.0`. |
+| Rendering | React 19 and Vite build a static client-side page; `package.json` declares Node `24.x`, matching Vercel. |
 | Type safety | TypeScript project references enable strict checks with unused locals and parameters rejected. |
 | Accessibility | Semantic landmarks/headings, a skip link, visible focus, readable HTML content, and a no-WebGL visual path are present. |
 | Localization | The UI uses browser-local `en`/`vi` selection rather than locale routes or server rendering. The selector uses native pressed buttons, and the active language updates document metadata and accessible interaction labels. |
@@ -64,7 +64,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 | Local motion preference | `src/app.test.tsx` checks the motion button's pressed state and accessible name. |
 | Language selection | `src/app.test.tsx` checks Vietnamese switching, persisted preference, localized content, and `html[lang]`; `tests/portfolio-accessibility.spec.ts` covers the compact 320px Vietnamese flow and document metadata. |
 | Student project archive and assistant launcher | `src/app.test.tsx` checks the local fallback count and assistant entry point; merge tests and Playwright verify that an uncurated public repository becomes a visible twentieth card. |
-| Assistant client and language contract | `src/features/portfolio-assistant/*.test.*`, `api/chat.test.mjs`, and `api/portfolio-assistant-rag.test.mjs` check the anonymous session, 75-question budget, selected-language request, Vietnamese UI/error behavior, language validation, and model guidance. |
+| Assistant client and language contract | `src/features/portfolio-assistant/*.test.*` and `server/portfolio-assistant/*.test.mjs` check the anonymous session, 75-question budget, selected-language request, Vietnamese UI/error behavior, language validation, and model guidance. |
 | Project-link ownership | `src/content/portfolio-data.test.ts` verifies GitHub host and `JasonTM17` repository paths. |
 | Scene initialization and interaction | `src/components/studio-scene.test.tsx` verifies fallback behavior and accessible controls; Playwright verifies a direct drag changes both model axes, reset restores the rest angle, and mobile retains vertical touch scrolling. |
 | Browser accessibility | `tests/portfolio-accessibility.spec.ts` uses axe, checks console errors, keyboard focus, 320px overflow, clear anchor positions, 3D interaction, assistant rendering, operating-system reduced motion, forced colors, and a mobile coarse-pointer case across two Chromium projects. |

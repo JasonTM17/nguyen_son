@@ -2,7 +2,7 @@
   display: grid;
   width: min(26.5rem, calc(100vw - 1.5rem));
   max-height: min(39rem, calc(100dvh - 6rem));
-  grid-template-rows: auto auto minmax(7rem, 1fr) auto auto;
+  grid-template-rows: auto minmax(7rem, 1fr) auto auto;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--indigo), transparent 55%);
   border-radius: 1.25rem;
@@ -24,7 +24,6 @@
 
 .portfolio-assistant__header p,
 .portfolio-assistant__header h2,
-.portfolio-assistant__budget,
 .portfolio-assistant__message p,
 .portfolio-assistant__message small,
 .portfolio-assistant__thinking {
@@ -50,8 +49,8 @@
 
 .portfolio-assistant__close {
   display: inline-grid;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--indigo), transparent 65%);
   border-radius: 50%;
@@ -60,14 +59,6 @@
   cursor: pointer;
   font-size: 1.5rem;
   line-height: 1;
-}
-
-.portfolio-assistant__budget {
-  padding: 0.6rem 1.1rem;
-  background: color-mix(in srgb, var(--teal), transparent 92%);
-  color: var(--indigo);
-  font-size: 0.75rem;
-  font-weight: 720;
 }
 
 .portfolio-assistant__messages {
@@ -113,16 +104,28 @@
   font-style: italic;
 }
 
+.portfolio-assistant__limit-status {
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--amber), transparent 42%);
+  border-radius: 0.8rem;
+  padding: 0.65rem 0.75rem;
+  background: color-mix(in srgb, var(--amber), transparent 88%);
+  color: var(--ink);
+  font-size: 0.76rem;
+  font-weight: 720;
+  line-height: 1.42;
+}
+
 .portfolio-assistant__quick-questions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  overflow-x: auto;
   padding: 0 1.1rem 0.8rem;
 }
 
 .portfolio-assistant__quick-questions button {
   flex: 0 0 auto;
-  min-height: 36px;
+  min-height: 44px;
   border: 1px solid color-mix(in srgb, var(--indigo), transparent 66%);
   border-radius: 999px;
   padding: 0.35rem 0.65rem;
@@ -156,7 +159,7 @@
 
 .portfolio-assistant__form button {
   align-self: end;
-  min-height: 42px;
+  min-height: 44px;
   border: 1px solid var(--amber);
   border-radius: 0.7rem;
   padding: 0.45rem 0.75rem;
@@ -188,6 +191,7 @@
 @media (forced-colors: active) {
   .portfolio-assistant__panel,
   .portfolio-assistant__message,
+  .portfolio-assistant__limit-status,
   .portfolio-assistant__close,
   .portfolio-assistant__quick-questions button,
   .portfolio-assistant__form textarea,

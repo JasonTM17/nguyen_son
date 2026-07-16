@@ -46,11 +46,12 @@ export type PortfolioCopy = Readonly<{
     rotateRight: string;
   }>;
   assistant: Readonly<{
-    budget: (remaining: number, limit: number) => string;
     close: string;
     formLabel: string;
     heading: string;
     launcher: string;
+    launcherHint: string;
+    launcherTitle: string;
     limitReached: string;
     panelEyebrow: string;
     placeholder: string;

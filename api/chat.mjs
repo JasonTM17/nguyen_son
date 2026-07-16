@@ -1,5 +1,5 @@
-import { getChatError, parseChatRequest, retrievePortfolioContext } from "./portfolio-assistant-rag.mjs";
-import { releaseQuestionAllowance, takeQuestionAllowance } from "./portfolio-assistant-rate-limit.mjs";
+import { getChatError, parseChatRequest, retrievePortfolioContext } from "../server/portfolio-assistant/portfolio-assistant-rag.mjs";
+import { releaseQuestionAllowance, takeQuestionAllowance } from "../server/portfolio-assistant/portfolio-assistant-rate-limit.mjs";
 
 const DEFAULT_BASE_URL = "https://api.deepseek.com";
 const DEFAULT_MODEL = "deepseek-v4-flash";

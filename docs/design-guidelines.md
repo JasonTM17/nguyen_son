@@ -49,7 +49,7 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 | Primary actions | Amber-filled primary button; GitHub action remains quiet and bordered. |
 | Project cards | Light raised surfaces with project index, category label, concise description, technology tags, and GitHub link. Vietnamese categories and descriptions come from maintained local copy; titles and repository links stay canonical. A restrained top rail and lift provide feedback on fine pointers. |
 | Public archive | Smaller raised cards, a live-sync status line with date and time, and view-timeline entrance motion only where supported and motion is not reduced. Curated Vietnamese descriptions remain local; newly public repositories use their GitHub description or a localized learning-project fallback. Live language, topic, and update metadata can still appear. |
-| Portfolio assistant | Lower-right navy 3D orb launcher that reveals its label on hover, keyboard focus, or open state; the panel stays warm and compact, distinguishes visitor/assistant bubbles, and keeps the 75-question budget visible. Its launcher, labels, suggestions, statuses, and fallback messages follow the selected language. |
+| Portfolio assistant | Lower-right navy capsule with a dimensional teal Sơn AI mascot, subtle float/blink, and an always-visible localized chatbot label; the panel stays warm and compact, distinguishes visitor/assistant bubbles, and enforces the 75-question limit without exposing a running quota counter. A concise status appears only when the limit is exhausted. Its launcher, labels, suggestions, statuses, and fallback messages follow the selected language. |
 | Principle list | Ordered, ruled rows with amber sequence numbers. |
 | Footer | Short close, GitHub action, and static-portfolio note. |
 
@@ -65,7 +65,7 @@ Use these custom properties rather than introducing near-duplicate colors. In fo
 - The portrait artwork and Three.js enhancement are decorative. They must not carry information absent from semantic HTML.
 - Keep the portrait artwork visible when the optional canvas is healthy or unavailable. Forced-colors uses the inline SVG path instead.
 - Keep the portfolio assistant fully operable by keyboard: launcher, close button, suggestions, labeled text area, send button, and source labels are standard HTML controls/content.
-- Assistant animation is a short panel entrance only; reduced-motion rules must continue to disable it.
+- Assistant motion is limited to a short panel entrance and the mascot's subtle transform-only float/blink; reduced-motion rules must continue to disable both.
 
 ## Style ownership
 

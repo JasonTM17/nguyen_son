@@ -6,7 +6,6 @@ import {
   consumeQuestion,
   getPortfolioAssistantSessionId,
   getRemainingQuestions,
-  portfolioAssistantQuestionLimit,
   restoreRemainingQuestions,
 } from "./portfolio-assistant-storage";
 import type { PortfolioAssistantMessage } from "./portfolio-assistant-types";
@@ -34,6 +33,7 @@ export function PortfolioAssistant() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [messages, setMessages] = useState<readonly PortfolioAssistantMessage[]>(() => [createWelcomeMessage(language)]);
   const [remaining, setRemaining] = useState(() => getRemainingQuestions());
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const messageLogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -57,8 +57,11 @@ export function PortfolioAssistant() {
   }, [messages, isSubmitting]);
 
   useEffect(() => {
-    if (isOpen) inputRef.current?.focus();
-  }, [isOpen]);
+    if (!isOpen || isSubmitting) return;
+
+    const focusTarget = remaining > 0 ? inputRef.current : closeButtonRef.current;
+    focusTarget?.focus();
+  }, [isOpen, isSubmitting, remaining]);
 
   function closeAssistant(): void {
     setIsOpen(false);
@@ -122,8 +125,17 @@ export function PortfolioAssistant() {
         ref={launcherRef}
         type="button"
       >
-        <span aria-hidden="true" className="portfolio-assistant__launcher-orb" />
-        <span className="portfolio-assistant__launcher-label">{copy.launcher}</span>
+        <span aria-hidden="true" className="portfolio-assistant__mascot">
+          <span className="portfolio-assistant__mascot-antenna" />
+          <span className="portfolio-assistant__mascot-face">
+            <span className="portfolio-assistant__mascot-eyes" />
+            <span className="portfolio-assistant__mascot-smile" />
+          </span>
+        </span>
+        <span className="portfolio-assistant__launcher-copy">
+          <strong>{copy.launcherTitle}</strong>
+          <small>{copy.launcherHint}</small>
+        </span>
       </button>
       {isOpen && (
         <section aria-labelledby="portfolio-assistant-heading" className="portfolio-assistant__panel" id="portfolio-assistant-panel" onKeyDown={handlePanelKeyDown} role="dialog">
@@ -132,9 +144,8 @@ export function PortfolioAssistant() {
               <p>{copy.panelEyebrow}</p>
               <h2 id="portfolio-assistant-heading">{copy.heading}</h2>
             </div>
-            <button aria-label={copy.close} className="portfolio-assistant__close" onClick={closeAssistant} type="button">×</button>
+            <button aria-label={copy.close} className="portfolio-assistant__close" onClick={closeAssistant} ref={closeButtonRef} type="button">×</button>
           </header>
-          <p className="portfolio-assistant__budget">{copy.budget(remaining, portfolioAssistantQuestionLimit)}</p>
           <div aria-live="polite" className="portfolio-assistant__messages" ref={messageLogRef} role="log">
             {messages.map((message) => (
               <article className={`portfolio-assistant__message portfolio-assistant__message--${message.role}`} key={message.id}>
@@ -143,6 +154,7 @@ export function PortfolioAssistant() {
               </article>
             ))}
             {isSubmitting && <p className="portfolio-assistant__thinking">{copy.thinking}</p>}
+            {remaining <= 0 && <p className="portfolio-assistant__limit-status" role="status">{copy.limitReached}</p>}
           </div>
           <div className="portfolio-assistant__quick-questions" aria-label={copy.suggestedQuestions}>
             {copy.quickQuestions.map((question) => <button disabled={isSubmitting || remaining <= 0} key={question} onClick={() => void sendQuestion(question)} type="button">{question}</button>)}

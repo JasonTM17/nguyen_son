@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { PublicGithubRepository } from "../types/public-github-repository";
 
-const CACHE_KEY = "nguyen-son-public-repositories-v1";
+const CACHE_KEY = "nguyen-son-public-repositories-v2";
 const GITHUB_REPOSITORIES_URL = "https://api.github.com/users/JasonTM17/repos?type=owner&per_page=100&sort=updated&direction=desc";
 const GITHUB_API_VERSION = "2026-03-10";
 const MAX_GITHUB_PAGES = 10;
@@ -11,9 +11,12 @@ const EXCLUDED_REPOSITORIES = new Set(["JasonTM17", "nguyen_son"]);
 
 type GithubRepositoryResponse = {
   description?: string | null;
+  disabled?: boolean;
+  fork?: boolean;
   html_url?: string;
   language?: string | null;
   name?: string;
+  private?: boolean;
   topics?: string[];
   updated_at?: string | null;
 };
@@ -59,6 +62,9 @@ export function normalizeGithubRepository(repository: GithubRepositoryResponse):
   if (
     !repository.name ||
     !repository.html_url ||
+    repository.disabled === true ||
+    repository.fork === true ||
+    repository.private === true ||
     !isOwnerRepositoryUrl(repository.html_url) ||
     EXCLUDED_REPOSITORIES.has(repository.name)
   ) return null;
