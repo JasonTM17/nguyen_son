@@ -1,7 +1,7 @@
 import type { PortfolioCopy } from "./portfolio-copy-types";
 
 export const vietnamesePortfolioCopy: PortfolioCopy = {
-  documentDescription: "Portfolio của Nguyễn Sơn: kỹ nghệ phần mềm, DevOps, quy trình thời gian thực, ứng dụng di động và AI ứng dụng.",
+  documentDescription: "Portfolio học tập của sinh viên CNTT Nguyễn Sơn về kỹ nghệ phần mềm, DevOps, quy trình thời gian thực, ứng dụng di động và AI ứng dụng.",
   documentTitle: "Nguyễn Sơn | Sinh viên CNTT · Software & DevOps",
   skipLink: "Đến nội dung chính",
   homeLabel: "Trang chủ Nguyễn Sơn",

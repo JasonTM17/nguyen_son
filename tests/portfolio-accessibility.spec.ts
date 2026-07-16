@@ -187,7 +187,7 @@ test("keeps the Vietnamese interface, chat request, and compact header in sync",
   await expect(page).toHaveTitle("Nguyễn Sơn | Sinh viên CNTT · Software & DevOps");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     "content",
-    "Portfolio của Nguyễn Sơn: kỹ nghệ phần mềm, DevOps, quy trình thời gian thực, ứng dụng di động và AI ứng dụng.",
+    "Portfolio học tập của sinh viên CNTT Nguyễn Sơn về kỹ nghệ phần mềm, DevOps, quy trình thời gian thực, ứng dụng di động và AI ứng dụng.",
   );
   await expect(page.getByText("Học có mục tiêu. Xây từng bước.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Kho dự án" })).toBeVisible();

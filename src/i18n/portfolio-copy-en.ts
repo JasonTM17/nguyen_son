@@ -1,7 +1,7 @@
 import type { PortfolioCopy } from "./portfolio-copy-types";
 
 export const englishPortfolioCopy: PortfolioCopy = {
-  documentDescription: "Nguyen Son's portfolio: software engineering, DevOps, real-time workflows, mobile apps, and applied AI.",
+  documentDescription: "Nguyen Son's IT student portfolio: learning software engineering, DevOps, real-time workflows, mobile apps, and applied AI.",
   documentTitle: "Nguyen Son | IT Student · Software & DevOps",
   skipLink: "Skip to content",
   homeLabel: "Nguyen Son home",
