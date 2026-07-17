@@ -118,6 +118,7 @@ describe("portfolio assistant chat handler", () => {
     expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe("Bearer unit-test-placeholder");
     const requestPayload = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(requestPayload.model).toBe("deepseek-v4-flash");
+    expect(requestPayload.max_tokens).toBe(900);
     expect(requestPayload.messages).toHaveLength(3);
     expect(requestPayload.messages[0].content).toContain(
       "Retrieved project entries are a relevance-selected subset, not the complete portfolio.",

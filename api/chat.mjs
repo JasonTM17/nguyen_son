@@ -3,6 +3,8 @@ import { releaseQuestionAllowance, takeQuestionAllowance } from "../server/portf
 
 const DEFAULT_BASE_URL = "https://api.deepseek.com";
 const DEFAULT_MODEL = "deepseek-v4-flash";
+const MAX_MODEL_TOKENS = 900;
+const MODEL_TIMEOUT_MS = 25_000;
 
 function getEnvironmentValue(name, fallback = "") {
   const value = process.env[name]?.trim();
@@ -65,7 +67,7 @@ function scopeProjectListReply(reply, language, retrieval) {
 
 async function requestDeepSeek(apiKey, messages) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15_000);
+  const timeout = setTimeout(() => controller.abort(), MODEL_TIMEOUT_MS);
   const baseUrl = getEnvironmentValue("DEEPSEEK_BASE_URL", DEFAULT_BASE_URL).replace(/\/+$/, "");
   const model = getEnvironmentValue("DEEPSEEK_MODEL", DEFAULT_MODEL);
 
@@ -76,7 +78,7 @@ async function requestDeepSeek(apiKey, messages) {
       body: JSON.stringify({
         model,
         temperature: 0.25,
-        max_tokens: 450,
+        max_tokens: MAX_MODEL_TOKENS,
         messages,
       }),
       signal: controller.signal,
@@ -135,9 +137,13 @@ export default async function handler(request, response) {
     });
   }
 
-  const reply = getModelReply(await deepseekResponse.json().catch(() => null));
+  const modelPayload = await deepseekResponse.json().catch(() => null);
+  const reply = getModelReply(modelPayload);
   if (!reply) {
-    console.error("Portfolio assistant upstream response did not contain a usable reply.");
+    const finishReason = typeof modelPayload?.choices?.[0]?.finish_reason === "string"
+      ? modelPayload.choices[0].finish_reason
+      : "unknown";
+    console.error("Portfolio assistant upstream response did not contain a usable reply.", { finishReason });
     return sendJson(response, 502, {
       error: getChatError(parsedRequest.language, "noReply"),
       serverRemaining: releaseQuestionAllowance(clientIdentifier),
