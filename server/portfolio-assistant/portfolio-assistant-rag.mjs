@@ -9,6 +9,13 @@ const PROFILE_QUERY_TERMS = new Set([
   "about", "age", "born", "community", "feedback", "help", "hoc", "nganh", "nguyen", "school",
   "sinh", "sinhvien", "son", "student", "study", "truong", "tuoi", "university",
 ]);
+const PROJECT_LIST_PATTERNS = [
+  /\b(?:which|what|list|show)\b[^\n]{0,80}\bprojects\b/u,
+  /\bprojects\b[^\n]{0,80}\b(?:use|uses|using|built|have|include)\b/u,
+  /\b(?:nhung|cac)\s+du\s+an\b/u,
+  /\bdu\s+an\s+nao\b/u,
+  /\bliet\s+ke\b[^\n]{0,80}\bdu\s+an\b/u,
+];
 const CHAT_LANGUAGES = new Set(["en", "vi"]);
 const CHAT_ERRORS = {
   en: {
@@ -84,6 +91,15 @@ function shouldIncludePublicProfile(message) {
   return toSearchTerms(message).some((term) => PROFILE_QUERY_TERMS.has(term));
 }
 
+function isProjectListQuestion(message) {
+  const normalizedMessage = message
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLocaleLowerCase();
+
+  return PROJECT_LIST_PATTERNS.some((pattern) => pattern.test(normalizedMessage));
+}
+
 export function retrievePortfolioContext(message, history = []) {
   const terms = toSearchTerms([message, ...history.map((item) => item.content)].join(" "));
   const profile = portfolioDocuments.find((document) => document.id === "student-profile");
@@ -102,6 +118,7 @@ export function retrievePortfolioContext(message, history = []) {
   return {
     context: selected.map((document) => `[${document.title}] ${document.content}`).join("\n"),
     projectCount,
+    scopeProjectList: projectCount > 0 && isProjectListQuestion(message),
     sources: selected.map((document) => document.title),
   };
 }
