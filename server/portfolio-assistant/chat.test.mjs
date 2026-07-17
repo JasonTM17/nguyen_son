@@ -123,7 +123,10 @@ describe("portfolio assistant chat handler", () => {
       "Retrieved project entries are a relevance-selected subset, not the complete portfolio.",
     );
     expect(requestPayload.messages[0].content).toContain(
-      "When listing projects, always frame the result as matches found in the supplied context.",
+      "If the answer enumerates project matches, its first sentence must be exactly:",
+    );
+    expect(requestPayload.messages[0].content).toMatch(
+      /Based on the available portfolio context, I found \d+ relevant projects?\./,
     );
     expect(requestPayload.messages[0].content).toContain(
       'Never use exhaustive wording such as "all," "only," "every," "entire," or "complete"',
@@ -158,6 +161,9 @@ describe("portfolio assistant chat handler", () => {
 
     const requestPayload = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(requestPayload.messages[0].content).toContain("The visitor selected Vietnamese");
+    expect(requestPayload.messages[0].content).toContain(
+      '"Dựa trên ngữ cảnh portfolio hiện có, tôi tìm thấy 5 dự án liên quan."',
+    );
     expect(response.body.answer).toContain("DevHire Cloud");
 
     delete process.env.DEEPSEEK_API_KEY;

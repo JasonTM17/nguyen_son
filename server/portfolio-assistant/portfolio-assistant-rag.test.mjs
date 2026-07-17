@@ -11,6 +11,24 @@ describe("portfolio assistant retrieval", () => {
     expect(retrieval.context).toContain("Java 21 Spring Boot");
   });
 
+  it("retrieves the same exact Java project matches for English and Vietnamese questions", () => {
+    const expectedSources = [
+      "AgriCore SpringBoot Microservices project",
+      "BookStore project",
+      "DevHire Cloud project",
+      "JobHunter project",
+      "Laptop Shop project",
+    ];
+    const english = retrievePortfolioContext("Which projects use Java?");
+    const vietnamese = retrievePortfolioContext("Những dự án nào sử dụng Java?");
+
+    expect(english.projectCount).toBe(5);
+    expect(english.sources).toEqual(expectedSources);
+    expect(vietnamese.projectCount).toBe(5);
+    expect(vietnamese.sources).toEqual(expectedSources);
+    expect(vietnamese.context).not.toContain("Python");
+  });
+
   it("adds the owner-approved public profile only for profile questions", () => {
     const retrieval = retrievePortfolioContext("Son hoc o truong nao va bao nhieu tuoi?");
 
