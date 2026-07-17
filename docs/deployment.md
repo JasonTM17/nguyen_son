@@ -16,9 +16,9 @@ https://nguyen-son-portfolio.vercel.app
 | Node.js | `24.x` in both Vercel project settings and `package.json` |
 | Build command | `npm run build` |
 | Output directory | `dist` |
-| Chat endpoint | `api/chat.mjs` serves `POST /api/chat` |
+| Chat endpoint | `api/portfolio-assistant.mjs` serves the canonical `POST /api/portfolio-assistant` route |
 
-Only `api/chat.mjs` lives in the Vercel `api/` convention directory. Retrieval, knowledge, rate limiting, and tests live under `server/portfolio-assistant/`, so Vercel bundles them as internal dependencies instead of publishing extra function routes.
+`api/portfolio-assistant.mjs` delegates to the tested handler in `api/chat.mjs`; the older `POST /api/chat` route remains available for compatibility. Retrieval, knowledge, rate limiting, and tests live under `server/portfolio-assistant/`, so Vercel bundles them as internal dependencies instead of publishing extra function routes.
 
 ## Production environment
 
@@ -36,7 +36,7 @@ The server trims accidental leading or trailing whitespace from these values bef
 
 ## Availability
 
-Static page assets have no always-running application server, database, or background worker to keep alive. The optional `/api/chat` function runs only for a chat request and needs no keep-alive job. Static delivery still depends on an active Vercel deployment and service availability; chat also depends on a valid server-side DeepSeek configuration and its upstream response. Language selection is client-side, and the selected assistant language travels only with a chat request.
+Static page assets have no always-running application server, database, or background worker to keep alive. The optional `/api/portfolio-assistant` function runs only for a chat request and needs no keep-alive job. Static delivery still depends on an active Vercel deployment and service availability; chat also depends on a valid server-side DeepSeek configuration and its upstream response. Language selection is client-side, and the selected assistant language travels only with a chat request.
 
 ## Updates and rollback
 

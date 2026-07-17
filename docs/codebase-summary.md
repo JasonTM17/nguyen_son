@@ -11,7 +11,7 @@ This repository is a Vite + React + TypeScript implementation of the Nguyen Son 
 | `index.html` | Initial English browser shell/metadata, Manrope and IBM Plex Mono font requests, theme color, and React mount element. |
 | `public/` | Project-local artwork used by the hero studio. |
 | `src/` | Application source, styles, tests, typed content, and shared types. |
-| `api/` | The single public Vercel portfolio-assistant endpoint: `POST /api/chat`. |
+| `api/` | The canonical `POST /api/portfolio-assistant` Vercel route plus the compatible `/api/chat` entry point; both share one handler. |
 | `server/portfolio-assistant/` | Internal retrieval knowledge, request parsing, best-effort rate limiting, and their tests; these files are bundled dependencies, not public Vercel routes. |
 | `tests/` | Playwright browser accessibility coverage. |
 | `package.json` | Scripts and package dependencies. |
@@ -43,7 +43,7 @@ Generated `dist/`, `node_modules/`, Playwright reports, test results, TypeScript
 
 The hero contains `StudioScene`. The project-local high-detail portrait/desk artwork remains the primary image in normal and no-WebGL rendering; forced-colors uses the inline SVG fallback. When motion and color preferences allow it, a dynamically imported Three.js layer adds four procedural icons at the right edge. Direct drag/swipe and HTML left/reset/right controls rotate only this icon group, leaving the artwork unchanged. Runtime orchestration lives in `studio-scene-runtime.ts`, icon geometry in `studio-scene-objects.ts`, rotation behavior in `studio-scene-rotation-controller.ts`, and cleanup helpers in `three-resource-cleanup.ts`.
 
-`PortfolioAssistant` keeps the current conversation only in React memory and a 75-question rolling browser budget in local storage. It localizes its launcher, panel, suggestions, statuses, and fallback errors; a language switch starts a fresh localized conversation. It then posts a bounded message/history plus the active `en`/`vi` value to `/api/chat`. The client budget stays separate from the server's best-effort IP throttle. The function validates input and language, retrieves matching knowledge chunks, directs model output to the selected language, adds owner-approved biography only for explicit profile questions, uses only Vercel environment variables for the DeepSeek request, returns generic failures, and does not persist messages.
+`PortfolioAssistant` keeps the current conversation only in React memory and a 75-question rolling browser budget in local storage. It localizes its launcher, panel, suggestions, statuses, and fallback errors; a language switch starts a fresh localized conversation. It then posts a bounded message/history plus the active `en`/`vi` value to `/api/portfolio-assistant`. The client budget stays separate from the server's best-effort IP throttle. The function validates input and language, retrieves matching knowledge chunks, directs model output to the selected language, adds owner-approved biography only for explicit profile questions, uses only Vercel environment variables for the DeepSeek request, returns generic failures, and does not persist messages.
 
 `use-media-query.ts` is the shared browser media-query adapter. It returns no match when `matchMedia` is unavailable and supports both modern event listeners and legacy `addListener`/`removeListener` media-query lists. Motion and forced-colors hooks are thin query-specific wrappers around it.
 

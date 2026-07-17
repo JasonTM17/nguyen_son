@@ -24,7 +24,7 @@ flowchart TD
     V --> R[Lazy Three.js runtime]
     R --> C[WebGL canvas]
     A --> Q[Portfolio assistant UI]
-    Q --> API[/api/chat Vercel function]
+    Q --> API[/api/portfolio-assistant Vercel function]
     API --> K[Local RAG knowledge chunks]
     API --> DS[DeepSeek API]
 ```
@@ -38,7 +38,7 @@ flowchart TD
 5. When the active language changes, the provider updates `html[lang]`, `document.title`, and the description meta tag.
 6. `StudioScene` always renders the local owner artwork and a decorative inline SVG. When allowed, it also creates the optional canvas host.
 7. Selected work reads static records from `src/content/portfolio-data.ts`; the full project archive merges curated records with a paginated public GitHub owner snapshot. It refreshes on page load, after the visitor returns to the tab, and every five minutes while visible. Local records and the last valid browser cache cover failed or rate-limited requests.
-8. `PortfolioAssistant` is a fixed lower-right UI. It sends bounded text, a short conversation history, and the selected language to same-origin `/api/chat`; no DeepSeek credential is bundled into the Vite client.
+8. `PortfolioAssistant` is a fixed lower-right UI. It sends bounded text, a short conversation history, and the selected language to same-origin `/api/portfolio-assistant`; no DeepSeek credential is bundled into the Vite client.
 
 ## Language path
 
@@ -71,7 +71,7 @@ On normal component cleanup it cancels scheduled frames, disconnects observers, 
 | Browser preferences, language, and budget | Media queries control visual modes; local storage holds the optional motion setting, selected `en`/`vi` language, public-repository cache, anonymous chat session, and 75-question browser budget. |
 | Localized portfolio content | General UI copy is local to `src/i18n/`; selected-work and archive Vietnamese categories/descriptions are local typed content. No locale route, server-rendered locale, or remote translation service is used. |
 | External GitHub data | Browser fetch is restricted to the public `JasonTM17` owner repository endpoint; private, forked, disabled, profile, and portfolio-metadata repositories are excluded, and failures preserve the local archive. |
-| Portfolio assistant | Same-origin `POST /api/chat` validates bounded input and the `en`/`vi` language value, retrieves relevant local portfolio chunks, and includes owner-approved biography only for an explicit profile question before calling DeepSeek with a server-side secret. The system prompt requires replies in the selected language; the verified source titles/chunks remain local portfolio facts. Generic failures are localized and do not expose upstream detail. |
+| Portfolio assistant | Same-origin `POST /api/portfolio-assistant` validates bounded input and the `en`/`vi` language value, retrieves relevant local portfolio chunks, and includes owner-approved biography only for an explicit profile question before calling DeepSeek with a server-side secret. The compatible `/api/chat` entry point delegates to the same handler. The system prompt requires replies in the selected language; the verified source titles/chunks remain local portfolio facts. Generic failures are localized and do not expose upstream detail. |
 | Assistant rate limit | The browser enforces 75 questions in a rolling 24-hour budget. The Vercel function mirrors a best-effort per-IP, per-function-instance check; it is not a durable account-level quota. |
 | Backend/data storage | No database, user authentication, persistent transcript, or secret in the browser bundle. |
 

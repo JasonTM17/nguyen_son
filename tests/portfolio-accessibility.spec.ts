@@ -146,7 +146,7 @@ test("keeps a manual 3D rotation until it is explicitly reset", async ({ page },
 });
 
 test("opens a grounded portfolio assistant in the lower-right corner", async ({ page }) => {
-  await page.route("**/api/chat", async (route) => {
+  await page.route("**/api/portfolio-assistant", async (route) => {
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
@@ -167,7 +167,7 @@ test("opens a grounded portfolio assistant in the lower-right corner", async ({ 
 });
 
 test("keeps the Vietnamese interface, chat request, and compact header in sync", async ({ page }) => {
-  await page.route("**/api/chat", async (route) => {
+  await page.route("**/api/portfolio-assistant", async (route) => {
     const request = JSON.parse(route.request().postData() ?? "{}");
     expect(request.language).toBe("vi");
     await route.fulfill({

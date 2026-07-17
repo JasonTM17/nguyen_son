@@ -29,7 +29,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 8. Give visitors a motion-reduction control when the operating system has not already requested reduced motion.
 9. Always render the local studio artwork and an inline SVG studio fallback; add the Three.js canvas only when the current preference and forced-colors state allow it.
 10. Once WebGL is ready, let a visitor drag or swipe the decorative 3D icon layer within a restrained arc, keep the primary artwork visually unchanged, and provide keyboard-accessible rotate/reset controls.
-11. Offer a lower-right assistant that answers only portfolio questions through same-origin `/api/chat`, displays sources, keeps its UI in the selected language, starts a fresh localized transient conversation after a language change, sends only a validated `en` or `vi` language value, and enforces a 75-question rolling 24-hour browser budget with a best-effort server abuse check.
+11. Offer a lower-right assistant that answers only portfolio questions through same-origin `/api/portfolio-assistant`, displays sources, keeps its UI in the selected language, starts a fresh localized transient conversation after a language change, sends only a validated `en` or `vi` language value, and enforces a 75-question rolling 24-hour browser budget with a best-effort server abuse check.
 
 ## Non-functional requirements
 
@@ -52,7 +52,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 ## Scope boundaries
 
 - No user authentication, form submission, analytics integration, database layer, or persistent chat transcript is present in the repository source.
-- The only application endpoint used by the client is `POST /api/chat`, which proxies a bounded DeepSeek request after local retrieval and validates `en`/`vi`; it is not a general-purpose AI endpoint.
+- The only application endpoint used by the client is `POST /api/portfolio-assistant`, which proxies a bounded DeepSeek request after local retrieval and validates `en`/`vi`; the compatible `/api/chat` route is not used by the browser client, and neither route is a general-purpose AI endpoint.
 - Vercel hosts static assets and the chat function. A custom domain is not configured.
 - A license decision is not represented by a license file in the current project layout.
 
