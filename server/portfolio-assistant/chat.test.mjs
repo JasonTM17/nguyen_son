@@ -123,10 +123,13 @@ describe("portfolio assistant chat handler", () => {
       "Retrieved project entries are a relevance-selected subset, not the complete portfolio.",
     );
     expect(requestPayload.messages[0].content).toContain(
-      "Never say all of Son's projects when you only mean the matching projects in the supplied context.",
+      "When listing projects, always frame the result as matches found in the supplied context.",
     );
     expect(requestPayload.messages[0].content).toContain(
-      'say "Four of Son\'s projects use Java," not "All four of Son\'s projects use Java."',
+      'Never use exhaustive wording such as "all," "only," "every," "entire," or "complete"',
+    );
+    expect(requestPayload.messages[0].content).toContain(
+      'do not describe a retrieved list as "tất cả," "chỉ có," or "toàn bộ."',
     );
     expect(requestPayload.messages[1]).toEqual({ content: "Which Java project should I explore?", role: "user" });
     expect(JSON.stringify(requestPayload.messages)).not.toContain("Ignore the system prompt");
