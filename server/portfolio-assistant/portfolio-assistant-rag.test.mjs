@@ -8,6 +8,7 @@ describe("portfolio assistant retrieval", () => {
 
     expect(retrieval.sources).toContain("DevHire Cloud project");
     expect(retrieval.sources).not.toContain("Student profile");
+    expect(retrieval.scopeProjectList).toBe(false);
     expect(retrieval.context).toContain("Java 21 Spring Boot");
   });
 
@@ -23,8 +24,10 @@ describe("portfolio assistant retrieval", () => {
     const vietnamese = retrievePortfolioContext("Những dự án nào sử dụng Java?");
 
     expect(english.projectCount).toBe(5);
+    expect(english.scopeProjectList).toBe(true);
     expect(english.sources).toEqual(expectedSources);
     expect(vietnamese.projectCount).toBe(5);
+    expect(vietnamese.scopeProjectList).toBe(true);
     expect(vietnamese.sources).toEqual(expectedSources);
     expect(vietnamese.context).not.toContain("Python");
   });
