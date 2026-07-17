@@ -8,6 +8,8 @@ type ApiPayload = {
   sources?: unknown;
 };
 
+const PORTFOLIO_ASSISTANT_ENDPOINT = "/api/portfolio-assistant";
+
 export class PortfolioAssistantApiError extends Error {
   constructor(message: string) {
     super(message);
@@ -29,7 +31,7 @@ export async function askPortfolioAssistant(
   sessionId: string,
   language: PortfolioLanguage,
 ): Promise<PortfolioAssistantReply> {
-  const response = await fetch("/api/chat", {
+  const response = await fetch(PORTFOLIO_ASSISTANT_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

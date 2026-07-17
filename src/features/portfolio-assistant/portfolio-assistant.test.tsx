@@ -68,7 +68,7 @@ describe("PortfolioAssistant", () => {
 
     expect(await screen.findByText(/devhire cloud is the strongest java/i)).toBeInTheDocument();
     expect(screen.getByText(/grounded in: devhire cloud project/i)).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledWith("/api/chat", expect.objectContaining({ method: "POST" }));
+    expect(fetchMock).toHaveBeenCalledWith("/api/portfolio-assistant", expect.objectContaining({ method: "POST" }));
   });
 
   it("moves focus into the assistant and returns it to the launcher when closed", async () => {

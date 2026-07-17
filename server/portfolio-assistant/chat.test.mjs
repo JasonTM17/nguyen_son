@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import handler from "../../api/chat.mjs";
+import publicHandler from "../../api/portfolio-assistant.mjs";
 
 function createResponse() {
   const headers = new Map();
@@ -46,10 +47,11 @@ afterEach(() => {
 });
 
 describe("portfolio assistant chat handler", () => {
-  it("keeps the Vercel API directory limited to the public chat handler", async () => {
+  it("keeps both Vercel routes on the same tested handler", async () => {
     const apiDirectory = join(process.cwd(), "api");
 
-    expect((await readdir(apiDirectory)).sort()).toEqual(["chat.mjs"]);
+    expect((await readdir(apiDirectory)).sort()).toEqual(["chat.mjs", "portfolio-assistant.mjs"]);
+    expect(publicHandler).toBe(handler);
   });
 
   it("rejects non-POST requests with no-store security headers", async () => {
