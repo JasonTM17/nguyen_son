@@ -1,4 +1,6 @@
 const projectFacts = [
+  ["AgriCore SpringBoot Microservices", "AgriCore_SpringBoot_Microservices", "Java 21 and Spring Boot microservices learning platform for agricultural operations, with an API gateway, identity, farm and crop services, PostgreSQL, Redis, Kafka-ready messaging, Docker, tests, and CI.", "agriculture java spring boot microservices postgresql redis kafka docker devops"],
+  ["Horror Game Funny", "Horror_Game_Funny", "ROOM 407: THE LAST SHIFT — a source-only first-person psychological horror learning project built with Godot 4.7.1 and GDScript.", "first person psychological horror game godot gdscript"],
   ["FoodFlow", "FoodDelivery_App", "Real-time food delivery with NestJS, Next.js operations apps, Flutter, Supabase Realtime/PostGIS, and Docker.", "delivery nestjs nextjs flutter supabase realtime"],
   ["Crab", "Crab_Mobile_Flutter", "Ride-hailing, food delivery, wallet, real-time chat, and operations flows across Flutter, React, NestJS, Docker, and CI.", "mobility ride hailing flutter react nestjs"],
   ["Money Management", "Money_Management_App", "Offline-first Flutter finance app with PIN/biometrics, SQLite, Riverpod, Fastify/PostgreSQL, containers, and HMAC automation.", "finance flutter sqlite fastify postgresql"],
@@ -72,6 +74,7 @@ export const portfolioDocuments = [
   ...foundationDocuments,
   ...projectFacts.map(([title, repository, summary, keywords]) => ({
     id: repository,
+    kind: "project",
     title: `${title} project`,
     keywords: `${title} ${repository} ${keywords}`,
     content: `${title} (${repository}): ${summary}`,

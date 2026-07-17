@@ -1,8 +1,9 @@
 import { portfolioDocuments } from "./portfolio-assistant-knowledge.mjs";
 
 const STOP_WORDS = new Set([
-  "a", "about", "and", "are", "cua", "cho", "co", "cung", "does", "for", "from", "how", "is",
-  "la", "nhung", "nhu", "nhung", "please", "the", "to", "toi", "va", "what", "which", "with",
+  "a", "about", "an", "and", "are", "cua", "cho", "co", "cung", "does", "du", "dung", "for",
+  "from", "how", "is", "la", "nao", "nhu", "nhung", "please", "su", "the", "to", "toi", "va",
+  "what", "which", "with",
 ]);
 const PROFILE_QUERY_TERMS = new Set([
   "about", "age", "born", "community", "feedback", "help", "hoc", "nganh", "nguyen", "school",
@@ -70,15 +71,12 @@ export function sanitizeHistory(rawHistory) {
 }
 
 function scoreDocument(document, terms) {
-  const searchable = `${document.title} ${document.keywords} ${document.content}`
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .toLocaleLowerCase();
-  const keywords = document.keywords.toLocaleLowerCase();
+  const searchableTerms = new Set(toSearchTerms(`${document.title} ${document.keywords} ${document.content}`));
+  const keywordTerms = new Set(toSearchTerms(document.keywords));
 
   return terms.reduce((score, term) => {
-    if (!searchable.includes(term)) return score;
-    return score + (keywords.includes(term) ? 4 : 1);
+    if (!searchableTerms.has(term)) return score;
+    return score + (keywordTerms.has(term) ? 4 : 1);
   }, 0);
 }
 
@@ -99,9 +97,11 @@ export function retrievePortfolioContext(message, history = []) {
   // Owner-approved biography only belongs in a request that actually asks about it.
   // This keeps unrelated project questions from sending profile details to the model.
   const selected = [...(profile && shouldIncludePublicProfile(message) ? [profile] : []), ...ranked];
+  const projectCount = selected.filter((document) => document.kind === "project").length;
 
   return {
     context: selected.map((document) => `[${document.title}] ${document.content}`).join("\n"),
+    projectCount,
     sources: selected.map((document) => document.title),
   };
 }
