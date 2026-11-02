@@ -27,6 +27,7 @@ export function createCvHandlers(service, origin) {
       detail: e?.message ?? String(e),
       name: e?.name ?? 'Error',
       code: e?.code,
+      stack: e?.stack,
     });
   };
   const download = (response, result) => {
