@@ -22,13 +22,7 @@ export function createCvHandlers(service, origin) {
   };
   const error = (res, e) => {
     console.error('CV Error:', e);
-    return res.status(e.status ?? 503).json({
-      error: messages[e.code] ?? messages.unavailable,
-      detail: e?.message ?? String(e),
-      name: e?.name ?? 'Error',
-      code: e?.code,
-      stack: e?.stack,
-    });
+    return res.status(e.status ?? 503).json({ error: messages[e.code] ?? messages.unavailable });
   };
   const download = (response, result) => {
     response.setHeader('Content-Type', 'application/pdf');
