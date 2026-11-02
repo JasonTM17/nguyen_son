@@ -15,6 +15,19 @@ export type PortfolioCopy = Readonly<{
     statement: string;
   }>;
   selectedWork: Readonly<{
+    details: string;
+    problem: string;
+    implementation: string;
+    outcome: string;
+    viewDemo: string;
+    pinnedLabel: string;
+    viewPins: string;
+    syncLoading: string;
+    syncFallback: (date: string) => string;
+    syncSuccess: (date: string) => string;
+    syncUnavailable: string;
+    empty: string;
+    noDescription: string;
     eyebrow: string;
     heading: string;
     projectNumber: (index: number) => string;
@@ -25,6 +38,16 @@ export type PortfolioCopy = Readonly<{
     eyebrow: string;
     heading: (count: number) => string;
     intro: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    searchResults: (shown: number, total: number) => string;
+    filterLabel: string;
+    allTechnologies: string;
+    technologyGroups: Readonly<Record<"languages" | "frameworks" | "data" | "tools", string>>;
+    showMore: (count: number) => string;
+    allShown: string;
+    reset: string;
+    noResults: string;
     language: string;
     projectNumber: (index: number) => string;
     syncFallback: string;
@@ -40,18 +63,19 @@ export type PortfolioCopy = Readonly<{
   studio: Readonly<{
     controlsLabel: string;
     dragHint: string;
+    helpLabel: string;
     meta: readonly [string, string];
     reset: string;
     rotateLeft: string;
     rotateRight: string;
   }>;
   assistant: Readonly<{
+    brand: string;
+    description: string;
     close: string;
     formLabel: string;
     heading: string;
     launcher: string;
-    launcherHint: string;
-    launcherTitle: string;
     limitReached: string;
     panelEyebrow: string;
     placeholder: string;

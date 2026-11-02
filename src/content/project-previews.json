@@ -1,0 +1,74 @@
+[
+  {
+    "fullName": "JasonTM17/App_AI_powered_waste_sorting",
+    "src": "/projects/trash-sorter.webp",
+    "sourceHref": "https://github.com/JasonTM17/App_AI_powered_waste_sorting/blob/d058b6c3aa91aac3527caad05e1c2b31330f8be6/docs/assets/screenshots/web-user-dashboard.png",
+    "commit": "d058b6c3aa91aac3527caad05e1c2b31330f8be6",
+    "sourcePath": "docs/assets/screenshots/web-user-dashboard.png",
+    "sourceSha256": "3952bd0d62fefa7619977aa6ec69e6983aee81b6a2a7d2ab4d1d29d548b0c366",
+    "alt": {
+      "en": "Trash Sorter Pro web dashboard with sorting metrics and bin status.",
+      "vi": "Dashboard Trash Sorter Pro với số liệu phân loại và trạng thái thùng rác."
+    }
+  },
+  {
+    "fullName": "JasonTM17/Ecommerce_BookStore",
+    "src": "/projects/bookstore.webp",
+    "sourceHref": "https://github.com/JasonTM17/Ecommerce_BookStore/blob/ba500398213fb977540a23a62b8f4e511585a8f6/docs/portfolio/previews/home.webp",
+    "commit": "ba500398213fb977540a23a62b8f4e511585a8f6",
+    "sourcePath": "docs/portfolio/previews/home.webp",
+    "sourceSha256": "9fbd9f9fcedb0ef713d90c18a5de5923e1cbd78f527f4a4764d8cd67dbc9e111",
+    "alt": {
+      "en": "BookStore storefront with book discovery and product listings.",
+      "vi": "Giao diện BookStore với tìm sách và danh sách sản phẩm."
+    }
+  },
+  {
+    "fullName": "JasonTM17/JobHunter_SpringBoot_RestfulAPI_React",
+    "src": "/projects/jobhunter.webp",
+    "sourceHref": "https://github.com/JasonTM17/JobHunter_SpringBoot_RestfulAPI_React/blob/5116e9d0b70efd55fd43f190fad6a766f24a2ba0/docs/assets/screenshots/jobhunter-home.jpg",
+    "commit": "5116e9d0b70efd55fd43f190fad6a766f24a2ba0",
+    "sourcePath": "docs/assets/screenshots/jobhunter-home.jpg",
+    "sourceSha256": "3d282680fa8ea10e6277ac47ee662aba19ac5ccde2228988447ca8e5ace4d5e4",
+    "alt": {
+      "en": "JobHunter job board with search and employer listings.",
+      "vi": "Bảng tuyển dụng JobHunter với tìm việc và danh sách nhà tuyển dụng."
+    }
+  },
+  {
+    "fullName": "JasonTM17/Laptopshop_Spring_Boot_MVC",
+    "src": "/projects/laptopshop.webp",
+    "sourceHref": "https://github.com/JasonTM17/Laptopshop_Spring_Boot_MVC/blob/9998d8d6b54acd26bc695d6a2a9acc43e0603087/docs/screenshots/home.png",
+    "commit": "9998d8d6b54acd26bc695d6a2a9acc43e0603087",
+    "sourcePath": "docs/screenshots/home.png",
+    "sourceSha256": "d2a5f2220aac082308b21dab119120719b8f8402be29873a53ce347d19eae65a",
+    "alt": {
+      "en": "LaptopShop storefront with laptop promotions and categories.",
+      "vi": "Cửa hàng LaptopShop với khuyến mãi và danh mục laptop."
+    }
+  },
+  {
+    "fullName": "JasonTM17/HealthCare_Project",
+    "src": "/projects/healthcare.webp",
+    "sourceHref": "https://github.com/JasonTM17/HealthCare_Project/blob/a78938ee63345cb65e38d38696a1fbe2dd741a70/docs/assets/repo-tours/public-01.png",
+    "commit": "a78938ee63345cb65e38d38696a1fbe2dd741a70",
+    "sourcePath": "docs/assets/repo-tours/public-01.png",
+    "sourceSha256": "5945510a0eaddda13026d2e331347372b101b06460db2ee96292d5159d401f62",
+    "alt": {
+      "en": "HealthCare public homepage with service and doctor discovery.",
+      "vi": "Trang chủ HealthCare với tìm dịch vụ và bác sĩ."
+    }
+  },
+  {
+    "fullName": "JasonTM17/Student_Management_UTE",
+    "src": "/projects/campusute.webp",
+    "sourceHref": "https://github.com/JasonTM17/Student_Management_UTE/blob/1d9bcc4d6ba26af1e94586507c258b8a879919bd/docs/assets/showcase/public-home-vi.png",
+    "commit": "1d9bcc4d6ba26af1e94586507c258b8a879919bd",
+    "sourcePath": "docs/assets/showcase/public-home-vi.png",
+    "sourceSha256": "af988b8e69858fce72d073cdd0861be4573f0db742be2f2423b84f29315e3f12",
+    "alt": {
+      "en": "CampusUTE public academic portal with role-based entry points.",
+      "vi": "Cổng học vụ CampusUTE với lối vào theo vai trò."
+    }
+  }
+]

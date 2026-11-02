@@ -9,6 +9,7 @@ import {
   restoreRemainingQuestions,
 } from "./portfolio-assistant-storage";
 import type { PortfolioAssistantMessage } from "./portfolio-assistant-types";
+import { AssistantAnswer } from "./assistant-answer";
 
 function createWelcomeMessage(language: PortfolioLanguage): PortfolioAssistantMessage {
   return {
@@ -20,9 +21,9 @@ function createWelcomeMessage(language: PortfolioLanguage): PortfolioAssistantMe
 
 let messageSequence = 0;
 
-function createMessage(role: PortfolioAssistantMessage["role"], content: string, sources?: readonly string[]): PortfolioAssistantMessage {
+function createMessage(role: PortfolioAssistantMessage["role"], content: string, details: Pick<PortfolioAssistantMessage, "sources" | "references" | "pinnedProjects"> = {}): PortfolioAssistantMessage {
   messageSequence += 1;
-  return { content, id: `${role}-${Date.now()}-${messageSequence}`, role, sources };
+  return { content, id: `${role}-${Date.now()}-${messageSequence}`, role, ...details };
 }
 
 export function PortfolioAssistant() {
@@ -97,7 +98,7 @@ export function PortfolioAssistant() {
     try {
       const reply = await askPortfolioAssistant(message, messages, getPortfolioAssistantSessionId(), language);
       if (conversationVersion !== conversationVersionRef.current) return;
-      setMessages((current) => [...current, createMessage("assistant", reply.answer, reply.sources)]);
+      setMessages((current) => [...current, createMessage("assistant", reply.answer, reply)]);
     } catch (error) {
       const apiError = error instanceof PortfolioAssistantApiError ? error : undefined;
       setRemaining(restoreRemainingQuestions(remainingBeforeRequest));
@@ -125,17 +126,14 @@ export function PortfolioAssistant() {
         ref={launcherRef}
         type="button"
       >
-        <span aria-hidden="true" className="portfolio-assistant__mascot">
-          <span className="portfolio-assistant__mascot-antenna" />
-          <span className="portfolio-assistant__mascot-face">
-            <span className="portfolio-assistant__mascot-eyes" />
-            <span className="portfolio-assistant__mascot-smile" />
-          </span>
+        <span aria-hidden="true" className="portfolio-assistant__launcher-avatar">
+          <img src="/shiba-assistant.svg" alt="" width="96" height="96" />
         </span>
-        <span className="portfolio-assistant__launcher-copy">
-          <strong>{copy.launcherTitle}</strong>
-          <small>{copy.launcherHint}</small>
+        <span className="portfolio-assistant__launcher-label" aria-hidden="true">
+          <span className="portfolio-assistant__launcher-name">{copy.brand}</span>
+          <span className="portfolio-assistant__launcher-description">{copy.description}</span>
         </span>
+        <span aria-hidden="true" className="portfolio-assistant__launcher-arrow">{isOpen ? "−" : "↗"}</span>
       </button>
       {isOpen && (
         <section aria-labelledby="portfolio-assistant-heading" className="portfolio-assistant__panel" id="portfolio-assistant-panel" onKeyDown={handlePanelKeyDown} role="dialog">
@@ -149,8 +147,16 @@ export function PortfolioAssistant() {
           <div aria-live="polite" className="portfolio-assistant__messages" ref={messageLogRef} role="log">
             {messages.map((message) => (
               <article className={`portfolio-assistant__message portfolio-assistant__message--${message.role}`} key={message.id}>
-                <p>{message.content}</p>
-                {message.sources?.length ? <small>{copy.sources}: {message.sources.join(" · ")}</small> : null}
+                {message.role === "assistant" ? <AssistantAnswer content={message.pinnedProjects?.summary ?? message.content} /> : <p>{message.content}</p>}
+                {message.pinnedProjects?.repositories.length ? <ol className="portfolio-assistant__pin-list">
+                  {message.pinnedProjects.repositories.map((repo) => <li key={repo.fullName}>
+                    <a href={repo.href} target="_blank" rel="noreferrer">{repo.name.replace(/[_-]+/g, " ")}<span aria-hidden="true">↗</span></a>
+                    <small>{repo.fullName}{repo.language ? ` · ${repo.language}` : ""}</small>
+                  </li>)}
+                </ol> : null}
+                {message.references?.length ? <nav className="portfolio-assistant__references" aria-label={copy.sources}>
+                  {message.references.map((reference) => <a key={reference.href} href={reference.href} target="_blank" rel="noreferrer">{reference.title}<span aria-hidden="true">↗</span></a>)}
+                </nav> : message.sources?.length ? <small>{copy.sources}: {message.sources.join(" · ")}</small> : null}
               </article>
             ))}
             {isSubmitting && <p className="portfolio-assistant__thinking">{copy.thinking}</p>}

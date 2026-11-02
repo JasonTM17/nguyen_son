@@ -1,7 +1,7 @@
 .portfolio-assistant__panel {
   display: grid;
   width: min(26.5rem, calc(100vw - 1.5rem));
-  max-height: min(39rem, calc(100dvh - 6rem));
+  max-height: min(39rem, calc(100dvh - 7.95rem));
   grid-template-rows: auto minmax(7rem, 1fr) auto auto;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--indigo), transparent 55%);
@@ -83,6 +83,31 @@
 .portfolio-assistant__message--assistant {
   background: color-mix(in srgb, var(--surface), white 10%);
 }
+
+.portfolio-assistant__answer {
+  display: grid;
+  gap: 0.85rem;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+}
+
+.portfolio-assistant__answer p,
+.portfolio-assistant__answer li { white-space: pre-line; }
+.portfolio-assistant__answer ol,
+.portfolio-assistant__answer ul { display: grid; gap: 0.8rem; margin: 0; padding-left: 1.4rem; }
+.portfolio-assistant__answer li { padding-left: 0.2rem; }
+.portfolio-assistant__answer li::marker { color: var(--teal); font-weight: 750; }
+.portfolio-assistant__message small { overflow-wrap: anywhere; }
+
+.portfolio-assistant__pin-list { display: grid; gap: 0; padding-left: 1.3rem; margin: 0.9rem 0 0; }
+.portfolio-assistant__pin-list li { min-width: 0; padding: 0.7rem 0 0.7rem 0.25rem; border-top: 1px solid var(--line); }
+.portfolio-assistant__pin-list li::marker { color: var(--teal); font-weight: 750; }
+.portfolio-assistant__pin-list a,
+.portfolio-assistant__references a { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; min-height: 44px; overflow-wrap: anywhere; color: var(--teal); font-weight: 700; }
+.portfolio-assistant__pin-list a span,
+.portfolio-assistant__references a span { flex: 0 0 auto; }
+.portfolio-assistant__pin-list small { margin-top: 0.2rem; }
+.portfolio-assistant__references { display: grid; gap: 0.25rem; margin-top: 0.75rem; padding-top: 0.4rem; border-top: 1px solid var(--line); font-size: 0.76rem; }
 
 .portfolio-assistant__message--user {
   justify-self: end;
@@ -184,7 +209,7 @@
 }
 
 @media (max-width: 440px) {
-  .portfolio-assistant__panel { max-height: min(36rem, calc(100dvh - 5.2rem)); }
+  .portfolio-assistant__panel { max-height: min(36rem, calc(100dvh - 6.2rem)); }
   .portfolio-assistant__launcher { min-height: 46px; }
 }
 

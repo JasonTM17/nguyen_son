@@ -1,4 +1,7 @@
 import { portfolioDocuments } from "./portfolio-assistant-knowledge.mjs";
+import { publicProjectDocuments } from "./public-context.mjs";
+import { isPinnedListQuestion } from "../github-pins/reply.mjs";
+import { projectOverviewRequest } from './project-overview.mjs';
 
 const STOP_WORDS = new Set([
   "a", "about", "an", "and", "are", "cua", "cho", "co", "cung", "does", "du", "dung", "for",
@@ -100,26 +103,51 @@ function isProjectListQuestion(message) {
   return PROJECT_LIST_PATTERNS.some((pattern) => pattern.test(normalizedMessage));
 }
 
-export function retrievePortfolioContext(message, history = []) {
+export function retrievePortfolioContext(message, history = [], publicFeeds) {
+  const publicDocuments = publicFeeds ? publicProjectDocuments(publicFeeds) : [];
+  // A runtime feed, even empty/unavailable, must never resurrect curated projects as current.
+  const documents = publicFeeds ? [...portfolioDocuments.filter((document) => document.kind !== "project"), ...publicDocuments] : portfolioDocuments;
+  const pinQuestion = /\b(?:pinned|pins|featured|spotlight|ghim)\b/u.test(toSearchTerms(message).join(" "));
   const terms = toSearchTerms([message, ...history.map((item) => item.content)].join(" "));
-  const profile = portfolioDocuments.find((document) => document.id === "student-profile");
-  const ranked = portfolioDocuments
+  const query = ` ${toSearchTerms(message).join(" ")} `;
+  const namedProjects = publicDocuments.filter((document) => {
+    const name = toSearchTerms(document.publicData.name).join(" ");
+    return name.length >= 6 && query.includes(` ${name} `);
+  });
+  const discoveryQuestion = /\b(?:other|similar|compare|comparison|alternatives?|besides|versus|vs|khac|tuong tu|so sanh|ngoai)\b/u.test(message.normalize("NFD").replace(/\p{Diacritic}/gu, "").replace(/đ/g, "d").toLowerCase());
+  const profile = documents.find((document) => document.id === "student-profile");
+  const overviewRequest = !namedProjects.length && !discoveryQuestion ? projectOverviewRequest(message) : null;
+  const overviewPins = (publicFeeds?.pins?.repositories ?? []).map(repo => publicDocuments.find(doc => doc.id === repo.fullName)).filter(Boolean);
+  const overviewCatalog = (publicFeeds?.catalog?.repositories ?? []).map(repo => publicDocuments.find(doc => doc.id === `JasonTM17/${repo.name}`)).filter(Boolean);
+  const overviewDocuments = overviewRequest ? (overviewPins.length ? overviewPins : overviewCatalog).slice(0, Math.min(6, overviewRequest.requestedCount)) : null;
+  const ranked = overviewDocuments ?? (namedProjects.length && !discoveryQuestion && !isPinnedListQuestion(message) ? namedProjects : pinQuestion && publicFeeds ? (publicFeeds.pins?.repositories ?? []).map((repo) => publicDocuments.find((document) => document.id === repo.fullName)).filter(Boolean) : documents
     .filter((document) => document.id !== "student-profile")
     .map((document) => ({ document, score: scoreDocument(document, terms) }))
     .filter(({ score }) => score > 0)
     .sort((left, right) => right.score - left.score || left.document.title.localeCompare(right.document.title))
     .slice(0, 5)
-    .map(({ document }) => document);
+    .map(({ document }) => document));
   // Owner-approved biography only belongs in a request that actually asks about it.
   // This keeps unrelated project questions from sending profile details to the model.
   const selected = [...(profile && shouldIncludePublicProfile(message) ? [profile] : []), ...ranked];
   const projectCount = selected.filter((document) => document.kind === "project").length;
 
   return {
-    context: selected.map((document) => `[${document.title}] ${document.content}`).join("\n"),
+    context: selected.filter((document) => !document.publicData).map((document) => `[${document.title}] ${document.content}`).join("\n"),
+    publicContext: publicFeeds ? JSON.stringify({
+      catalog: publicFeeds.catalog ? { verifiedAt: publicFeeds.catalog.verifiedAt, stale: publicFeeds.catalog.stale, repositoryCount: publicFeeds.catalog.repositories.length } : { unavailable: true },
+      pins: publicFeeds.pins ? { verifiedAt: publicFeeds.pins.verifiedAt, stale: publicFeeds.pins.stale, repositoriesInDisplayedOrder: publicFeeds.pins.repositories.map((repo) => repo.fullName) } : { unavailable: true },
+      relevantProjects: selected.filter((document) => document.publicData).map((document) => document.publicData),
+    }) : null,
     projectCount,
-    scopeProjectList: projectCount > 0 && isProjectListQuestion(message),
+    overview: overviewRequest ? { requestedCount: overviewRequest.requestedCount, count: projectCount, basis: overviewPins.length ? 'github-pins' : 'public-catalog' } : null,
+    scopeProjectList: projectCount > 0 && (Boolean(overviewRequest) || isProjectListQuestion(message)),
     sources: selected.map((document) => document.title),
+    references: selected.filter((document) => document.publicData).flatMap((document) => {
+      const repo = document.publicData;
+      return typeof repo.fullName === "string" && /^[A-Za-z0-9-]+\/(?!\.{1,2}$)[A-Za-z0-9_.-]{1,100}$/.test(repo.fullName) && repo.href === `https://github.com/${repo.fullName}`
+        ? [{ title: repo.fullName, href: repo.href }] : [];
+    }),
   };
 }
 

@@ -1,0 +1,11 @@
+# Automatic GitHub project covers
+
+GET /api/project-preview?repo=owner/name accepts only exact repositories currently pinned by the configured public profile. No caller URL is fetched. The server discovers Markdown, reference-style and HTML images in README.md, README.MD or readme.md, prioritizing covers and interface screenshots over badges/logos. If none validates, it checks conventional cover paths and a bounded GitHub tree. Existing reviewed local screenshots remain a fallback, followed by decorative artwork.
+
+Repository images must be HTTPS raster files from the same repository on raw.githubusercontent.com, or permanent GitHub user-attachment links. Redirect targets are never fetched by the server; only recognized GitHub attachment redirects are accepted for browser loading. GET responses cannot redirect. SVG, external hosts, credentials, traversal and cross-repository paths are rejected. HEAD validation checks image MIME and rejects declared sizes above 8 MiB; missing lengths and attachment redirects do not bound browser download size.
+
+Discovery has an eight-second deadline, 200 KB README limit, 2 MB tree-response limit, first 10,000 tree entries and at most eight candidates per stage. Cache holds at most 32 identities, coalesces parallel lookups and refreshes successful images every five minutes; missing images/failures back off for one minute. Recovery images retain their original verification time, are labeled saved and expire after one hour on both server and client. GitHub availability and unauthenticated API limits can delay discovery.
+
+Visible cards refresh metadata every minute and on focus. Pin changes follow the existing pin feed. A newly pinned repository needs no local image mapping. Under normal availability, an existing cover change appears in about five to six minutes. Images load directly from GitHub, so automatic images are not locally resized or optimized. Clicking the cover or title opens the repository; the separate source action opens the original image.
+
+For predictable selection, put a prominent screenshot in the README, optionally at docs/portfolio/cover.webp. Heuristics cannot prove image meaning; unsupported or inaccessible images fall back honestly. No GitHub token, image proxy or owner CV data is used.

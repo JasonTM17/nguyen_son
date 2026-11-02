@@ -12,19 +12,52 @@ afterEach(() => {
 });
 
 describe("PortfolioAssistant", () => {
-  it("keeps the cute Sơn AI identity and chatbot purpose visible before opening", () => {
+  it("renders exact structured pins as safe clickable source links instead of model-written inventory", async () => {
+    const source = "https://github.com/JasonTM17";
+    const repositories = ["HealthCare_Project", "Student_Management_UTE"].map((name) => ({ name, fullName: `JasonTM17/${name}`, href: `https://github.com/JasonTM17/${name}`, language: "Java" }));
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({
+      answer: "Unstructured old inventory should not be rendered", sources: [],
+      pinnedProjects: { summary: "Verified current pins", repositories, source, verifiedAt: new Date().toISOString(), stale: false },
+      references: [{ title: "View profile", href: source }, { title: "Unsafe", href: "javascript:alert(1)" }],
+    }) }));
     render(<PortfolioAssistant />);
-    const launcher = screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i });
+    fireEvent.click(screen.getByRole("button", { name: /open ai assistant/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Which projects are pinned on GitHub?" }));
+    expect(await screen.findByText("Verified current pins")).toBeInTheDocument();
+    expect(screen.queryByText("Unstructured old inventory should not be rendered")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
+    const link = screen.getByRole("link", { name: /HealthCare Project/ });
+    expect(link).toHaveAttribute("href", repositories[0].href);
+    expect(link).toHaveAttribute("rel", "noreferrer");
+    expect(screen.queryByRole("link", { name: "Unsafe" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /View profile/ })).toHaveAttribute("href", source);
+  });
 
-    expect(within(launcher).getByText("Sơn AI")).toBeVisible();
-    expect(within(launcher).getByText("Portfolio chatbot")).toBeVisible();
+  it("adds validated source links to general answers without activating URLs from prose", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({ answer: '<a href="javascript:alert(1)">fake</a>', sources: ["HealthCare"], references: [{ title: "HealthCare source", href: "https://github.com/JasonTM17/HealthCare_Project" }, { title: "Bad", href: "https://evil.test" }] }) }));
+    render(<PortfolioAssistant />);
+    fireEvent.click(screen.getByRole("button", { name: /open ai assistant/i }));
+    fireEvent.change(screen.getByLabelText(/ask about nguyen son's portfolio/i), { target: { value: "Explain HealthCare" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    expect(await screen.findByText(/<a href=/)).toBeInTheDocument();
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+    expect(screen.getByRole("link", { name: /HealthCare source/ })).toHaveAttribute("href", "https://github.com/JasonTM17/HealthCare_Project");
+  });
+
+  it("renders the localized AI identity and decorative mascot in the launcher", () => {
+    render(<PortfolioAssistant />);
+    const launcher = screen.getByRole("button", { name: /open ai assistant/i });
+
+    expect(within(launcher).getByText("Trợ lí AI")).toBeInTheDocument();
+    expect(within(launcher).getByText("Your portfolio guide")).toBeInTheDocument();
+    expect(launcher.querySelector("img")).toHaveAttribute("src", "/shiba-assistant.svg");
   });
 
   it("keeps an exhausted assistant operable without exposing a running counter", async () => {
     for (let index = 0; index < portfolioAssistantQuestionLimit; index += 1) consumeQuestion();
     render(<PortfolioAssistant />);
 
-    const launcher = screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i });
+    const launcher = screen.getByRole("button", { name: /open ai assistant/i });
     fireEvent.click(launcher);
 
     expect(screen.getByRole("status")).toHaveTextContent(/75-question limit/i);
@@ -45,7 +78,7 @@ describe("PortfolioAssistant", () => {
     }));
     render(<PortfolioAssistant />);
 
-    fireEvent.click(screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i }));
+    fireEvent.click(screen.getByRole("button", { name: /open ai assistant/i }));
     fireEvent.change(screen.getByLabelText(/ask about nguyen son's portfolio/i), { target: { value: "Which project uses Java?" } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
 
@@ -62,7 +95,7 @@ describe("PortfolioAssistant", () => {
     vi.stubGlobal("fetch", fetchMock);
     render(<PortfolioAssistant />);
 
-    fireEvent.click(screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i }));
+    fireEvent.click(screen.getByRole("button", { name: /open ai assistant/i }));
     fireEvent.change(screen.getByLabelText(/ask about nguyen son's portfolio/i), { target: { value: "Which project uses Java?" } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
 
@@ -73,7 +106,7 @@ describe("PortfolioAssistant", () => {
 
   it("moves focus into the assistant and returns it to the launcher when closed", async () => {
     render(<PortfolioAssistant />);
-    const launcher = screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i });
+    const launcher = screen.getByRole("button", { name: /open ai assistant/i });
 
     fireEvent.click(launcher);
     expect(await screen.findByLabelText(/ask about nguyen son's portfolio/i)).toHaveFocus();
@@ -86,7 +119,7 @@ describe("PortfolioAssistant", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     render(<PortfolioAssistant />);
 
-    fireEvent.click(screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i }));
+    fireEvent.click(screen.getByRole("button", { name: /open ai assistant/i }));
     fireEvent.change(screen.getByLabelText(/ask about nguyen son's portfolio/i), { target: { value: "Which project uses Java?" } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
 
@@ -108,7 +141,7 @@ describe("PortfolioAssistant", () => {
       </PortfolioLanguageProvider>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Mở chatbot portfolio Sơn AI" }));
+    fireEvent.click(screen.getByRole("button", { name: "Mở Trợ lí AI" }));
     expect(screen.getByText(/chào bạn — mình là trợ lý portfolio của sơn/i)).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Hỏi về portfolio của Nguyễn Sơn"), { target: { value: "Dự án nào dùng Java?" } });
     fireEvent.click(screen.getByRole("button", { name: "Gửi" }));
@@ -130,7 +163,7 @@ describe("PortfolioAssistant", () => {
       </PortfolioLanguageProvider>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Mở chatbot portfolio Sơn AI" }));
+    fireEvent.click(screen.getByRole("button", { name: "Mở Trợ lí AI" }));
     fireEvent.change(screen.getByLabelText("Hỏi về portfolio của Nguyễn Sơn"), { target: { value: "Dự án nào dùng Java?" } });
     fireEvent.click(screen.getByRole("button", { name: "Gửi" }));
 
@@ -151,7 +184,7 @@ describe("PortfolioAssistant", () => {
       </PortfolioLanguageProvider>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i }));
+    fireEvent.click(screen.getByRole("button", { name: /open ai assistant/i }));
     fireEvent.change(screen.getByLabelText(/ask about nguyen son's portfolio/i), { target: { value: "Which project uses Java?" } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
     fireEvent.click(screen.getByRole("button", { name: "Vietnamese" }));
@@ -184,7 +217,7 @@ describe("PortfolioAssistant", () => {
       </PortfolioLanguageProvider>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /open sơn ai portfolio chatbot/i }));
+    fireEvent.click(screen.getByRole("button", { name: /open ai assistant/i }));
     fireEvent.change(screen.getByLabelText(/ask about nguyen son's portfolio/i), { target: { value: "Which project uses Java?" } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
     fireEvent.click(screen.getByRole("button", { name: "Vietnamese" }));

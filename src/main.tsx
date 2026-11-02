@@ -10,6 +10,7 @@ import "./styles/content-sections.css";
 import "./styles/public-project-archive.css";
 import "./styles/portfolio-assistant.css";
 import "./styles/portfolio-assistant-panel.css";
+import './features/cv/cv.css';
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

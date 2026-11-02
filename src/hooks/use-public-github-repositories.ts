@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import type { PublicGithubRepository } from "../types/public-github-repository";
 
-const CACHE_KEY = "nguyen-son-public-repositories-v2";
-const GITHUB_REPOSITORIES_URL = "https://api.github.com/users/JasonTM17/repos?type=owner&per_page=100&sort=updated&direction=desc";
-const GITHUB_API_VERSION = "2026-03-10";
-const MAX_GITHUB_PAGES = 10;
-const BACKGROUND_SYNC_INTERVAL_MS = 5 * 60 * 1000;
-const MIN_SYNC_INTERVAL_MS = 2 * 60 * 1000;
+const CACHE_KEY = "nguyen-son-public-repositories-v3";
+const BACKGROUND_SYNC_INTERVAL_MS = 60_000;
+const MIN_SYNC_INTERVAL_MS = 30_000;
+const MAX_STALE_MS = 24 * 60 * 60 * 1000;
 const EXCLUDED_REPOSITORIES = new Set(["JasonTM17", "nguyen_son"]);
 
 type GithubRepositoryResponse = {
@@ -39,13 +37,14 @@ function isPublicGithubRepository(value: unknown): value is PublicGithubReposito
   return (
     typeof repository.href === "string" &&
     typeof repository.name === "string" &&
-    isOwnerRepositoryUrl(repository.href) &&
+    repository.href === `https://github.com/JasonTM17/${repository.name}` &&
+    /^(?!\.{1,2}$)[A-Za-z0-9_.-]{1,100}$/.test(repository.name) &&
     !EXCLUDED_REPOSITORIES.has(repository.name) &&
-    (repository.description === null || typeof repository.description === "string") &&
-    (repository.language === null || typeof repository.language === "string") &&
+    (repository.description === null || typeof repository.description === "string" && repository.description.length <= 600) &&
+    (repository.language === null || typeof repository.language === "string" && repository.language.length <= 60) &&
     (repository.updatedAt === null || typeof repository.updatedAt === "string") &&
     Array.isArray(repository.topics) &&
-    repository.topics.every((topic) => typeof topic === "string")
+    repository.topics.length <= 20 && repository.topics.every((topic) => typeof topic === "string" && topic.length <= 50)
   );
 }
 
@@ -84,8 +83,8 @@ function readCachedFeed(): CachedRepositoryFeed | null {
     const rawValue = window.localStorage.getItem(CACHE_KEY);
     if (!rawValue) return null;
     const cached = JSON.parse(rawValue) as CachedRepositoryFeed;
-    if (!Array.isArray(cached.repositories) || typeof cached.syncedAt !== "string") return null;
-    return { repositories: cached.repositories.filter(isPublicGithubRepository), syncedAt: cached.syncedAt };
+    if (!Array.isArray(cached.repositories) || cached.repositories.length > 1000 || !recent(cached.syncedAt) || !cached.repositories.every(isPublicGithubRepository)) return null;
+    return cached;
   } catch {
     return null;
   }
@@ -99,31 +98,24 @@ function writeCachedFeed(feed: CachedRepositoryFeed): void {
   }
 }
 
-async function fetchPublicRepositories(signal: AbortSignal): Promise<GithubRepositoryResponse[]> {
-  const repositories: GithubRepositoryResponse[] = [];
-
-  for (let page = 1; page <= MAX_GITHUB_PAGES; page += 1) {
-    const response = await fetch(`${GITHUB_REPOSITORIES_URL}&page=${page}`, {
-      cache: "no-store",
-      headers: {
-        Accept: "application/vnd.github+json",
-        "X-GitHub-Api-Version": GITHUB_API_VERSION,
-      },
-      signal,
-    });
-    if (!response.ok) throw new Error("GitHub repository sync failed.");
-
-    const payload = (await response.json()) as GithubRepositoryResponse[];
-    repositories.push(...payload);
-    const hasNextPage = response.headers.get("link")?.includes('rel="next"') ?? false;
-    if (!hasNextPage) break;
-    if (page === MAX_GITHUB_PAGES) throw new Error("GitHub repository pagination exceeded the safety limit.");
-  }
-
-  return repositories;
+function recent(timestamp: unknown, clockSkewMs = 0): timestamp is string {
+  if (typeof timestamp !== "string") return false;
+  const age = Date.now() - Date.parse(timestamp);
+  return Number.isFinite(age) && age >= -clockSkewMs && age <= MAX_STALE_MS;
 }
 
-export function usePublicGithubRepositories(): RepositoryFeedState {
+export function validatePublicProjectFeed(value: unknown, newlyReceived = false): value is { repositories: PublicGithubRepository[]; verifiedAt: string; stale: boolean; source: string } {
+  if (!value || typeof value !== "object") return false;
+  const feed = value as { repositories?: unknown; verifiedAt?: unknown; stale?: unknown; source?: unknown };
+  // Only a newly received, fresh server response gets a small transport clock-skew
+  // tolerance. Persisted or stale recovery data always uses strict original dates.
+  const clockSkewMs = newlyReceived && feed.stale === false ? 60_000 : 0;
+  if (feed.source !== "https://github.com/JasonTM17?tab=repositories" || typeof feed.stale !== "boolean" || !recent(feed.verifiedAt, clockSkewMs) ||
+      !Array.isArray(feed.repositories) || feed.repositories.length > 1000 || !feed.repositories.every(isPublicGithubRepository)) return false;
+  return new Set(feed.repositories.map((repo) => repo.name.toLowerCase())).size === feed.repositories.length;
+}
+
+export function usePublicGithubRepositories(enabled = import.meta.env.MODE !== "test"): RepositoryFeedState {
   const [state, setState] = useState<RepositoryFeedState>(() => {
     const cachedFeed = typeof window === "undefined" ? null : readCachedFeed();
     return {
@@ -135,7 +127,7 @@ export function usePublicGithubRepositories(): RepositoryFeedState {
   });
 
   useEffect(() => {
-    if (import.meta.env.MODE === "test") return;
+    if (!enabled) return;
 
     const controller = new AbortController();
     let lastSyncStartedAt = 0;
@@ -147,18 +139,18 @@ export function usePublicGithubRepositories(): RepositoryFeedState {
       lastSyncStartedAt = Date.now();
 
       try {
-        const payload = await fetchPublicRepositories(controller.signal);
+        const response = await fetch("/api/public-projects", { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(12_000)]) });
+        if (!response.ok) throw new Error("Public catalog unavailable");
+        const payload: unknown = await response.json();
+        if (!validatePublicProjectFeed(payload, true)) throw new Error("Invalid public catalog");
         if (controller.signal.aborted) return;
-        const repositories = payload
-          .map(normalizeGithubRepository)
-          .filter((repository): repository is PublicGithubRepository => repository !== null)
-          .sort((left, right) => (right.updatedAt ?? "").localeCompare(left.updatedAt ?? ""));
-        const syncedAt = new Date().toISOString();
+        const repositories = payload.repositories;
+        const syncedAt = payload.verifiedAt;
         writeCachedFeed({ repositories, syncedAt });
-        setState({ error: false, isLoading: false, repositories, syncedAt });
+        setState({ error: payload.stale, isLoading: false, repositories, syncedAt });
       } catch {
         if (!controller.signal.aborted) {
-          setState((current) => ({ ...current, error: true, isLoading: false }));
+          setState((current) => ({ error: true, isLoading: false, repositories: recent(current.syncedAt) ? current.repositories : [], syncedAt: recent(current.syncedAt) ? current.syncedAt : null }));
         }
       } finally {
         requestInFlight = false;
@@ -184,7 +176,7 @@ export function usePublicGithubRepositories(): RepositoryFeedState {
       window.removeEventListener("focus", syncAfterReturning);
       document.removeEventListener("visibilitychange", syncAfterReturning);
     };
-  }, []);
+  }, [enabled]);
 
   return state;
 }

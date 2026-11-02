@@ -64,7 +64,8 @@ export function SiteHeader({ motionPreference }: SiteHeaderProps) {
     <header className="site-header">
       <div className="site-header__inner">
         <a className="wordmark" href="#main-content" aria-label={copy.homeLabel}>
-          nguyen_son
+          <span className="wordmark__symbol" aria-hidden="true">ns<span>·</span></span>
+          <span>nguyen_son<span className="wordmark__suffix">.dev</span></span>
         </a>
         <nav aria-label={copy.navigationLabel} className="site-navigation">
           {navigationItems.map((item) => (

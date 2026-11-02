@@ -108,7 +108,11 @@ function StudioSceneInstance({ copy, disabled }: StudioSceneInstanceProps) {
 
   return (
     <div className="studio-scene" data-canvas-ready={canvasReady}>
-      <img alt="" className="studio-scene__portrait" src="/nguyen-son-studio-avatar-clean.png" />
+      <picture>
+        <source type="image/avif" srcSet="/nguyen-son-studio-640.avif 640w, /nguyen-son-studio-1023.avif 1023w" sizes="(max-width: 739px) 80vw, (max-width: 1100px) 42vw, 460px" />
+        <source type="image/webp" srcSet="/nguyen-son-studio-640.webp 640w, /nguyen-son-studio-1023.webp 1023w" sizes="(max-width: 739px) 80vw, (max-width: 1100px) 42vw, 460px" />
+        <img alt="" className="studio-scene__portrait" src="/nguyen-son-studio-avatar-clean.png" width="1023" height="1537" fetchPriority="high" decoding="async" />
+      </picture>
       <StudioSceneFallback />
       <div aria-hidden="true" className="studio-scene-host" ref={hostRef} />
       {!disabled && canvasReady && (
@@ -120,17 +124,33 @@ function StudioSceneInstance({ copy, disabled }: StudioSceneInstanceProps) {
             <StudioControl
               label={copy.reset}
               onClick={() => hostRef.current?.dispatchEvent(new Event("studioreset"))}
-              wide
+              emphasized
             >
-              {copy.reset}
+              <svg aria-hidden="true" className="studio-scene__arrow" fill="none" viewBox="0 0 24 24">
+                <path d="M8 3H4a1 1 0 0 0-1 1v4m13-5h4a1 1 0 0 1 1 1v4M3 16v4a1 1 0 0 0 1 1h4m8 0h4a1 1 0 0 0 1-1v-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                <circle cx="12" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.7" />
+              </svg>
             </StudioControl>
             <StudioControl label={copy.rotateRight} onClick={() => rotateStudio(0.16)}>
               <RotationArrow direction="right" />
             </StudioControl>
+            <details className="studio-scene__help" onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                event.preventDefault();
+                event.currentTarget.open = false;
+                event.currentTarget.querySelector("summary")?.focus();
+              }
+            }}>
+              <summary aria-label={copy.helpLabel} className="studio-scene__help-toggle" title={copy.helpLabel}>
+                <svg aria-hidden="true" className="studio-scene__arrow" fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
+                  <path d="M12 11v6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                  <circle cx="12" cy="7.5" r="1" fill="currentColor" />
+                </svg>
+              </summary>
+              <p className="studio-scene__interaction-hint" id="studio-scene-interaction-hint">{copy.dragHint}</p>
+            </details>
           </div>
-          <p className="studio-scene__interaction-hint" id="studio-scene-interaction-hint">
-            {copy.dragHint}
-          </p>
         </div>
       )}
       <div aria-hidden="true" className="studio-scene__meta">
@@ -145,16 +165,17 @@ type StudioControlProps = {
   readonly children: ReactNode;
   readonly label: string;
   readonly onClick: () => void;
-  readonly wide?: boolean;
+  readonly emphasized?: boolean;
 };
 
-function StudioControl({ children, label, onClick, wide = false }: StudioControlProps) {
+function StudioControl({ children, label, onClick, emphasized = false }: StudioControlProps) {
   return (
     <button
       aria-describedby="studio-scene-interaction-hint"
       aria-label={label}
-      className={`studio-scene__control${wide ? " studio-scene__control--wide" : ""}`}
+      className={`studio-scene__control${emphasized ? " studio-scene__control--reset" : ""}`}
       onClick={onClick}
+      title={label}
       type="button"
     >
       {children}
@@ -171,7 +192,7 @@ function RotationArrow({ direction }: { readonly direction: "left" | "right" }) 
       viewBox="0 0 24 24"
     >
       <path
-        d="M8.2 7.2 3.4 12l4.8 4.8M4 12h8.5a6.5 6.5 0 1 1 0 13"
+        d="m8 4-4 4 4 4M4 8h9a6 6 0 1 1 0 12"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"

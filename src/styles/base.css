@@ -4,16 +4,16 @@
   font-synthesis: none;
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
-  --canvas: #f4efe5;
-  --paper: #fffaf2;
-  --surface: #fffdf8;
-  --surface-tint: #ece7dc;
+  --canvas: #f7f5ef;
+  --paper: #fffdf8;
+  --surface: #fffefa;
+  --surface-tint: #eeeee6;
   --ink: #15213e;
   --muted: #59637a;
-  --line: #c9c5bc;
+  --line: #dcded4;
   --indigo: #273d7c;
   --cobalt: #3e62bd;
-  --teal: #198c87;
+  --teal: #247668;
   --amber: #ed9a45;
   --focus: #c06000;
   --shadow: rgba(22, 35, 67, 0.16);
@@ -80,8 +80,8 @@ h2,
 h3 {
   font-family: "Manrope", Inter, ui-sans-serif, system-ui, sans-serif;
   font-weight: 800;
-  letter-spacing: -0.07em;
-  line-height: 0.94;
+  letter-spacing: -0.055em;
+  line-height: 1.12;
 }
 
 :focus-visible {

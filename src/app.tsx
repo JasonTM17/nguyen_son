@@ -10,6 +10,10 @@ import { portfolioCopy } from "./i18n/portfolio-copy";
 import { PortfolioLanguageProvider } from "./i18n/portfolio-language";
 import { usePortfolioLanguage } from "./i18n/portfolio-language-context";
 import { useMotionPreference } from "./hooks/use-motion-preference";
+import { lazy, Suspense, useSyncExternalStore } from 'react';
+import { isCvAdminLocation, subscribeCvLocation } from './features/cv/cv-route';
+import { PublicCvProvider } from './features/cv/public-cv-provider';
+const CvAdmin = lazy(() => import('./features/cv/cv-admin'));
 
 function PortfolioPage() {
   const motionPreference = useMotionPreference();
@@ -48,9 +52,11 @@ function PortfolioPage() {
 }
 
 export default function App() {
+  const admin = useSyncExternalStore(subscribeCvLocation, () => isCvAdminLocation(window.location), () => false);
+  if (admin) return <Suspense fallback={<p role="status">Đang tải trang quản trị CV…</p>}><CvAdmin /></Suspense>;
   return (
     <PortfolioLanguageProvider>
-      <PortfolioPage />
+      <PublicCvProvider><PortfolioPage /></PublicCvProvider>
     </PortfolioLanguageProvider>
   );
 }

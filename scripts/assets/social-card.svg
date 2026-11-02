@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#d8dfd2" stroke-width="1"/></pattern></defs>
+  <rect width="1200" height="630" fill="#f7f5ef"/>
+  <rect x="748" y="28" width="424" height="574" rx="28" fill="#eeeee6"/>
+  <rect x="748" y="28" width="424" height="574" rx="28" fill="url(#grid)"/>
+  <rect x="64" y="60" width="58" height="58" rx="17" fill="#15213e"/>
+  <text x="74" y="98" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#fffdf8">ns<tspan fill="#7cc6ad">.</tspan></text>
+  <text x="141" y="96" font-family="Consolas, monospace" font-size="20" fill="#247668">LEARNING IN PUBLIC</text>
+  <text x="63" y="271" font-family="Arial, sans-serif" font-size="88" font-weight="700" letter-spacing="-4" fill="#15213e">Nguyen Son</text>
+  <text x="67" y="333" font-family="Arial, sans-serif" font-size="33" fill="#247668">Software engineering</text>
+  <text x="67" y="378" font-family="Arial, sans-serif" font-size="33" fill="#247668">&amp; DevOps learner</text>
+  <path d="M68 426H642" stroke="#d2d9cb" stroke-width="2"/>
+  <text x="68" y="469" font-family="Arial, sans-serif" font-size="22" fill="#59637a">Projects. Experiments. A little more each day.</text>
+  <text x="68" y="560" font-family="Consolas, monospace" font-size="19" fill="#273d7c">nguyen-son-portfolio.vercel.app</text>
+</svg>

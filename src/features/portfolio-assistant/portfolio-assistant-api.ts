@@ -1,11 +1,14 @@
 import type { PortfolioAssistantMessage, PortfolioAssistantReply } from "./portfolio-assistant-types";
 import { portfolioCopy } from "../../i18n/portfolio-copy";
 import type { PortfolioLanguage } from "../../i18n/portfolio-language-context";
+import { safeAssistantPins, safeAssistantReferences } from "./portfolio-assistant-references";
 
 type ApiPayload = {
   answer?: unknown;
   error?: unknown;
   sources?: unknown;
+  references?: unknown;
+  pinnedProjects?: unknown;
 };
 
 const PORTFOLIO_ASSISTANT_ENDPOINT = "/api/portfolio-assistant";
@@ -48,5 +51,5 @@ export async function askPortfolioAssistant(
     throw new PortfolioAssistantApiError(error);
   }
 
-  return { answer, sources: getSources(payload) };
+  return { answer, sources: getSources(payload), references: safeAssistantReferences(payload.references), pinnedProjects: safeAssistantPins(payload.pinnedProjects) };
 }

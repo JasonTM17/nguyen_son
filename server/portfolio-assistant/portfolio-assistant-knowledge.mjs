@@ -60,7 +60,7 @@ const foundationDocuments = [
     id: "portfolio-catalog",
     title: "Portfolio catalog",
     keywords: "how many projects repository repositories github public portfolio archive",
-    content: "The portfolio archive automatically follows Son's current public GitHub project repositories. The GitHub profile README and the portfolio repository itself are metadata repositories, not project entries. Four curated learning projects are featured while the full archive refreshes from GitHub.",
+    content: "The portfolio archive and assistant share a public GitHub repository catalog. Featured cards follow the public GitHub pins in displayed order. Catalog and pin feeds have separate verification times; unavailable data is not proof of an empty profile. The profile README and portfolio repository are metadata, not project entries. Curated background documents are not a current repository inventory.",
   },
   {
     id: "assistant-boundary",

@@ -3,6 +3,7 @@ import type { MotionPreference } from "../hooks/use-motion-preference";
 import { portfolioCopy } from "../i18n/portfolio-copy";
 import { usePortfolioLanguage } from "../i18n/portfolio-language-context";
 import { StudioScene } from "./studio-scene";
+import { PublicCv } from '../features/cv/public-cv';
 
 type HeroSectionProps = {
   readonly motionPreference: MotionPreference;
@@ -26,9 +27,12 @@ export function HeroSection({ motionPreference }: HeroSectionProps) {
         <div className="hero__actions">
           <a className="button button--primary" href="#work">
             {copy.actions.work}
+            <span aria-hidden="true">↗</span>
           </a>
+          <PublicCv className="button--quiet" />
           <a className="button button--quiet" href={githubLink.href} target="_blank" rel="noreferrer">
             {copy.actions.github}
+            <span aria-hidden="true">↗</span>
           </a>
         </div>
         <ul className="focus-list" aria-label={copy.focusAreas}>

@@ -50,6 +50,10 @@ export function PortfolioLanguageProvider({ children }: PortfolioLanguageProvide
     document.documentElement.lang = language;
     document.title = copy.documentTitle;
     document.querySelector('meta[name="description"]')?.setAttribute("content", copy.documentDescription);
+    for (const selector of ['meta[property="og:title"]', 'meta[name="twitter:title"]']) document.querySelector(selector)?.setAttribute("content", copy.documentTitle);
+    for (const selector of ['meta[property="og:description"]', 'meta[name="twitter:description"]']) document.querySelector(selector)?.setAttribute("content", copy.documentDescription);
+    document.querySelector('meta[property="og:locale"]')?.setAttribute("content", language === "vi" ? "vi_VN" : "en_US");
+    document.querySelector('meta[property="og:locale:alternate"]')?.setAttribute("content", language === "vi" ? "en_US" : "vi_VN");
   }, [language]);
 
   const value = useMemo(

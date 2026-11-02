@@ -8,7 +8,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 
 | Goal | Source-backed implementation |
 | --- | --- |
-| Present Nguyen Son's work clearly | Student-focused hero/about copy, four featured project records, and a complete archive synchronized with current public project repositories. |
+| Present Nguyen Son's work clearly | Student-focused hero/about copy, featured records matching public GitHub pins, and a complete archive synchronized with current public project repositories. |
 | Give the portfolio a distinctive personal identity | A large light-mode hero with a project-local 3D portrait studio and factual engineering/DevOps statement. |
 | Serve English- and Vietnamese-speaking visitors clearly | An explicit `EN`/`VI` header selector, browser-local preference, localized page/interaction copy, and language-aware assistant responses. |
 | Let visitors reach relevant sections quickly | Sticky anchor navigation plus a skip link. |
@@ -23,7 +23,7 @@ Nguyen Son Portfolio is a bilingual React portfolio for a student developer. It 
 2. Provide an accessible `EN`/`VI` header selector. Save a valid choice in the browser; otherwise choose Vietnamese when the browser locale begins with `vi`, or English for every other locale.
 3. Apply the selected language to user-facing page copy, navigation, actions, studio/motion interaction labels, and `html[lang]`, document title, and description after the client mounts.
 4. Provide in-page navigation to Work, Archive, Principles, and About without a sticky header obscuring target headings.
-5. Render the selected work from typed static data: FoodFlow, Money Management, VN TravelAI, and AI-powered waste sorting.
+5. Render selected work from verified public GitHub pins in their displayed order, with periodic refresh and explicit loading, saved, empty and unavailable states.
 6. Render every current public owner project repository except the profile README and portfolio metadata repositories. Refresh on page load, after returning to the tab, and every five visible minutes. Curated copy remains the resilient fallback; newly public repositories receive current GitHub metadata and localized generic copy where needed.
 7. Open external GitHub destinations in a separate browsing context with `rel="noreferrer"`.
 8. Give visitors a motion-reduction control when the operating system has not already requested reduced motion.

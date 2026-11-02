@@ -2,17 +2,19 @@
 
 ## Purpose
 
-This repository is a Vite + React + TypeScript implementation of the Nguyen Son student portfolio. Its public interface supports English and Vietnamese through browser-local selection. Most page content is authored locally, while a public GitHub feed adds newly public project repositories and refreshes archive metadata. A small Vercel serverless endpoint grounds portfolio questions in local fact chunks before calling DeepSeek; it has no database or persistent transcript.
+This Vite + React + TypeScript portfolio supports English/Vietnamese with browser-local selection. Fixed public GitHub services provide a shared repository catalog and ordered pin feed to the page and assistant. Trusted local background remains separate from untrusted public project JSON before DeepSeek access. There is no database or persistent transcript.
 
 ## Top-level layout
 
 | Path | Role |
 | --- | --- |
 | `index.html` | Initial English browser shell/metadata, Manrope and IBM Plex Mono font requests, theme color, and React mount element. |
-| `public/` | Project-local artwork used by the hero studio. |
+| `public/` | Project-local hero artwork and the Shiba assistant SVG. |
 | `src/` | Application source, styles, tests, typed content, and shared types. |
 | `api/` | The canonical `POST /api/portfolio-assistant` Vercel route plus the compatible `/api/chat` entry point; both share one handler. |
 | `server/portfolio-assistant/` | Internal retrieval knowledge, request parsing, best-effort rate limiting, and their tests; these files are bundled dependencies, not public Vercel routes. |
+| `server/github-catalog/`, `server/github-pins/`, `server/public-feed-cache.mjs` | Fixed upstream readers, bounded verified snapshots, single-flight/freshness/backoff and timestamp-preserving fallback. Exposed through GET `/api/public-projects` and `/api/pinned-projects`. |
+| `scripts/generate-media.mjs` | Reproducible ImageMagick AVIF/WebP, favicon and social-preview generation; authoring only. |
 | `tests/` | Playwright browser accessibility coverage. |
 | `package.json` | Scripts and package dependencies. |
 | `vite.config.ts` | React plugin and Vitest configuration. |
@@ -27,7 +29,7 @@ Generated `dist/`, `node_modules/`, Playwright reports, test results, TypeScript
 | --- | --- |
 | `src/main.tsx` | React `StrictMode` bootstrap and modular stylesheet imports. |
 | `src/app.tsx` | Page shell, skip link, major sections, shared motion-preference state, and assistant mount. |
-| `src/components/` | Header, language selector, footer, hero, selected work, public archive, principles, motion control, studio artwork/fallback runtime, procedural icon objects, and cleanup helpers. |
+| `src/components/` | Header, language selector, footer, hero, selected work and decorative concept illustrations, searchable public archive, principles, motion control, studio artwork/fallback runtime, procedural icon objects, and cleanup helpers. |
 | `src/content/` | Typed public links, localized focus areas/selected projects/principles, full public-project archive, and Vietnamese archive copy. |
 | `src/i18n/` | Language context/provider plus English and Vietnamese interface-copy records. |
 | `src/features/portfolio-assistant/` | Localized assistant UI, API client, anonymous budget/session storage, and types. |
@@ -39,7 +41,7 @@ Generated `dist/`, `node_modules/`, Playwright reports, test results, TypeScript
 
 ## Page composition
 
-`App` is wrapped in `PortfolioLanguageProvider` and renders the header, hero, selected work, full public archive, principles, about section, footer, and fixed assistant. The provider restores a valid browser-local `en`/`vi` choice or derives a first-visit default from the browser locale, then updates the document language, title, and description. It supplies localized copy to the UI and selected/archive project-data helpers. `App` provides one `MotionPreference` result to the header control and hero visual. The selected-work section maps static project data into cards; the archive combines curated records with the latest public GitHub owner snapshot. Newly public repositories are inserted first, while a successful snapshot removes entries that are no longer public. The feed checks on page load, after returning to the tab, and every five visible minutes; local content and the last valid browser cache provide failure resilience.
+`App` is wrapped in `PortfolioLanguageProvider` and renders the header, hero, ordered pins, public archive, principles, about, footer and Shiba assistant. The provider restores EN/VI and updates document/share metadata. Both feeds refresh through same-origin endpoints every visible minute/on return. Authoritative snapshots remove no-longer-public entries; fallback retains original verification time and expires after 24h. Reviewed project presentations, distinct SVG concepts and grouped technology aliases supplement canonical live identities. Only checked demo URLs receive actions; GitHub is the verified public connection path.
 
 The hero contains `StudioScene`. The project-local high-detail portrait/desk artwork remains the primary image in normal and no-WebGL rendering; forced-colors uses the inline SVG fallback. When motion and color preferences allow it, a dynamically imported Three.js layer adds four procedural icons at the right edge. Direct drag/swipe and HTML left/reset/right controls rotate only this icon group, leaving the artwork unchanged. Runtime orchestration lives in `studio-scene-runtime.ts`, icon geometry in `studio-scene-objects.ts`, rotation behavior in `studio-scene-rotation-controller.ts`, and cleanup helpers in `three-resource-cleanup.ts`.
 

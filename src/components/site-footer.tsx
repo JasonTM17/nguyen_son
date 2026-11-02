@@ -1,6 +1,7 @@
 import type { ExternalLink } from "../types/portfolio";
 import { portfolioCopy } from "../i18n/portfolio-copy";
 import { usePortfolioLanguage } from "../i18n/portfolio-language-context";
+import { PublicCv } from '../features/cv/public-cv';
 
 type SiteFooterProps = {
   readonly githubLink: ExternalLink;
@@ -16,9 +17,9 @@ export function SiteFooter({ githubLink }: SiteFooterProps) {
         <p className="eyebrow">{copy.eyebrow}</p>
         <h2>{copy.heading}</h2>
       </div>
-      <a className="button button--primary" href={githubLink.href} target="_blank" rel="noreferrer">
+      <div className="site-footer__actions"><PublicCv /><a className="button button--primary" href={githubLink.href} target="_blank" rel="noreferrer">
         {copy.visitGithub}
-      </a>
+      </a></div>
       <p className="site-footer__note">{copy.note}</p>
     </footer>
   );
