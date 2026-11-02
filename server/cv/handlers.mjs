@@ -20,7 +20,15 @@ export function createCvHandlers(service, origin) {
     res.setHeader('Referrer-Policy', 'no-referrer');
     res.setHeader('X-Frame-Options', 'DENY');
   };
-  const error = (res, e) => res.status(e.status ?? 503).json({ error: messages[e.code] ?? messages.unavailable });
+  const error = (res, e) => {
+    console.error('CV Error:', e);
+    return res.status(e.status ?? 503).json({
+      error: messages[e.code] ?? messages.unavailable,
+      detail: e?.message ?? String(e),
+      name: e?.name ?? 'Error',
+      code: e?.code,
+    });
+  };
   const download = (response, result) => {
     response.setHeader('Content-Type', 'application/pdf');
     response.setHeader('Content-Disposition', `attachment; filename="Nguyen-Son-CV.pdf"; filename*=UTF-8''${encodeURIComponent(result.metadata.filename).replace(/['()*]/g, c => '%' + c.charCodeAt(0).toString(16))}`);
